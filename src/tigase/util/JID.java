@@ -29,7 +29,7 @@ package tigase.util;
  * <p>
  * Created: Thu Jan 27 22:53:41 2005
  * </p>
- * @author <a href="mailto:artur.hefczyc@gmail.com">Artur Hefczyc</a>
+ * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 public class JID {

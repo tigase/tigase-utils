@@ -31,7 +31,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * Created: Wed May  4 13:24:03 2005
  *
- * @author <a href="mailto:artur.hefczyc@gmail.com">Artur Hefczyc</a>
+ * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 public class Algorithms {

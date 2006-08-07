@@ -34,7 +34,7 @@ import java.net.Socket;
  *
  * Created: Sat Jan 28 21:18:46 2006
  *
- * @author <a href="mailto:artur.hefczyc@gmail.com">Artur Hefczyc</a>
+ * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 public class Telnet {
@@ -72,7 +72,7 @@ public class Telnet {
       + "-- \n"
       + "Tigase XMPP Telnet, version: "
       + Telnet.class.getPackage().getImplementationVersion() + "\n"
-      + "Author:	Artur Hefczyc <artur.hefczyc@gmail.com>\n"
+      + "Author:	Artur Hefczyc <artur.hefczyc@tigase.org>\n"
       + "-- \n"
       ;
   }
