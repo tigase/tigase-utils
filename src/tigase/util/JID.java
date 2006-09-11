@@ -22,6 +22,9 @@
  */
 package tigase.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /**
  * <code>JID</code> class contains static methods for <em>JID</em>
  * manipulation.
@@ -75,7 +78,20 @@ public class JID {
   }
 
   /**
-   * Method <code>getNodeHost</code> parses given <em>JID</em> and returns
+   * Method <code>getNodeHostIP</code> parses given <em>JID</em> for node
+   * <em>domain</em> part and then tries to resolve host IP address..
+   *
+   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @return a <code>String</code> value of node <em>domain</em> IP address.
+   */
+  public static final String getNodeHostIP(final String jid)
+		throws UnknownHostException {
+    String domain = getNodeHost(jid);
+    return DNSResolver.getHostSRV_IP(domain);
+  }
+
+  /**
+   * Method <code>getNodeNick</code> parses given <em>JID</em> and returns
    * node nick name or empty string if nick name could not be found.
    *
    * @param jid a <code>String</code> value of <em>JID</em> to parse.
@@ -102,7 +118,18 @@ public class JID {
 
 	public static final String getJID(final String nick, final String domain,
 		final String resource) {
-		return nick + "@" + domain + "/" + resource;
+		StringBuilder sb = new StringBuilder();
+		if (nick != null) {
+			sb.append(nick + "@");
+		} // end of if (nick != null)
+		if (domain == null) {
+			throw new NullPointerException("Valid JID must contain at least domain name.");
+		} // end of if (domain == null)
+		sb.append(domain);
+		if (resource != null) {
+			sb.append("/" + resource);
+		} // end of if (resource != null)
+		return  sb.toString();
 	}
 
 } // JID
