@@ -62,15 +62,17 @@ public class ClassUtil {
     return class_name;
   }
 
-  public static void walkInDirForFiles(File path, Set<String> set) {
-    if (path.isDirectory()) {
-      String[] files = path.list();
+  public static void walkInDirForFiles(File base_dir,
+		String path, Set<String> set) {
+		File tmp_file = new File(base_dir, path);
+    if (tmp_file.isDirectory()) {
+      String[] files = tmp_file.list();
       for (String file : files) {
-        walkInDirForFiles(new File(path, file), set);
+				walkInDirForFiles(base_dir, new File(path, file).toString(), set);
       } // end of for ()
-    } // end of if (file.isDirectory())
-    else {
-      set.add(path.toString());
+    } else {
+			//System.out.println("File: " + path.toString());
+      set.add(path);
     } // end of if (file.isDirectory()) else
   }
 
@@ -79,10 +81,9 @@ public class ClassUtil {
     if (path.isDirectory()) {
       String[] files = path.list();
       for (String file : files) {
-        walkInDirForFiles(new File(file), set);
+        walkInDirForFiles(path, file, set);
       } // end of for ()
-    } // end of if (file.isDirectory())
-    else {
+    } else {
       set.add(path.toString());
     } // end of if (file.isDirectory()) else
     return set;
@@ -95,7 +96,7 @@ public class ClassUtil {
       String class_name = getClassNameFromFileName(elem);
       if (class_name != null) {
         result.add(class_name);
-        //        System.out.println("class name: "+class_name);
+				//System.out.println("class name: "+class_name);
       } // end of if (class_name != null)
     } // end of for ()
     return result;
@@ -134,7 +135,7 @@ public class ClassUtil {
     Set<Class> classes_set = new TreeSet<Class>(new ClassComparator());
 
     String classpath = System.getProperty("java.class.path");
-    //    System.out.println("classpath: "+classpath);
+    //System.out.println("classpath: "+classpath);
     StringTokenizer stok =
       new StringTokenizer(classpath, File.pathSeparator, false);
     while (stok.hasMoreTokens()) {
@@ -142,12 +143,12 @@ public class ClassUtil {
       File file = new File(path);
       if (file.exists()) {
         if (file.isDirectory()) {
-          //          System.out.println("directory: "+path);
+          //System.out.println("directory: "+path);
           Set<String> class_names = getClassNamesFromDir(file);
           classes_set.addAll(getClassesFromNames(class_names));
         } // end of if (file.isDirectory())
         if (file.isFile()) {
-          //          System.out.println("jar file: "+path);
+					//System.out.println("jar file: "+path);
           Set<String> class_names = getClassNamesFromJar(file);
           classes_set.addAll(getClassesFromNames(class_names));
         } // end of if (file.isFile())
