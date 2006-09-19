@@ -24,6 +24,7 @@ package tigase.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 import javax.naming.*;
 import javax.naming.directory.*;
@@ -39,6 +40,26 @@ import java.util.*;
  * @version $Rev$
  */
 public class DNSResolver {
+
+  /**
+   * Variable <code>log</code> is a class logger.
+   */
+  private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
+
+	public static String[] getDefHostNames() {
+		String[] hostnames = null;
+		try {
+			hostnames = new String[2];
+			hostnames[0] = InetAddress.getLocalHost().getHostName();
+			hostnames[1] = "localhost";
+			log.fine("Local hostname is: " + hostnames[0]);
+		} // end of try
+		catch (UnknownHostException e) {
+			log.warning("Can not detect local hostname, using 'localhost'");
+			hostnames = new String[] {"localhost"};
+		} // end of try-catch
+		return hostnames;
+	}
 
 	public static String getHostSRV_IP(final String hostname)
 		throws UnknownHostException {
