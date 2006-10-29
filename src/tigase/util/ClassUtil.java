@@ -124,7 +124,10 @@ public class ClassUtil {
     Set<Class> classes = new TreeSet<Class>(new ClassComparator());
     for (String name : names) {
       //      System.out.println("Class name: "+name);
-      classes.add(Class.forName(name));
+			try {
+				Class cls = Class.forName(name);
+				classes.add(cls);
+			} catch (NoClassDefFoundError e) {}
     } // end of for ()
     return classes;
   }
