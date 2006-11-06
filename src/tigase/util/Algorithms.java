@@ -74,4 +74,38 @@ public class Algorithms {
     return enc.toString();
   }
 
+	private static String help() {
+		return
+			" -id id				id used to calculate digest\n"
+			+ " -pass pass			password phrase for digest calculation\n"
+			+ " -alg alg			algorith to use for calculating digest\n"
+			;
+	}
+
+	/**
+	 * Describe <code>main</code> method here.
+	 *
+	 * @param args a <code>String[]</code> value
+	 */
+	public static void main(final String[] args) throws Exception {
+		String id = null;
+		String pass = null;
+		String alg = "MD5";
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-id")) {
+				id = args[++i];
+			} // end of if (args[i].equals("-id"))
+			if (args[i].equals("-pass")) {
+				pass = args[++i];
+			} // end of if (args[i].equals("-id"))
+			if (args[i].equals("-alg")) {
+				alg = args[++i];
+			} // end of if (args[i].equals("-id"))
+		} // end of for (int i = 0; i < args.length; i++)
+		if (id == null) {
+			id = "";
+		} // end of if (id == null)
+		System.out.println(digest(id, pass, alg));
+	}
+
 } // Algorithms
