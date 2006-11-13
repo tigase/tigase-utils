@@ -61,7 +61,7 @@ public class JID {
    */
   public static final String getNodeResource(final String jid) {
     int idx = jid.indexOf('/');
-    return idx == -1 ? "" : jid.substring(idx+1);
+    return idx == -1 ? null : jid.substring(idx+1);
   }
 
   /**
@@ -100,7 +100,7 @@ public class JID {
   public static final String getNodeNick(final String jid) {
     String id = getNodeID(jid);
     int idx = id.indexOf('@');
-    return idx == -1 ? "" : id.substring(0, idx);
+    return idx == -1 ? null : id.substring(0, idx);
   }
 
   /**

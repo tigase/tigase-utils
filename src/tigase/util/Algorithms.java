@@ -24,6 +24,7 @@ package tigase.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  * Describe class Algorithms here.
@@ -58,21 +59,29 @@ public class Algorithms {
    * @exception NoSuchAlgorithmException if an error occurs during encoding
    * digest message.
    */
-  public static final String digest(final String id, final String secret,
+  public static final String hexDigest(final String id, final String secret,
+    final String alg) throws NoSuchAlgorithmException {
+    return bytesToHex(digest(id, secret, alg));
+  }
+
+  public static final byte[] digest(final String id, final String secret,
     final String alg) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance(alg);
     String conc = id + secret;
     md.update(conc.getBytes());
-    byte[] buff = md.digest();
-    StringBuilder enc = new StringBuilder();
+    return md.digest();
+  }
+
+	public static final String bytesToHex(final byte[] buff) {
+    StringBuilder res = new StringBuilder();
     for (byte b : buff) {
       char ch = Character.forDigit((b >> 4) & 0xF, 16);
-      enc.append(ch);
+      res.append(ch);
       ch = Character.forDigit(b & 0xF, 16);
-      enc.append(ch);
+      res.append(ch);
     } // end of for (b : digest)
-    return enc.toString();
-  }
+    return res.toString();
+	}
 
 	private static String help() {
 		return
@@ -92,6 +101,10 @@ public class Algorithms {
 		String pass = null;
 		String alg = "MD5";
 		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-h")) {
+				System.out.println(help());
+				System.exit(0);
+			} // end of if (args[i].equals("-id"))
 			if (args[i].equals("-id")) {
 				id = args[++i];
 			} // end of if (args[i].equals("-id"))
@@ -105,7 +118,7 @@ public class Algorithms {
 		if (id == null) {
 			id = "";
 		} // end of if (id == null)
-		System.out.println(digest(id, pass, alg));
+		System.out.println(hexDigest(id, pass, alg));
 	}
 
 } // Algorithms
