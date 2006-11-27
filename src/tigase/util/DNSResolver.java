@@ -22,13 +22,18 @@
  */
 package tigase.util;
 
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.naming.*;
-import javax.naming.directory.*;
-import java.util.*;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 
 /**
  * Describe class DNSResolver here.
@@ -46,8 +51,8 @@ public class DNSResolver {
    */
   private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
 
-	private static SimpleCache<String, Object> cache =
-		new SimpleCache<String, Object>(1000);
+	private static Map<String, Object> cache =
+		Collections.synchronizedMap(new SimpleCache<String, Object>(1000));
 
 	public static String[] getDefHostNames() {
 		String[] hostnames = null;
