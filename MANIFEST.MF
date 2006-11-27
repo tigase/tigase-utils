@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Created-By: "Artur Hefczyc"
 Specification-Version: 2.2.0
-Implementation-Version: 2.2.0-b389
-Tigase-Version: 2.2.0-b389
+Implementation-Version: 2.2.0-b390
+Tigase-Version: 2.2.0-b390
 

@@ -46,6 +46,9 @@ public class DNSResolver {
    */
   private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
 
+	private static SimpleCache<String, Object> cache =
+		new SimpleCache<String, Object>(1000);
+
 	public static String[] getDefHostNames() {
 		String[] hostnames = null;
 		try {
@@ -63,6 +66,11 @@ public class DNSResolver {
 
 	public static String getHostSRV_IP(final String hostname)
 		throws UnknownHostException {
+
+		String cache_res = (String)cache.get(hostname);
+		if (cache_res != null) {
+			return cache_res;
+		} // end of if (result != null)
 
 		String result_host = hostname;
 
@@ -87,6 +95,7 @@ public class DNSResolver {
 
 		InetAddress[] all = InetAddress.getAllByName(result_host);
 
+		cache.put(hostname, all[0].getHostAddress());
 		return all[0].getHostAddress();
 	}
 
