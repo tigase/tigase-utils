@@ -22,6 +22,7 @@
  */
 package tigase.util;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,8 +42,21 @@ public class SimpleCache<K, V> extends LinkedHashMap<K, V> {
 	private int maxCacheSize = 1000;
 
 	public SimpleCache(int maxSize) {
-		super();
+		super(10, 0.75f, true);
 		maxCacheSize = maxSize;
+	}
+
+	public V remove(Object key) {
+		V val = super.remove(key);
+		String strk = key.toString();
+		Iterator<K> ks = keySet().iterator();
+		while (ks.hasNext()) {
+			String k = ks.next().toString();
+			if (k.startsWith(strk)) {
+				ks.remove();
+			} // end of if (k.startsWith(strk))
+		} // end of while (ks.hasNext())
+		return val;
 	}
 
 	protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {

@@ -53,20 +53,24 @@ public class DNSResolver {
 
 	private static Map<String, Object> cache =
 		Collections.synchronizedMap(new SimpleCache<String, Object>(1000));
+	private static String[] localnames = null;
 
-	public static String[] getDefHostNames() {
-		String[] hostnames = null;
+	static {
+		cache.put("localhost", "127.0.0.1");
 		try {
-			hostnames = new String[2];
-			hostnames[0] = InetAddress.getLocalHost().getHostName();
-			hostnames[1] = "localhost";
-			log.fine("Local hostname is: " + hostnames[0]);
+			localnames = new String[2];
+			localnames[0] = InetAddress.getLocalHost().getHostName();
+			localnames[1] = "localhost";
+			InetAddress[] all = InetAddress.getAllByName(localnames[0]);
+			cache.put(localnames[0], all[0].getHostAddress());
 		} // end of try
 		catch (UnknownHostException e) {
-			log.warning("Can not detect local hostname, using 'localhost'");
-			hostnames = new String[] {"localhost"};
+			localnames = new String[] {"localhost"};
 		} // end of try-catch
-		return hostnames;
+	}
+
+	public static String[] getDefHostNames() {
+		return localnames;
 	}
 
 	public static String getHostSRV_IP(final String hostname)
