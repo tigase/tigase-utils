@@ -92,9 +92,11 @@ public class Base64 {
 		StringBuilder result =
 			new StringBuilder(groups * 4 + (pads > 0 ? 1 : 0));
 		for (int i = 0; i < groups; i++) {
-			int c1 = input[i*3] >> 2;
-			int c2 = ((input[i*3] << 4) & 0x3f) | (input[i*3+1] >> 4);
-			int c3 = ((input[i*3+1] << 2) & 0x3f ) | (input[i*3+2] >> 6);
+			int c1 = (input[i*3] & 0xff) >> 2;
+			int c2 = (((input[i*3] & 0xff) << 4) & 0x3f)
+				| ((input[i*3+1] & 0xff) >> 4);
+			int c3 = (((input[i*3+1] & 0xff) << 2) & 0x3f )
+				| ((input[i*3+2] & 0xff) >> 6);
 			int c4 = input[i*3+2] & 0x3f;
 			result.append(toBase64[c1]);
 			result.append(toBase64[c2]);
@@ -103,9 +105,10 @@ public class Base64 {
 		} // end of for (int i = 0; i < groups; i++)
 		switch (pads) {
 		case 1: {
-			int c1 = input[groups*3] >> 2;
-			int c2 = ((input[groups*3] << 4) & 0x3f) | (input[groups*3+1] >> 4);
-			int c3 = (input[groups*3+1] << 2) & 0x3f;
+			int c1 = (input[groups*3] & 0xff) >> 2;
+			int c2 = (((input[groups*3] & 0xff) << 4) & 0x3f)
+				| ((input[groups*3+1] & 0xff) >> 4);
+			int c3 = ((input[groups*3+1] & 0xff) << 2) & 0x3f;
 			result.append(toBase64[c1]);
 			result.append(toBase64[c2]);
 			result.append(toBase64[c3]);
@@ -113,8 +116,8 @@ public class Base64 {
 			break;
 		}
 		case 2: {
-			int c1 = input[groups*3] >> 2;
-			int c2 = ((input[groups*3] << 4) & 0x3f);
+			int c1 = (input[groups*3] & 0xff) >> 2;
+			int c2 = (((input[groups*3] & 0xff) << 4) & 0x3f);
 			result.append(toBase64[c1]);
 			result.append(toBase64[c2]);
 			result.append("==");
