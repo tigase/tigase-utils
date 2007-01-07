@@ -1,27 +1,15 @@
 Manifest-Version: 1.0
 Created-By: Artur Hefczyc
-Main-Class: tigase.server.XMPPServer
+Main-Class: tigase.util.Algorithms
 
-Name: tigase/server/
-Specification-Title: Tigase Jabber Server
+Name: tigase/util/
+Specification-Title: Tigase Utils
 Specification-Version: 1.0.0
 Specification-Vendor: tigase.org
-Implementation-Title: tigase.server
+Implementation-Title: tigase.util
 Implementation-Version: 1.0.0-b111
 Implementation-Vendor: tigase.org
-Package-Title: tigase.server
-Package-Version: build111
-Package-Vendor: tigase.org
-Tigase-Version: 1.0.0-b111
-
-Name: tigase/
-Specification-Title: Tigase Jabber Server
-Specification-Version: 1.0.0
-Specification-Vendor: tigase.org
-Implementation-Title: tigase
-Implementation-Version: 1.0.0-b111
-Implementation-Vendor: tigase.org
-Package-Title: tigase
+Package-Title: tigase.util
 Package-Version: build111
 Package-Vendor: tigase.org
 Tigase-Version: 1.0.0-b111
