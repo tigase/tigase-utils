@@ -28,6 +28,7 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -70,6 +71,13 @@ public class DNSResolver {
 	}
 
 	public static String[] getDefHostNames() {
+// 		if (extrahosts != null) {
+// 			String[] hosts = extrahosts.split(",");
+// 			String[] result = new String[localnames.length + hosts.length];
+// 			System.arraycopy(localnames, 0, result, 0, localnames.length);
+// 			System.arraycopy(hosts, 0, result, localnames.length, hosts.length);
+// 			return result;
+// 		}
 		return localnames;
 	}
 
