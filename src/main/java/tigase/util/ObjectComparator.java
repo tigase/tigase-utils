@@ -53,7 +53,7 @@ public class ObjectComparator implements Comparator<Object> {
    * @return an <code>int</code> value
    */
   public int compare(final Object o1, final Object o2) {
-    return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
+    return o1.getClass().getName().compareTo(o2.getClass().getName());
   }
 
 } // ObjectComparator

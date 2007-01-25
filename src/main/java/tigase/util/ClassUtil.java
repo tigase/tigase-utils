@@ -165,7 +165,7 @@ public class ClassUtil {
   public static <T extends Class>
     Set<T> getClassesImplementing(Set<Class> classes, T cls) {
 
-    Set<T> classes_set = new TreeSet<T>(new ClassComparator());
+		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
 
     for (Class c : classes) {
       if (cls.isAssignableFrom(c)) {

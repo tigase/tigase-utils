@@ -53,7 +53,7 @@ public class ClassComparator implements Comparator<Class> {
    */
   //  @Override
   public int compare(Class c1, Class c2) {
-    return c1.getSimpleName().compareTo(c2.getSimpleName());
+    return c1.getName().compareTo(c2.getName());
   }
 
 }// ClassComparator

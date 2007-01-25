@@ -35,7 +35,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class JID {
+public abstract class JID {
 
   /**
    * Method <code>getNodeID</code> cuts off <em>resource</em> <em>JID</em> part
