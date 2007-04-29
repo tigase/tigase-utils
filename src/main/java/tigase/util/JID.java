@@ -113,7 +113,7 @@ public abstract class JID {
    * @param domain a <code>String</code> value of domain part of <em>JID</em>.
    */
   public static final String getNodeID(final String nick, final String domain) {
-    return nick + "@" + domain;
+    return ((nick != null && nick.length() > 0) ? nick + "@" + domain : domain);
   }
 
 	public static final String getJID(final String nick, final String domain,
