@@ -116,6 +116,19 @@ public abstract class JID {
     return ((nick != null && nick.length() > 0) ? nick + "@" + domain : domain);
   }
 
+	/**
+	 * <code>getJID</code> method builds valid JID string from given nick name,
+	 * domain and resource. It is aware of the fact that some elements might be
+	 * <code>null</code> and then they are not included in JID. <code>domain</code>
+	 * musn't be <code>null</code> however.
+	 *
+	 * @param nick a <code>String</code> value of JID's nick name. <code>null</code>
+	 * allowed.
+	 * @param domain a <code>String</code> value of JID's domain name.
+	 * <code>null</code> <strong>not</strong> allowed.
+	 * @param resource a <code>String</code> value of JID's resource.
+	 * @return a <code>String</code> value
+	 */
 	public static final String getJID(final String nick, final String domain,
 		final String resource) {
 		StringBuilder sb = new StringBuilder();
@@ -130,6 +143,25 @@ public abstract class JID {
 			sb.append("/" + resource);
 		} // end of if (resource != null)
 		return  sb.toString();
+	}
+
+	/**
+	 * <code>checkNickName</code> method checks whether given string is a valid
+	 * nick name: not null, not zero length, doesn't contain invalid characters.
+	 *
+	 * @param nickname a <code>String</code> value of nick name to validate.
+	 * @return a <code>String</code> value <code>null</code> if nick name
+	 * is correct otherwise text with description of the problem.
+	 */
+	public static final String checkNickName(final String nickname) {
+		if (nickname == null || nickname.length() == 0) {
+			return "Nickname empty.";
+		} // end of if (new_comp_name == null || new_comp_name.length() == 0)
+		if (nickname.contains(" ") || nickname.contains("\t")
+				|| nickname.contains("@") || nickname.contains("&")) {
+			return "Nickname contains invalid characters.";
+		} // end of if (!isValidCompName(new_comp_name))
+		return null;
 	}
 
 } // JID
