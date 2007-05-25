@@ -26,7 +26,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * <code>JID</code> class contains static methods for <em>JID</em>
+ * <code>JIDUtils</code> class contains static methods for <em>JIDUtils</em>
  * manipulation.
  *
  * <p>
@@ -35,13 +35,13 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public abstract class JID {
+public abstract class JIDUtils {
 
   /**
-   * Method <code>getNodeID</code> cuts off <em>resource</em> <em>JID</em> part
+   * Method <code>getNodeID</code> cuts off <em>resource</em> <em>JIDUtils</em> part
    * if exists and returns only node ID.
    *
-   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
    * @return a <code>String</code> value of node <em>ID</em> without resource
    * part.
    */
@@ -51,11 +51,11 @@ public abstract class JID {
   }
 
   /**
-   * Method <code>getNodeID</code> parses given <em>JID</em> and returns
-   * <em>resource</em> part of given <em>JID</em> or empty string if there
+   * Method <code>getNodeID</code> parses given <em>JIDUtils</em> and returns
+   * <em>resource</em> part of given <em>JIDUtils</em> or empty string if there
    * was no <em>resource</em> part.
    *
-   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
    * @return a <code>String</code> value of node <em>Resource</em> or empty
    * string.
    */
@@ -65,10 +65,10 @@ public abstract class JID {
   }
 
   /**
-   * Method <code>getNodeHost</code> parses given <em>JID</em> and returns node
+   * Method <code>getNodeHost</code> parses given <em>JIDUtils</em> and returns node
    * <em>domain</em> part.
    *
-   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
    * @return a <code>String</code> value of node <em>domain</em> part.
    */
   public static final String getNodeHost(final String jid) {
@@ -78,10 +78,10 @@ public abstract class JID {
   }
 
   /**
-   * Method <code>getNodeHostIP</code> parses given <em>JID</em> for node
+   * Method <code>getNodeHostIP</code> parses given <em>JIDUtils</em> for node
    * <em>domain</em> part and then tries to resolve host IP address..
    *
-   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
    * @return a <code>String</code> value of node <em>domain</em> IP address.
    */
   public static final String getNodeHostIP(final String jid)
@@ -91,10 +91,10 @@ public abstract class JID {
   }
 
   /**
-   * Method <code>getNodeNick</code> parses given <em>JID</em> and returns
+   * Method <code>getNodeNick</code> parses given <em>JIDUtils</em> and returns
    * node nick name or empty string if nick name could not be found.
    *
-   * @param jid a <code>String</code> value of <em>JID</em> to parse.
+   * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
    * @return a <code>String</code> value of node nick name or empty string.
    */
   public static final String getNodeNick(final String jid) {
@@ -105,28 +105,28 @@ public abstract class JID {
 
   /**
    * This is static method to construct user <em>ID</em> from given
-   * <em>JID</em> parts.
-   * This is not user session <em>ID</em> (<em>JID</em>), this is just
-   * user <em>ID</em> - <em>JID</em> without resource part.
+   * <em>JIDUtils</em> parts.
+   * This is not user session <em>ID</em> (<em>JIDUtils</em>), this is just
+   * user <em>ID</em> - <em>JIDUtils</em> without resource part.
    *
-   * @param nick a <code>String</code> value of node part of <em>JID</em>.
-   * @param domain a <code>String</code> value of domain part of <em>JID</em>.
+   * @param nick a <code>String</code> value of node part of <em>JIDUtils</em>.
+   * @param domain a <code>String</code> value of domain part of <em>JIDUtils</em>.
    */
   public static final String getNodeID(final String nick, final String domain) {
     return ((nick != null && nick.length() > 0) ? nick + "@" + domain : domain);
   }
 
 	/**
-	 * <code>getJID</code> method builds valid JID string from given nick name,
+	 * <code>getJID</code> method builds valid JIDUtils string from given nick name,
 	 * domain and resource. It is aware of the fact that some elements might be
-	 * <code>null</code> and then they are not included in JID. <code>domain</code>
+	 * <code>null</code> and then they are not included in JIDUtils. <code>domain</code>
 	 * musn't be <code>null</code> however.
 	 *
-	 * @param nick a <code>String</code> value of JID's nick name. <code>null</code>
+	 * @param nick a <code>String</code> value of JIDUtils's nick name. <code>null</code>
 	 * allowed.
-	 * @param domain a <code>String</code> value of JID's domain name.
+	 * @param domain a <code>String</code> value of JIDUtils's domain name.
 	 * <code>null</code> <strong>not</strong> allowed.
-	 * @param resource a <code>String</code> value of JID's resource.
+	 * @param resource a <code>String</code> value of JIDUtils's resource.
 	 * @return a <code>String</code> value
 	 */
 	public static final String getJID(final String nick, final String domain,
@@ -136,7 +136,7 @@ public abstract class JID {
 			sb.append(nick + "@");
 		} // end of if (nick != null)
 		if (domain == null) {
-			throw new NullPointerException("Valid JID must contain at least domain name.");
+			throw new NullPointerException("Valid JIDUtils must contain at least domain name.");
 		} // end of if (domain == null)
 		sb.append(domain);
 		if (resource != null) {
@@ -164,4 +164,4 @@ public abstract class JID {
 		return null;
 	}
 
-} // JID
+} // JIDUtils
