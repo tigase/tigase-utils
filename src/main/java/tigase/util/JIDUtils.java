@@ -73,7 +73,7 @@ public abstract class JIDUtils {
    */
   public static final String getNodeHost(final String jid) {
     String id = getNodeID(jid);
-    int idx = id.indexOf('@');
+    int idx = id.lastIndexOf('@');
     return idx == -1 ? id : id.substring(idx+1);
   }
 
