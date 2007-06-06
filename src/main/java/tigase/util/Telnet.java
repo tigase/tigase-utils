@@ -172,7 +172,7 @@ public class Telnet {
 		new Thread(sl2).start();
 	}
 
-	private class StreamListener implements Runnable {
+	private static class StreamListener implements Runnable {
 
 		private InputStream is = null;
 		private OutputStream os = null;
