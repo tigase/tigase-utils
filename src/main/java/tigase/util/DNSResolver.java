@@ -28,6 +28,7 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -78,7 +79,8 @@ public class DNSResolver {
 // 			System.arraycopy(hosts, 0, result, localnames.length, hosts.length);
 // 			return result;
 // 		}
-		return localnames;
+		return (localnames != null ?
+			Arrays.copyOf(localnames, localnames.length) : null);
 	}
 
 	public static String getHostSRV_IP(final String hostname)
