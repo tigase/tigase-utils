@@ -43,9 +43,7 @@ public class ClassComparator implements Comparator<Class>, Serializable {
 
   private static final long serialVersionUID = 1L;
 
-	public ClassComparator() { }
-
-  // Implementation of java.util.Comparator
+ // Implementation of java.util.Comparator
 
   /**
    * Method <code>compare</code> is used to perform 

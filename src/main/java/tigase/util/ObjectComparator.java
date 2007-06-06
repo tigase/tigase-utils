@@ -23,6 +23,7 @@
 package tigase.util;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Describe class ObjectComparator here.
@@ -33,17 +34,9 @@ import java.util.Comparator;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class ObjectComparator implements Comparator<Object> {
+public class ObjectComparator implements Comparator<Object>, Serializable {
 
-  /**
-   * Creates a new <code>ObjectComparator</code> instance.
-   *
-   */
-  public ObjectComparator() {
-
-  }
-
-  // Implementation of java.util.Comparator
+  private static final long serialVersionUID = 1L;
 
   /**
    * Describe <code>compare</code> method here.
