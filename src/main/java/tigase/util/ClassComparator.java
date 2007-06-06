@@ -24,6 +24,7 @@
 package tigase.util;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * In a few cases classes have to be kept in <code>Set</code>. This
@@ -38,9 +39,11 @@ import java.util.Comparator;
  * @version $Rev$
  */
 
-public class ClassComparator implements Comparator<Class> {
+public class ClassComparator implements Comparator<Class>, Serializable {
 
-  public ClassComparator() { }
+  private static final long serialVersionUID = 1L;
+
+	public ClassComparator() { }
 
   // Implementation of java.util.Comparator
 
