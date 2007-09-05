@@ -95,6 +95,6 @@ public class VMPCRandom extends SecureRandom {
 	private static final long serialVersionUID = 4516013411867308772L;
 
 	public VMPCRandom() {
-		super(new Spi(), null);
+		super(new Spi(), (new SecureRandom()).getProvider());
 	}
 }
