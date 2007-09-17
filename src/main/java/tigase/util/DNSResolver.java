@@ -52,21 +52,26 @@ public class DNSResolver {
    */
   private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
 
+	private static final String LOCALHOST = "localhost";
+
 	private static Map<String, Object> cache =
-		Collections.synchronizedMap(new SimpleCache<String, Object>(1000));
+		Collections.synchronizedMap(new SimpleCache<String, Object>(100));
 	private static String[] localnames = null;
 
 	static {
-		cache.put("localhost", "127.0.0.1");
+		cache.put(LOCALHOST, "127.0.0.1");
 		try {
-			localnames = new String[2];
-			localnames[0] = InetAddress.getLocalHost().getHostName();
-			localnames[1] = "localhost";
-			InetAddress[] all = InetAddress.getAllByName(localnames[0]);
-			cache.put(localnames[0], all[0].getHostAddress());
-		} // end of try
-		catch (UnknownHostException e) {
-			localnames = new String[] {"localhost"};
+			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName())) {
+				localnames = new String[2];
+				localnames[0] = InetAddress.getLocalHost().getHostName();
+				localnames[1] = "localhost";
+				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
+				cache.put(localnames[0], all[0].getHostAddress());
+			} else {
+				localnames = new String[] {LOCALHOST};
+			}
+		} catch (UnknownHostException e) {
+			localnames = new String[] {LOCALHOST};
 		} // end of try-catch
 	}
 
