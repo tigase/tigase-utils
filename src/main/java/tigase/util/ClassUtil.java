@@ -127,7 +127,7 @@ public class ClassUtil {
 				Class cls = Class.forName(name);
 				classes.add(cls);
 			} catch (NoClassDefFoundError e) {
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
     } // end of for ()
