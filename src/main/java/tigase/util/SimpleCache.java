@@ -41,7 +41,7 @@ public class SimpleCache<K, V> extends LinkedHashMap<K, V> {
 	private int maxCacheSize = 1000;
 
 	public SimpleCache(int maxSize) {
-		super(10, 0.75f, true);
+		super(maxSize, 0.1f, true);
 		maxCacheSize = maxSize;
 	}
 
