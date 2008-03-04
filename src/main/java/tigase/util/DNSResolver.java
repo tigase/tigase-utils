@@ -53,9 +53,11 @@ public class DNSResolver {
   private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
 
 	private static final String LOCALHOST = "localhost";
+	private static final long DNS_CACHE_TIME = 1000*60*60;
 
 	private static Map<String, Object> cache =
-		Collections.synchronizedMap(new SimpleCache<String, Object>(100));
+		Collections.synchronizedMap(new SimpleCache<String, Object>(100,
+				DNS_CACHE_TIME));
 	private static String[] localnames = null;
 
 	static {
