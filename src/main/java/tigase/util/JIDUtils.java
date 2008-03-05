@@ -98,7 +98,7 @@ public abstract class JIDUtils {
    */
   public static final String getNodeNick(final String jid) {
     String id = getNodeID(jid);
-    int idx = id.indexOf('@');
+    int idx = id.lastIndexOf('@');
     return idx == -1 ? null : id.substring(0, idx);
   }
 
