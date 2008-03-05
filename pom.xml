@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
-	<version>3.0.5-SNAPSHOT</version>
+	<version>3.0.5</version>
 	<description>Tigase Utils</description>
 	<name>TigaseUtils</name>
 	<organization>
@@ -11,9 +11,9 @@
     	<url>http://www.tigase.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</connection>
-		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</developerConnection>
-		<url>https://svn.tigase.org/reps/tigase-utils</url>
+		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.0.5</connection>
+		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.0.5</developerConnection>
+		<url>https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.0.5</url>
 	</scm>        
 	<developers>
 		<developer>
