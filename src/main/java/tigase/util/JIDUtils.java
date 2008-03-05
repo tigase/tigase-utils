@@ -153,7 +153,7 @@ public abstract class JIDUtils {
 	 * is correct otherwise text with description of the problem.
 	 */
 	public static final String checkNickName(final String nickname) {
-		if (nickname == null || nickname.length() == 0) {
+		if (nickname == null || nickname.trim().length() == 0) {
 			return "Nickname empty.";
 		} // end of if (new_comp_name == null || new_comp_name.length() == 0)
 		if (nickname.contains(" ") || nickname.contains("\t")
