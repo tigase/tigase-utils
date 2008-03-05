@@ -139,17 +139,4 @@ public class SimpleCache<K, V> implements Map<K, V> {
 		return dataMap().values();
 	}
 
-// 	public V remove(Object key) {
-// 		CacheObject<V> val = super.remove(key);
-// 		String strk = key.toString();
-// 		Iterator<K> ks = keySet().iterator();
-// 		while (ks.hasNext()) {
-// 			String k = ks.next().toString();
-// 			if (k.startsWith(strk)) {
-// 				ks.remove();
-// 			} // end of if (k.startsWith(strk))
-// 		} // end of while (ks.hasNext())
-// 		return val.data;
-// 	}
-
 } // SimpleCache
