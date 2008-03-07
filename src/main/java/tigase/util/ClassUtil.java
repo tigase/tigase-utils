@@ -127,6 +127,7 @@ public class ClassUtil {
 				Class cls = Class.forName(name);
 				classes.add(cls);
 			} catch (NoClassDefFoundError e) {
+			} catch (UnsatisfiedLinkError e) {
 			} catch (Throwable e) {
 				Throwable cause = e.getCause();
 				e.printStackTrace();
