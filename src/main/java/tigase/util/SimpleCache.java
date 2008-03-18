@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 /**
  * Describe class SimpleCache here.
@@ -38,18 +39,37 @@ import java.util.LinkedHashMap;
  */
 public class SimpleCache<K, V> implements Map<K, V> {
 
+  /**
+   * Variable <code>log</code> is a class logger.
+   */
+  private static final Logger log = Logger.getLogger("tigase.util.SimpleCache");
+
 	private static final long serialVersionUID = 1L;
 
 	private SizedCache<K, CacheObject<V>> cache = null;
 
 	private long cache_time = 1000;
+	protected boolean cache_off = false;
 
 	public SimpleCache(int maxSize, long time) {
 		cache_time = time;
-		cache = new SizedCache<K, CacheObject<V>>(maxSize);
+		// A quick way to switch all the cache off in Tigase.
+		// Set the property: tigase.cache=false
+		String cache_on = System.getProperty("tigase.cache");
+		if (cache_on == null || cache_on.equals("true")
+			|| cache_on.equals("1") || cache_on.equals("yes")
+			|| cache_on.equals("on")) {
+			cache_off = false;
+			cache = new SizedCache<K, CacheObject<V>>(maxSize);
+		} else {
+			cache_off = true;
+			log.warning("Tigase cache turned off.");
+		}
 	}
 
 	public V get(Object key) {
+		if (cache_off) { return null; }
+
 		CacheObject<V> cob = cache.get(key);
 		if ((cob != null) && (cob.time+cache_time >= System.currentTimeMillis())) {
 			return cob.data;
@@ -59,6 +79,8 @@ public class SimpleCache<K, V> implements Map<K, V> {
 	}
 
   public V put(K key, V value) {
+		if (cache_off) { return null; }
+
 		V result = get(key);
 		CacheObject<V> cob = new CacheObject<V>();
 		cob.time = System.currentTimeMillis();
@@ -68,14 +90,20 @@ public class SimpleCache<K, V> implements Map<K, V> {
 	}
 
 	public void clear() {
+		if (cache_off) { return; }
+
 		cache.clear();
 	}
 
 	public boolean containsKey(Object key) {
+		if (cache_off) { return false; }
+
 		return cache.containsKey(key);
 	}
 
 	public boolean containsValue(Object value) {
+		if (cache_off) { return false; }
+
 		if (value==null) {
 			for (CacheObject<V> v: cache.values())
 				if (v.data==null)
@@ -89,6 +117,8 @@ public class SimpleCache<K, V> implements Map<K, V> {
 	}
 
 	protected Map<K, V> dataMap() {
+		if (cache_off) { return null; }
+
 		Set<Map.Entry<K, CacheObject<V>>> cache_res = cache.entrySet();
 		LinkedHashMap<K, V> result = new LinkedHashMap<K, V>();
 		for (Map.Entry<K, CacheObject<V>> entry: cache_res) {
@@ -98,32 +128,46 @@ public class SimpleCache<K, V> implements Map<K, V> {
 	}
 
 	public Set<Map.Entry<K,V>> entrySet() {
+		if (cache_off) { return null; }
+
 		return dataMap().entrySet();
 	}
 
 	public boolean equals(Object o) {
+		if (cache_off) { return false; }
+
 		return dataMap().equals(o);
 	}
 
 	public int hashCode() {
+		if (cache_off) { return 0; }
+
 		return dataMap().hashCode();
 	}
 
 	public boolean isEmpty() {
+		if (cache_off) { return true; }
+
 		return cache.isEmpty();
 	}
 
 	public Set<K>	keySet() {
+		if (cache_off) { return null; }
+
 		return cache.keySet();
 	}
 
 	public void putAll(Map<? extends K,? extends V> m) {
+		if (cache_off) { return; }
+
 		for (Map.Entry<? extends K,? extends V> entry: m.entrySet()) {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
 
 	public V remove(Object key) {
+		if (cache_off) { return null; }
+
 		CacheObject<V> cache_res = cache.remove(key);
 		if (cache_res != null) {
 			return cache_res.data;
@@ -132,10 +176,14 @@ public class SimpleCache<K, V> implements Map<K, V> {
 	}
 
 	public int size() {
+		if (cache_off) { return 0; }
+
 		return cache.size();
 	}
 
 	public Collection<V> values() {
+		if (cache_off) { return null; }
+
 		return dataMap().values();
 	}
 
