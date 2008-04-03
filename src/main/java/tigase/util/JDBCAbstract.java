@@ -144,7 +144,7 @@ public abstract class JDBCAbstract {
 	 * @exception SQLException if an error occurs on database query.
 	 */
 	protected void initPreparedStatements() throws SQLException {
-		String query = "select localtime;";
+		String query = "select 1;";
 		conn_valid_st = conn.prepareStatement(query);
 	}
 
