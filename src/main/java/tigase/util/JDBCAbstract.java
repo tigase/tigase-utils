@@ -23,6 +23,7 @@ package tigase.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -135,6 +136,10 @@ public abstract class JDBCAbstract {
 
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return conn.prepareStatement(query);
+	}
+
+	public CallableStatement prepareCallable(String query) throws SQLException {
+		return conn.prepareCall(query);
 	}
 
 	/**
