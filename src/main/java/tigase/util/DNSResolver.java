@@ -59,6 +59,7 @@ public class DNSResolver {
 		Collections.synchronizedMap(new SimpleCache<String, Object>(100,
 				DNS_CACHE_TIME));
 	private static String[] localnames = null;
+	private static String defaultHostname = null;
 
 	static {
 		cache.put(LOCALHOST, "127.0.0.1");
@@ -66,15 +67,31 @@ public class DNSResolver {
 			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName())) {
 				localnames = new String[2];
 				localnames[0] = InetAddress.getLocalHost().getHostName();
-				localnames[1] = "localhost";
+				localnames[1] = LOCALHOST;
 				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
 				cache.put(localnames[0], all[0].getHostAddress());
 			} else {
 				localnames = new String[] {LOCALHOST};
 			}
+			for (String hostname: localnames) {
+				InetAddress[] all = InetAddress.getAllByName(hostname);
+				for (InetAddress addr: all) {
+					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() || addr.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
+						continue;
+					}
+					defaultHostname = addr.getHostName();
+				}
+			}
+			if (defaultHostname == null) {
+				defaultHostname = localnames[0];
+			}
 		} catch (UnknownHostException e) {
 			localnames = new String[] {LOCALHOST};
 		} // end of try-catch
+	}
+
+	public static String getDefaultHostname() {
+		return defaultHostname;
 	}
 
 	public static String[] getDefHostNames() {
@@ -134,7 +151,28 @@ public class DNSResolver {
 		String host = "gmail.com";
 		if (args.length > 0) { host = args[0]; }
 
-		System.out.println("IP: " + getHostSRV_IP(host));
+		System.out.println("gmail.com IP: " + getHostSRV_IP(host));
+
+		System.out.println("Localhost name: "
+			+ InetAddress.getLocalHost().getHostName());
+		System.out.println("Localhost canonnical name: "
+			+ InetAddress.getLocalHost().getCanonicalHostName());
+		System.out.println("Is local loopback: "
+			+ InetAddress.getLocalHost().isLoopbackAddress());
+		for (String hostname: localnames) {
+			InetAddress[] all = InetAddress.getAllByName(hostname);
+			for (InetAddress addr: all) {
+				System.out.println("  ------   ");
+				System.out.println("Host name: " + addr.getHostName());
+				System.out.println("Host getCanonicalHostName(): "
+					+ addr.getCanonicalHostName());
+				System.out.println("Host getHostAddress(): " + addr.getHostAddress());
+				System.out.println("Is isLoopbackAddress()  : " + addr.isLoopbackAddress());
+				System.out.println("Is isAnyLocalAddress()  : " + addr.isAnyLocalAddress());
+				System.out.println("Is isLinkLocalAddress() : " + addr.isLinkLocalAddress());
+				System.out.println("Is isSiteLocalAddress() : " + addr.isSiteLocalAddress());
+			}
+		}
 
 // 		InetAddress[] all = InetAddress.getAllByName(host);
 // 		for (InetAddress ia: all) {
