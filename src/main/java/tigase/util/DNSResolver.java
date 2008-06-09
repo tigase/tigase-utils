@@ -130,12 +130,23 @@ public class DNSResolver {
 				result_host = res.substring(idx + 1, res.length());
 			} // end of if (att != null)
 			ctx.close();
-		} // end of try
-		catch (NamingException e) {
+		} catch (NamingException e) {
 			result_host = hostname;
 		} // end of try-catch
 
 		InetAddress[] all = InetAddress.getAllByName(result_host);
+
+		cache.put(hostname, all[0].getHostAddress());
+		return all[0].getHostAddress();
+	}
+
+	public static String getHostIP(String hostname) throws UnknownHostException {
+		String cache_res = (String)cache.get(hostname);
+		if (cache_res != null) {
+			return cache_res;
+		} // end of if (result != null)
+
+		InetAddress[] all = InetAddress.getAllByName(hostname);
 
 		cache.put(hostname, all[0].getHostAddress());
 		return all[0].getHostAddress();
