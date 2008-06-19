@@ -53,6 +53,7 @@ public class DNSResolver {
   private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
 
 	private static final String LOCALHOST = "localhost";
+	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
 	private static final long DNS_CACHE_TIME = 1000*60*60;
 
 	private static Map<String, Object> cache =
@@ -60,6 +61,7 @@ public class DNSResolver {
 				DNS_CACHE_TIME));
 	private static String[] localnames = null;
 	private static String defaultHostname = null;
+	private static String opendns_hit_nxdomain_ip = null;
 
 	static {
 		cache.put(LOCALHOST, "127.0.0.1");
@@ -88,6 +90,13 @@ public class DNSResolver {
 		} catch (UnknownHostException e) {
 			localnames = new String[] {LOCALHOST};
 		} // end of try-catch
+		// OpenDNS workorund
+		try {
+			opendns_hit_nxdomain_ip =
+        InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
+		} catch (UnknownHostException e) {
+			opendns_hit_nxdomain_ip = null;
+		}
 	}
 
 	public static String getDefaultHostname() {
@@ -135,9 +144,12 @@ public class DNSResolver {
 		} // end of try-catch
 
 		InetAddress[] all = InetAddress.getAllByName(result_host);
-
-		cache.put(hostname, all[0].getHostAddress());
-		return all[0].getHostAddress();
+		String ip_address = all[0].getHostAddress();
+		if (ip_address.equals(opendns_hit_nxdomain_ip)) {
+			throw new UnknownHostException("OpenDNS NXDOMAIN");
+		}
+		cache.put(hostname, ip_address);
+		return ip_address;
 	}
 
 	public static String getHostIP(String hostname) throws UnknownHostException {
@@ -147,9 +159,12 @@ public class DNSResolver {
 		} // end of if (result != null)
 
 		InetAddress[] all = InetAddress.getAllByName(hostname);
-
-		cache.put(hostname, all[0].getHostAddress());
-		return all[0].getHostAddress();
+		String ip_address = all[0].getHostAddress();
+		if (ip_address.equals(opendns_hit_nxdomain_ip)) {
+			throw new UnknownHostException("OpenDNS NXDOMAIN");
+		}
+		cache.put(hostname, ip_address);
+		return ip_address;
 	}
 
 	/**
