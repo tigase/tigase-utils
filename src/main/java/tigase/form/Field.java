@@ -172,15 +172,16 @@ public class Field {
 		List<String> optionsLabelList = new LinkedList<String>();
 		List<String> optionsValueList = new LinkedList<String>();
 
-		for (Element element : fieldElement.getChildren()) {
-			if ("value".equals(element.getName())) {
-				valueList.add(element.getCData());
-			} else if ("value".equals(element.getName())) {
-				optionsLabelList.add(element.getAttribute("label"));
-				Element v = element.getChild("value");
-				optionsValueList.add(v.getCData());
+		if (fieldElement.getChildren() != null)
+			for (Element element : fieldElement.getChildren()) {
+				if ("value".equals(element.getName())) {
+					valueList.add(element.getCData());
+				} else if ("value".equals(element.getName())) {
+					optionsLabelList.add(element.getAttribute("label"));
+					Element v = element.getChild("value");
+					optionsValueList.add(v.getCData());
+				}
 			}
-		}
 		this.values = valueList.toArray(new String[] {});
 		this.optionLabels = optionsLabelList.toArray(new String[] {});
 		this.optionValues = optionsValueList.toArray(new String[] {});
