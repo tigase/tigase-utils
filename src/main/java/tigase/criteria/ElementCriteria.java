@@ -99,10 +99,11 @@ public class ElementCriteria implements Criteria {
 	 * @see tigase.criteria.Criteria#match(tigase.xml.Element)
 	 */
 	public boolean match(Element element) {
-		if (name != null && !name.equals(element.getName())) {
+		if (name != null && name != element.getName()) {
 			return false;
 		}
-		if (cdata != null && (element.getCData() == null || !cdata.equals(element.getCData()))) {
+		if (cdata != null &&
+			(element.getCData() == null || !cdata.equals(element.getCData()))) {
 			return false;
 		}
 		boolean result = true;
