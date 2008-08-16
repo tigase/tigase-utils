@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
-	<version>3.0.13-SNAPSHOT</version>
+	<version>3.1.0</version>
 	<description>Tigase Utils</description>
 	<name>TigaseUtils</name>
 	<organization>
@@ -12,9 +11,9 @@
 		<url>http://www.tigase.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</connection>
-		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</developerConnection>
-		<url>https://svn.tigase.org/reps/tigase-utils</url>
+		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.1.0</connection>
+		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.1.0</developerConnection>
+		<url>https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.1.0</url>
 	</scm>
 	<developers>
 		<developer>
@@ -77,7 +76,7 @@
 		<dependency>
 			<groupId>tigase</groupId>
 			<artifactId>tigase-xmltools</artifactId>
-			<version>3.0.8-SNAPSHOT</version>
+			<version>3.0.8</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
