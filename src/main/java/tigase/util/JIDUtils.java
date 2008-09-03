@@ -46,7 +46,7 @@ public abstract class JIDUtils {
    */
   public static final String getNodeID(final String jid) {
     int idx = jid.indexOf('/');
-    return idx == -1 ? jid : jid.substring(0, idx);
+    return idx == -1 ? jid.toLowerCase() : jid.substring(0, idx).toLowerCase();
   }
 
   /**
@@ -60,7 +60,7 @@ public abstract class JIDUtils {
    */
   public static final String getNodeResource(final String jid) {
     int idx = jid.indexOf('/');
-    return idx == -1 ? null : jid.substring(idx+1);
+    return idx == -1 ? null : jid.substring(idx+1).toLowerCase();
   }
 
   /**
@@ -73,7 +73,7 @@ public abstract class JIDUtils {
   public static final String getNodeHost(final String jid) {
     String id = getNodeID(jid);
     int idx = id.lastIndexOf('@');
-    return idx == -1 ? id : id.substring(idx+1);
+    return idx == -1 ? id.toLowerCase() : id.substring(idx+1).toLowerCase();
   }
 
   /**
@@ -99,7 +99,7 @@ public abstract class JIDUtils {
   public static final String getNodeNick(final String jid) {
     String id = getNodeID(jid);
     int idx = id.lastIndexOf('@');
-    return idx == -1 ? null : id.substring(0, idx);
+    return idx == -1 ? null : id.substring(0, idx).toLowerCase();
   }
 
   /**
@@ -112,7 +112,8 @@ public abstract class JIDUtils {
    * @param domain a <code>String</code> value of domain part of <em>JIDUtils</em>.
    */
   public static final String getNodeID(final String nick, final String domain) {
-    return ((nick != null && nick.length() > 0) ? nick + "@" + domain : domain);
+    return ((nick != null && nick.length() > 0) ?
+			(nick + "@" + domain).toLowerCase() : domain.toLowerCase());
   }
 
 	/**
@@ -141,7 +142,7 @@ public abstract class JIDUtils {
 		if (resource != null) {
 			sb.append("/" + resource);
 		} // end of if (resource != null)
-		return  sb.toString();
+		return  sb.toString().toLowerCase();
 	}
 
 	/**
