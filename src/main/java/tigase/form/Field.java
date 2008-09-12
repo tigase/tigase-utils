@@ -235,7 +235,9 @@ public class Field {
 				if (this.optionLabels != null && i < this.optionLabels.length) {
 					option.setAttribute("label", this.optionLabels[i]);
 				}
-				Element vo = new Element("value", this.optionValues[i]);
+				Element vo = new Element("value");
+				if (this.optionValues[i] == null || "".equals(this.optionValues[i]))
+					vo.setCData(this.optionValues[i]);
 				option.addChild(vo);
 				field.addChild(option);
 			}
