@@ -175,7 +175,9 @@ public class Field {
 		if (fieldElement.getChildren() != null)
 			for (Element element : fieldElement.getChildren()) {
 				if ("value".equals(element.getName())) {
-					valueList.add(element.getCData());
+					String v = element.getCData();
+					if (v != null)
+						valueList.add(v);
 				} else if ("value".equals(element.getName())) {
 					optionsLabelList.add(element.getAttribute("label"));
 					Element v = element.getChild("value");
@@ -364,6 +366,20 @@ public class Field {
 	 */
 	public void setVar(String var) {
 		this.var = var;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		if (this.values == null) {
+			sb.append("*null*");
+		} else
+			for (String c : this.values) {
+				sb.append("[");
+				sb.append(c);
+				sb.append("] ");
+			}
+		return this.var + " = " + sb.toString();
 	}
 
 }
