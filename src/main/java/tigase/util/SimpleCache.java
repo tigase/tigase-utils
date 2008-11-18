@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 /**
@@ -67,6 +68,17 @@ public class SimpleCache<K, V> implements Map<K, V> {
 		}
 	}
 
+	public void removeOld(){
+		if (cache_off) { return; }
+		Iterator<Entry<K, CacheObject<V>>> iterator = cache.entrySet().iterator();
+		while (iterator.hasNext()) {
+			CacheObject<V> cob = iterator.next().getValue();
+			if (cob.time + cache_time < System.currentTimeMillis()) {
+				iterator.remove();
+			}
+		}
+	}
+	
 	public V get(Object key) {
 		if (cache_off) { return null; }
 
