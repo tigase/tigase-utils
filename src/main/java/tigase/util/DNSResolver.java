@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
