@@ -130,6 +130,7 @@ public class ClassUtil {
 			} catch (UnsatisfiedLinkError e) {
 			} catch (Throwable e) {
 				Throwable cause = e.getCause();
+				System.out.println("Class name: "+name);
 				e.printStackTrace();
 				if (cause != null) {
 					cause.printStackTrace();
