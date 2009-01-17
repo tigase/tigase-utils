@@ -65,22 +65,23 @@ public class DNSResolver {
 	static {
 		cache.put(LOCALHOST, "127.0.0.1");
 		try {
-			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName())) {
+			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName().toLowerCase())) {
 				localnames = new String[2];
-				localnames[0] = InetAddress.getLocalHost().getHostName();
+				localnames[0] = InetAddress.getLocalHost().getHostName().toLowerCase();
 				localnames[1] = LOCALHOST;
 				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
-				cache.put(localnames[0], all[0].getHostAddress());
+				cache.put(localnames[0], all[0].getHostAddress().toLowerCase());
 			} else {
 				localnames = new String[] {LOCALHOST};
 			}
 			for (String hostname: localnames) {
 				InetAddress[] all = InetAddress.getAllByName(hostname);
 				for (InetAddress addr: all) {
-					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() || addr.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
+					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() ||
+									addr.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
 						continue;
 					}
-					defaultHostname = addr.getHostName();
+					defaultHostname = addr.getHostName().toLowerCase();
 				}
 			}
 			if (defaultHostname == null) {
