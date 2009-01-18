@@ -124,8 +124,11 @@ public class ClassUtil {
     for (String name : names) {
       //      System.out.println("Class name: "+name);
 			try {
-				Class cls = Class.forName(name);
-				classes.add(cls);
+				if (!name.contains("ui") && !name.contains("swing") && 
+								!name.contains("awt")) {
+					Class cls = Class.forName(name);
+					classes.add(cls);
+				}
 			} catch (NoClassDefFoundError e) {
 			} catch (UnsatisfiedLinkError e) {
 			} catch (Throwable e) {
