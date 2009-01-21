@@ -125,7 +125,7 @@ public class ClassUtil {
       //      System.out.println("Class name: "+name);
 			try {
 				if (!name.contains(".ui.") && !name.contains(".swing.") &&
-								!name.contains(".awt.")) {
+								!name.contains(".awt.") && !name.startsWith("com.mysql")) {
 					Class cls = Class.forName(name);
 					classes.add(cls);
 				}
