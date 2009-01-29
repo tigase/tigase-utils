@@ -29,6 +29,8 @@ import java.util.Map;
  *
  * Created: Mon Mar  3 15:16:52 2008
  *
+ * @param <K>
+ * @param <V> 
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
@@ -43,6 +45,7 @@ public class SizedCache<K, V> extends LinkedHashMap<K, V> {
 		maxCacheSize = maxSize;
 	}
 
+	@Override
 	protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
 		return size() > maxCacheSize;
 	}
