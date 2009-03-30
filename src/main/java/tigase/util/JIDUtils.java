@@ -132,14 +132,14 @@ public abstract class JIDUtils {
 		final String resource) {
 		StringBuilder sb = new StringBuilder();
 		if (nick != null) {
-			sb.append(nick + "@");
+			sb.append(nick).append("@");
 		} // end of if (nick != null)
 		if (domain == null) {
 			throw new NullPointerException("Valid JIDUtils must contain at least domain name.");
 		} // end of if (domain == null)
 		sb.append(domain);
 		if (resource != null) {
-			sb.append("/" + resource);
+			sb.append("/").append(resource);
 		} // end of if (resource != null)
 		return  sb.toString().toLowerCase();
 	}

@@ -41,7 +41,7 @@ public class SizedCache<K, V> extends LinkedHashMap<K, V> {
 	private int maxCacheSize = 1000;
 
 	public SizedCache(int maxSize) {
-		super(maxSize, 0.1f, true);
+		super(maxSize, 0.9f, true);
 		maxCacheSize = maxSize;
 	}
 
