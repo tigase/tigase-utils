@@ -36,8 +36,15 @@ import tigase.xml.Element;
  */
 public class Field {
 	public static enum FieldType {
-		bool("boolean"), fixed("fixed"), hidden("hidden"), jid_single("jid-single"), list_multi("list-multi"), list_single(
-				"list-single"), text_multi("text-multi"), text_private("text-private"), text_single("text-single");
+		bool("boolean"),
+		fixed("fixed"),
+		hidden("hidden"),
+		jid_single("jid-single"),
+		list_multi("list-multi"),
+		list_single("list-single"),
+		text_multi("text-multi"),
+		text_private("text-private"),
+		text_single("text-single");
 		public static FieldType getFieldTypeByName(String name) {
 			if ("boolean".equals(name)) {
 				return bool;
@@ -142,6 +149,34 @@ public class Field {
 		return field;
 	}
 
+	public static Boolean getAsBoolean(Field f) {
+		if (f != null) {
+			String v = f.getValue();
+			if (v == null) {
+				return null;
+			} else if ("1".equals(v) || "true".equals(v)) {
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+		} else
+			return null;
+	}
+
+	public static void main(String[] args) {
+		// <field var='pubsub#presence_based_delivery'
+		// type='boolean'><value>false</value></field>
+
+		Element field = new Element("field", new String[] { "var", "type" }, new String[] { "pubsub#presence_based_delivery",
+				"boolean" });
+		field.addChild(new Element("value", "true"));
+
+		Field f = new Field(field);
+
+		System.out.println(f);
+		System.out.println(getAsBoolean(f));
+	}
+
 	private String description;
 
 	private String label;
@@ -160,7 +195,8 @@ public class Field {
 
 	public Field(Element fieldElement) {
 		this.var = fieldElement.getAttribute("var");
-		this.type = FieldType.getFieldTypeByName(fieldElement.getAttribute("type"));
+		String $type = fieldElement.getAttribute("type");
+		this.type = $type == null ? FieldType.text_single : FieldType.getFieldTypeByName($type);
 		this.label = fieldElement.getAttribute("label");
 		Element d = fieldElement.getChild("desc");
 		if (d != null) {

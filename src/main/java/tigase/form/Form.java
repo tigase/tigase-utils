@@ -142,7 +142,7 @@ public class Form {
 			String v = f.getValue();
 			if (v == null) {
 				return null;
-			} else if ("1".equals(v)) {
+			} else if ("1".equals(v) || "true".equals(v)) {
 				return Boolean.TRUE;
 			} else {
 				return Boolean.FALSE;
