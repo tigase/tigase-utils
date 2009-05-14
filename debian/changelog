@@ -1,0 +1,6 @@
+tigase-utils (3.2.1-b532-xk1) hardy; urgency=low
+
+  * Updated to SVN revision 532
+  * Initial Release.
+
+ -- Tomasz Sterna <tomek@xiaoka.com>  Thu, 07 May 2009 13:37:03 +0000
