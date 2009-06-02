@@ -122,10 +122,11 @@ public class ClassUtil {
     throws ClassNotFoundException{
     Set<Class> classes = new TreeSet<Class>(new ClassComparator());
     for (String name : names) {
-      //      System.out.println("Class name: "+name);
+      //System.out.println("Class name: "+name);
 			try {
 				if (!name.contains(".ui.") && !name.contains(".swing.") &&
-								!name.contains(".awt.") && !name.startsWith("com.mysql")) {
+								!name.contains(".awt.") && !name.startsWith("com.mysql") &&
+								!name.startsWith("tigase.pubsub.Utils")) {
 					Class cls = Class.forName(name);
 					classes.add(cls);
 				}
@@ -165,6 +166,7 @@ public class ClassUtil {
 					//System.out.println("jar file: "+path);
           Set<String> class_names = getClassNamesFromJar(file);
           classes_set.addAll(getClassesFromNames(class_names));
+					//System.out.println("Loaded jar file: "+path);
         } // end of if (file.isFile())
       } // end of if (file.exists())
     } // end of while (stok.hasMoreTokens())
@@ -179,6 +181,7 @@ public class ClassUtil {
 		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
 
     for (Class c : classes) {
+			//System.out.println("Checking class: " + c.getName());
       if (cls.isAssignableFrom(c)) {
         int mod = c.getModifiers();
         if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod)) {
