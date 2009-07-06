@@ -80,7 +80,8 @@ public abstract class JIDUtils {
    * <em>domain</em> part and then tries to resolve host IP address..
    *
    * @param jid a <code>String</code> value of <em>JIDUtils</em> to parse.
-   * @return a <code>String</code> value of node <em>domain</em> IP address.
+	 * @return a <code>String</code> value of node <em>domain</em> IP address.
+	 * @throws UnknownHostException
    */
   public static final String getNodeHostIP(final String jid)
 		throws UnknownHostException {
@@ -108,7 +109,8 @@ public abstract class JIDUtils {
    * user <em>ID</em> - <em>JIDUtils</em> without resource part.
    *
    * @param nick a <code>String</code> value of node part of <em>JIDUtils</em>.
-   * @param domain a <code>String</code> value of domain part of <em>JIDUtils</em>.
+	 * @param domain a <code>String</code> value of domain part of <em>JIDUtils</em>.
+	 * @return
    */
   public static final String getNodeID(final String nick, final String domain) {
     return ((nick != null && nick.length() > 0) ?
