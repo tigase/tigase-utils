@@ -49,7 +49,8 @@ public class DNSResolver {
   /**
    * Variable <code>log</code> is a class logger.
    */
-  private static final Logger log = Logger.getLogger("tigase.util.DNSResolver");
+  private static final Logger log = 
+					Logger.getLogger(DNSResolver.class.getName());
 
 	private static final String LOCALHOST = "localhost";
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
@@ -61,8 +62,10 @@ public class DNSResolver {
 	private static String[] localnames = null;
 	private static String defaultHostname = null;
 	private static String opendns_hit_nxdomain_ip = null;
+	private static long resolveDefaultTime = 0;
 
 	static {
+		long start = System.currentTimeMillis();
 		cache.put(LOCALHOST, "127.0.0.1");
 		try {
 			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName().toLowerCase())) {
@@ -96,6 +99,10 @@ public class DNSResolver {
         InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
 		} catch (UnknownHostException e) {
 			opendns_hit_nxdomain_ip = null;
+		}
+		resolveDefaultTime = System.currentTimeMillis() - start;
+		if (resolveDefaultTime > 0) {
+			log.warning("Resolving default host name took: " + resolveDefaultTime);
 		}
 	}
 
@@ -171,6 +178,7 @@ public class DNSResolver {
 	 * Describe <code>main</code> method here.
 	 *
 	 * @param args a <code>String[]</code> value
+	 * @throws Exception
 	 */
 	public static void main(final String[] args) throws Exception {
 
