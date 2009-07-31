@@ -95,6 +95,10 @@ public class ZLibWrapper {
 		this(level, COMPRESSED_BUFF_SIZE);
 	}
 
+	public ZLibWrapper() {
+		this(Deflater.BEST_COMPRESSION, COMPRESSED_BUFF_SIZE);
+	}
+
 	public float averageCompressionRate() {
 		return average_compression_rate;
 	}
