@@ -83,8 +83,8 @@ public class ZLibWrapper {
 		this.compression_level = level;
 		this.compressed_buff_size = comp_buff_size;
 		this.decompressed_buff_size = 10 * comp_buff_size;
-		this.compresser = new Deflater(compression_level, true);
-		this.decompresser = new Inflater(true);
+		this.compresser = new Deflater(compression_level, false);
+		this.decompresser = new Inflater(false);
 		compress_output = new byte[compressed_buff_size];
 		compress_input = new byte[decompressed_buff_size];
 		decompress_output = new byte[decompressed_buff_size];
@@ -263,21 +263,27 @@ public class ZLibWrapper {
 				}
 			}
 		}
-		// If the decompressed_output array is smaller assign result to the output
-		// to make sure the next time there is enough space in the output array
-		// to limit memory allocation calls
-		if (result_arr.length > decompress_output.length) {
-			decompress_output = result_arr;
-			if (log.isLoggable(Level.FINEST)) {
-				log.finest("Increasing compress_output size to: " +
-						compress_output.length);
+		ByteBuffer result = null;
+		// It may happen there is not enough data to decode full buffer, we return null
+		// in such a case and try next time
+		if (result_arr != null) {
+			// If the decompressed_output array is smaller assign result to the output
+			// to make sure the next time there is enough space in the output array
+			// to limit memory allocation calls
+			if (result_arr.length > decompress_output.length) {
+				decompress_output = result_arr;
+				if (log.isLoggable(Level.FINEST)) {
+					log.finest("Increasing compress_output size to: " +
+							compress_output.length);
+				}
 			}
+			// Calculate decompression rate for statistics collection
+			last_decompression_rate = (result_arr.length - before) / result_arr.length;
+			average_decompression_rate = (average_decompression_rate +
+					last_decompression_rate) / 2;
+			// Create resulting buffer.
+			result = ByteBuffer.wrap(result_arr);
 		}
-		// Calculate decompression rate for statistics collection
-		last_decompression_rate = (before - result_arr.length) / before;
-		average_decompression_rate = (average_decompression_rate + last_decompression_rate) / 2;
-		// Create resulting buffer.
-		ByteBuffer result = ByteBuffer.wrap(result_arr);
 		return result;
 	}
 
