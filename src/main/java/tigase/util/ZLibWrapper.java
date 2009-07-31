@@ -99,6 +99,15 @@ public class ZLibWrapper {
 		this(Deflater.BEST_COMPRESSION, COMPRESSED_BUFF_SIZE);
 	}
 
+	public void end() {
+		this.compresser.end();
+		this.decompresser.end();
+		this.compress_output = null;
+		this.compress_input = null;
+		this.decompress_output = null;
+		this.decompress_input = null;
+	}
+
 	public float averageCompressionRate() {
 		return average_compression_rate;
 	}
