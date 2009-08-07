@@ -74,10 +74,10 @@ public class ZLibWrapper {
 	private byte[] decompress_output = null;
 	private byte[] decompress_input = null;
 
-	private float average_compression_rate = 0;
-	private float average_decompression_rate = 0;
-	private float last_compression_rate = 0;
-	private float last_decompression_rate = 0;
+	private float average_compression_rate = 0f;
+	private float average_decompression_rate = 0f;
+	private float last_compression_rate = 0f;
+	private float last_decompression_rate = 0f;
 
 	public ZLibWrapper(int level, int comp_buff_size) {
 		this.compression_level = level;
