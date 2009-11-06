@@ -25,6 +25,7 @@ package tigase.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -46,7 +47,13 @@ import java.util.jar.JarFile;
  */
 public class ClassUtil {
 
-  public static String getClassNameFromFileName(String fileName) {
+ private static final String[] SKIP_CONTAINS =
+ {".ui.", ".swing", ".awt", ".sql.", ".xml."};
+ private static final String[] SKIP_STARTS = 
+ {"com.mysql", "tigase.pubsub.Utils", "org.apache.derby", "org.apache.xml",
+ "groovy.lang", "org.postgresql", "com.sun", "groovy", "org.codehaus.groovy"};
+
+	public static String getClassNameFromFileName(String fileName) {
     String class_name = null;
     if (fileName.endsWith(".class")) {
 //       class_name = fileName.substring(0,
@@ -122,11 +129,24 @@ public class ClassUtil {
     throws ClassNotFoundException{
     Set<Class> classes = new TreeSet<Class>(new ClassComparator());
     for (String name : names) {
-      //System.out.println("Class name: "+name);
 			try {
-				if (!name.contains(".ui.") && !name.contains(".swing.") &&
-								!name.contains(".awt.") && !name.startsWith("com.mysql") &&
-								!name.startsWith("tigase.pubsub.Utils")) {
+				boolean skip_class = false;
+				for (String test_str : SKIP_CONTAINS) {
+					skip_class = name.contains(test_str);
+					if (skip_class) {
+						break;
+					}
+				}
+				if (!skip_class) {
+					for (String test_str : SKIP_STARTS) {
+						skip_class = name.startsWith(test_str);
+						if (skip_class) {
+							break;
+						}
+					}
+				}
+				if (!skip_class) {
+					//System.out.println(new Date() + " - Class name: " + name);
 					Class cls = Class.forName(name);
 					classes.add(cls);
 				}
