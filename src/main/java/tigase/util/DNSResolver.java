@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -93,13 +94,18 @@ public class DNSResolver {
 		} catch (UnknownHostException e) {
 			localnames = new String[] {LOCALHOST};
 		} // end of try-catch
-		// OpenDNS workorund
-		try {
-			opendns_hit_nxdomain_ip =
-        InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
-		} catch (UnknownHostException e) {
-			opendns_hit_nxdomain_ip = null;
-		}
+		// OpenDNS workorund, but this may take a while so let's do it in background...
+		new Thread("OpenDNS checker") {
+			@Override
+			public void run() {
+				try {
+					opendns_hit_nxdomain_ip =
+							InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
+				} catch (UnknownHostException e) {
+					opendns_hit_nxdomain_ip = null;
+				}
+			}
+		}.start();
 		resolveDefaultTime = System.currentTimeMillis() - start;
 		if (resolveDefaultTime > 0) {
 			log.warning("Resolving default host name took: " + resolveDefaultTime);
