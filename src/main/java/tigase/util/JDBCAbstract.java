@@ -28,7 +28,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -45,8 +44,10 @@ public abstract class JDBCAbstract {
 	/**
 	 * Private logger for class instancess.
    */
-  private static final Logger log = Logger.getLogger("tigase.util.JDBCAbstract");
+  private static final Logger log = Logger.getLogger(JDBCAbstract.class.getName());
 
+	public static final String DERBY_CONNVALID_QUERY = "values 1";
+	public static final String JDBC_CONNVALID_QUERY = "select 1";
 	/**
 	 * Database connection string.
 	 */
@@ -68,7 +69,7 @@ public abstract class JDBCAbstract {
 	 * Connection validation helper.
 	 */
 	private long connectionValidateInterval = 1000*60;
-
+	private boolean derby_mode = false;
 
 	/**
 	 * <code>checkConnection</code> method checks database connection before any
@@ -116,7 +117,9 @@ public abstract class JDBCAbstract {
 	 */
 	private void initRepo() throws SQLException {
 		synchronized (db_conn) {
+			derby_mode = db_conn.startsWith("jdbc:derby");
 			conn = DriverManager.getConnection(db_conn);
+			conn.setAutoCommit(true);
 			initPreparedStatements();
 		}
 	}
@@ -135,7 +138,12 @@ public abstract class JDBCAbstract {
 	}
 
 	public PreparedStatement prepareStatement(String query) throws SQLException {
-		return conn.prepareStatement(query);
+		try {
+			return conn.prepareStatement(query);
+		} catch (SQLException e) {
+			log.warning("Can't prepare statement for query: " + query);
+			throw e;
+		}
 	}
 
 	public CallableStatement prepareCallable(String query) throws SQLException {
@@ -149,7 +157,7 @@ public abstract class JDBCAbstract {
 	 * @exception SQLException if an error occurs on database query.
 	 */
 	protected void initPreparedStatements() throws SQLException {
-		String query = "select 1;";
+		String query = (derby_mode ? DERBY_CONNVALID_QUERY : JDBC_CONNVALID_QUERY);
 		conn_valid_st = conn.prepareStatement(query);
 	}
 
