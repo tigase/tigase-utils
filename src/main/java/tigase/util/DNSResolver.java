@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -57,8 +56,8 @@ public class DNSResolver {
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
 	private static final long DNS_CACHE_TIME = 1000*60*60;
 
-	private static Map<String, Object> cache =
-		Collections.synchronizedMap(new SimpleCache<String, Object>(100,
+	private static Map<String, DNSEntry> cache =
+		Collections.synchronizedMap(new SimpleCache<String, DNSEntry>(100,
 				DNS_CACHE_TIME));
 	private static String[] localnames = null;
 	private static String defaultHostname = null;
@@ -67,14 +66,14 @@ public class DNSResolver {
 
 	static {
 		long start = System.currentTimeMillis();
-		cache.put(LOCALHOST, "127.0.0.1");
+		cache.put(LOCALHOST, new DNSEntry("127.0.0.1"));
 		try {
 			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName().toLowerCase())) {
 				localnames = new String[2];
 				localnames[0] = InetAddress.getLocalHost().getHostName().toLowerCase();
 				localnames[1] = LOCALHOST;
 				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
-				cache.put(localnames[0], all[0].getHostAddress().toLowerCase());
+				cache.put(localnames[0], new DNSEntry(all[0].getHostAddress().toLowerCase()));
 			} else {
 				localnames = new String[] {LOCALHOST};
 			}
@@ -128,16 +127,16 @@ public class DNSResolver {
 			Arrays.copyOf(localnames, localnames.length) : null);
 	}
 
-	public static String getHostSRV_IP(final String hostname)
-		throws UnknownHostException {
+	public static DNSEntry getHostSRV_Entry(String hostname)
+			throws UnknownHostException {
 
-		String cache_res = (String)cache.get(hostname);
+		DNSEntry cache_res = cache.get(hostname);
 		if (cache_res != null) {
 			return cache_res;
 		} // end of if (result != null)
 
 		String result_host = hostname;
-
+		int port = 5269;
 		try {
 			Hashtable<String, String> env = new Hashtable<String, String>();
 			env.put("java.naming.factory.initial",
@@ -146,10 +145,15 @@ public class DNSResolver {
 			Attributes attrs =
 				ctx.getAttributes("_xmpp-server._tcp." + hostname, new String[] {"SRV"});
 			Attribute att = attrs.get("SRV");
-			if (att != null) {
-				String res = att.get().toString();
-				int idx = res.lastIndexOf(" ");
-				result_host = res.substring(idx + 1, res.length());
+			if (att != null && att.size() > 0) {
+				// I am interested in the first position only
+				String[] dns_resp = att.get(0).toString().split(" ");
+				try {
+					port = Integer.parseInt(dns_resp[2]);
+				} catch (Exception e) {
+					port = 5269;
+				}
+				result_host = dns_resp[3];
 			} // end of if (att != null)
 			ctx.close();
 		} catch (NamingException e) {
@@ -161,14 +165,22 @@ public class DNSResolver {
 		if (ip_address.equals(opendns_hit_nxdomain_ip)) {
 			throw new UnknownHostException("OpenDNS NXDOMAIN");
 		}
-		cache.put(hostname, ip_address);
-		return ip_address;
+		DNSEntry entry = new DNSEntry(port, ip_address);
+		//System.out.println("Adding " + hostname + " to cache DNSEntry: " + entry.toString());
+		cache.put(hostname, entry);
+		return entry;		
+	}
+
+	public static String getHostSRV_IP(String hostname)
+		throws UnknownHostException {
+		DNSEntry entry = getHostSRV_Entry(hostname);
+		return entry != null ? entry.getIp() : null;
 	}
 
 	public static String getHostIP(String hostname) throws UnknownHostException {
-		String cache_res = (String)cache.get(hostname);
+		DNSEntry cache_res = cache.get(hostname);
 		if (cache_res != null) {
-			return cache_res;
+			return cache_res.getIp();
 		} // end of if (result != null)
 
 		InetAddress[] all = InetAddress.getAllByName(hostname);
@@ -176,7 +188,7 @@ public class DNSResolver {
 		if (ip_address.equals(opendns_hit_nxdomain_ip)) {
 			throw new UnknownHostException("OpenDNS NXDOMAIN");
 		}
-		cache.put(hostname, ip_address);
+		cache.put(hostname, new DNSEntry(ip_address));
 		return ip_address;
 	}
 
@@ -191,7 +203,7 @@ public class DNSResolver {
 		String host = "gmail.com";
 		if (args.length > 0) { host = args[0]; }
 
-		System.out.println("gmail.com IP: " + getHostSRV_IP(host));
+		System.out.println(host + ": " + getHostSRV_Entry(host));
 
 		System.out.println("Localhost name: "
 			+ InetAddress.getLocalHost().getHostName());
