@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
-	<version>3.3.6-SNAPSHOT</version>
+	<version>3.3.6</version>
 	<description>Tigase Utils</description>
 	<name>TigaseUtils</name>
 	<organization>
@@ -14,9 +14,9 @@
 		<url>http://www.tigase.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</connection>
-		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</developerConnection>
-		<url>https://svn.tigase.org/reps/tigase-utils</url>
+		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.3.6</connection>
+		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.3.6</developerConnection>
+		<url>https://svn.tigase.org/reps/tigase-utils/tags/tigase-utils-3.3.6</url>
 	</scm>
 	<developers>
 		<developer>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>tigase</groupId>
 			<artifactId>tigase-xmltools</artifactId>
-			<version>3.3.2</version>
+			<version>3.3.4</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
