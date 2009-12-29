@@ -30,7 +30,7 @@ package tigase.util;
  */
 public abstract class XMPPStringPrepFactory {
 
-	public XMPPStringPrepIfc getDefaultXMPPStringPrep() {
+	public static XMPPStringPrepIfc getDefaultXMPPStringPrep() {
 		return new XMPPStringPrep();
 	}
 
