@@ -85,7 +85,7 @@ public class BareJID implements Comparable<BareJID> {
 
 	private BareJID(String localpart, String domain) throws TigaseStringprepException {
 		this.localpart = localpart != null ? stringPrep.nodeprep(localpart) : null;
-		this.domain = stringPrep.nameprep(domain);
+		this.domain = stringPrep.nameprep(domain).intern();
 		this.to_string = toString(this.localpart, this.domain);
 	}
 
@@ -110,7 +110,8 @@ public class BareJID implements Comparable<BareJID> {
 	@Override
 	public boolean equals(Object b) {
 		if (b instanceof BareJID) {
-			return to_string.equals(((BareJID)b).to_string);
+			return this.domain == ((BareJID)b).domain
+					&& this.localpart.equals(((BareJID)b).localpart);
 		} else {
 			return false;
 		}
