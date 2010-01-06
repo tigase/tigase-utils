@@ -32,7 +32,9 @@ import java.net.UnknownHostException;
  * </p>
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
+ * @deprecated replaced by tigase.xmpp.JID
  */
+@Deprecated
 public abstract class JIDUtils {
 
   /**
