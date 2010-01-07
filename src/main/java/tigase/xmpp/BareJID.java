@@ -110,6 +110,8 @@ public class BareJID implements Comparable<BareJID> {
 	@Override
 	public boolean equals(Object b) {
 		if (b instanceof BareJID) {
+			// Intentionally comparing domains by reference instead of value
+			// domain is processed through the String.intern() method
 			return this.domain == ((BareJID)b).domain
 					&& this.localpart.equals(((BareJID)b).localpart);
 		} else {
