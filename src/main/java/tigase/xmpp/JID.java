@@ -53,6 +53,21 @@ public class JID implements Comparable<JID> {
 		this.bareJid = bareJid;
 		setResource(resource);
 	}
+	
+	public JID(BareJID bareJid) {
+		this.bareJid = bareJid;
+		to_string = BareJID.toString(bareJid, resource);
+	}
+
+	public JID copyWithoutResource() {
+		JID result = new JID(bareJid);
+		return result;
+	}
+
+	public JID copyWithResource(String resource) throws TigaseStringprepException {
+		JID result = new JID(bareJid, resource);
+		return result;
+	}
 
 	public void setResource(String resource) throws TigaseStringprepException {
 		this.resource = BareJID.stringPrep.resourceprep(resource);
