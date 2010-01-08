@@ -61,6 +61,11 @@ public class BareJID implements Comparable<BareJID> {
 		return result;
 	}
 
+	public static String jidToBareJID(String jid) {
+		String[] parsed = parseJID(jid);
+		return toString(parsed[0], parsed[1]);
+	}
+
 	public static String toString(String p_localpart, String p_domain) {
     return ((p_localpart != null && p_localpart.length() > 0) ?
 			(p_localpart + "@" + p_domain) : p_domain);
