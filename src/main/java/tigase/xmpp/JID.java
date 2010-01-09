@@ -70,7 +70,7 @@ public class JID implements Comparable<JID> {
 	}
 
 	public void setResource(String resource) throws TigaseStringprepException {
-		this.resource = BareJID.stringPrep.resourceprep(resource);
+		this.resource = resource != null ? BareJID.stringPrep.resourceprep(resource) : null;
 		to_string = BareJID.toString(bareJid, resource);
 	}
 
