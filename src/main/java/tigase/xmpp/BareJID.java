@@ -264,7 +264,9 @@ public final class BareJID implements Comparable<BareJID> {
 
 	/**
 	 * Method compares whether this <code>BareJID</code> instance represents the
-	 * same user bare JID as the one given in parameter.
+	 * same user bare JID as the one given in parameter. It returns
+	 * <code>true</code> of both the localpart (nickname) and domain part are the
+	 * same for both objects.
 	 *
 	 *
 	 * @param b is a <code>BareJID</code> object to which the instance is compared.
