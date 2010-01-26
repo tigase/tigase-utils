@@ -284,7 +284,8 @@ public final class BareJID implements Comparable<BareJID> {
 			// domain is processed through the String.intern() method
 			// NOPMD
 			result = (this.domain == ((BareJID) b).domain)
-							 && this.localpart.equals(((BareJID) b).localpart);
+							 && (this.localpart == null ? this.localpart == ((BareJID)b).localpart :
+					 this.localpart.equals(((BareJID)b).localpart));
 		}
 
 		return result;
