@@ -25,7 +25,6 @@ package tigase.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -51,7 +50,8 @@ public class ClassUtil {
  {".ui.", ".swing", ".awt", ".sql.", ".xml."};
  private static final String[] SKIP_STARTS = 
  {"com.mysql", "tigase.pubsub.Utils", "org.apache.derby", "org.apache.xml",
- "groovy.lang", "org.postgresql", "com.sun", "groovy", "org.codehaus.groovy"};
+ "groovy.lang", "org.postgresql", "com.sun", "groovy", "org.codehaus.groovy",
+	"org.netbeans"};
 
 	public static String getClassNameFromFileName(String fileName) {
     String class_name = null;
