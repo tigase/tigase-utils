@@ -63,9 +63,9 @@ public final class BareJID implements Comparable<BareJID> {
 
 	//~--- constructors ---------------------------------------------------------
 
-	private BareJID(String localpart, String domain) throws TigaseStringprepException {
-		this.localpart = (localpart == null) ? null : stringPrep.nodeprep(localpart);
-		this.domain = stringPrep.nameprep(domain).intern();
+	private BareJID(String localpart, String domain) {
+		this.localpart = localpart;
+		this.domain = domain.intern();
 		this.to_string = toString(this.localpart, this.domain);
 	}
 
@@ -96,7 +96,7 @@ public final class BareJID implements Comparable<BareJID> {
 	public static BareJID bareJIDInstance(String jid) throws TigaseStringprepException {
 		String[] parsedJid = parseJID(jid);
 
-		return new BareJID(parsedJid[0], parsedJid[1]);
+		return bareJIDInstance(parsedJid[0], parsedJid[1]);
 	}
 
 	/**
@@ -125,6 +125,59 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	public static BareJID bareJIDInstance(String p_localpart, String p_domain)
 					throws TigaseStringprepException {
+		String f_localpart = (p_localpart == null) ? null : stringPrep.nodeprep(p_localpart);
+		String f_domain = stringPrep.nameprep(p_domain);
+
+		return new BareJID(f_localpart, f_domain);
+	}
+
+	/**
+	 * The method creates an instance of the <code>BareJID</code> class. The
+	 * bare JID is parsed and constructed from the <code>String</code> parameter.
+	 * <strong>Note, this method does not perform stringprep processing on input
+	 * parameters.</strong>
+	 * <p/>
+	 * The resource part, if provided in the JID paramater, is thrown away.
+	 * <p/>
+	 * Please note, the method does not necessarily has to return a new instance
+	 * of the class. It may return the same exact object every time you pass
+	 * parameters which refer to the same bare JID identifier.
+	 *
+	 * @param jid is a <code>String</code> parameter used to create the bare JID
+	 * instance.
+	 *
+	 * @return an instance of the <code>BareJID</code> class which corresponds to
+	 * the JID given as the parameter.
+	 *
+	 */
+	public static BareJID bareJIDInstanceNS(String jid) {
+		String[] parsedJid = parseJID(jid);
+
+		return bareJIDInstanceNS(parsedJid[0], parsedJid[1]);
+	}
+
+	/**
+	 * The method creates an instance of the <code>BareJID</code> class. The
+	 * bare JID is parsed and constructed from two <code>String</code> parameters.
+	 * <strong>Note, this method does not perform stringprep processing on input
+	 * parameters.</strong>
+	 * <p/>
+	 * Please note, the method does not necessarily has to return a new instance
+	 * of the class. It may return the same exact object every time you pass
+	 * parameters which refer to the same bare JID identifier.
+	 *
+	 * @param p_localpart is a <code>String</code> parameter assumed to be a
+	 * JID localpart (nickname) and used to create the bare JID instance. The
+	 * localpart parameter can be null.
+	 * @param p_domain is a <code>String</code> parameter assumed to be a JID
+	 * domain part and used to create the bare JID instance. This parameter must not
+	 * be null.
+	 *
+	 * @return an instance of the <code>BareJID</code> class which corresponds to
+	 * the JID given as the parameter.
+	 *
+	 */
+	public static BareJID bareJIDInstanceNS(String p_localpart, String p_domain) {
 		return new BareJID(p_localpart, p_domain);
 	}
 
@@ -236,8 +289,19 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	public static String toString(BareJID bareJid, String p_resource) {
 		return bareJid.toString()
-					 + (((p_resource != null) && (p_resource.length() > 0))
-							? "/" + p_resource : "");
+					 + (((p_resource != null) && (p_resource.length() > 0)) ? "/" + p_resource : "");
+	}
+
+	/**
+	 * Changes stringprep processor implementation used for the JID checking. The method
+	 * can be called at any time to change used processor. All subsequent <code>JID</code>
+	 * and <code>BareJID</code> instances are created using a new processor.
+	 *
+	 * @param stringprepProcessor is a <code>String</code> value with stringprep processor
+	 * name or class name implementing stringprep processing interface.
+	 */
+	public static void useStringprepProcessor(String stringprepProcessor) {
+		stringPrep = XMPPStringPrepFactory.getXMPPStringPrep(stringprepProcessor);
 	}
 
 	/**
@@ -284,8 +348,9 @@ public final class BareJID implements Comparable<BareJID> {
 			// domain is processed through the String.intern() method
 			// NOPMD
 			result = (this.domain == ((BareJID) b).domain)
-							 && (this.localpart == null ? this.localpart == ((BareJID)b).localpart :
-					 this.localpart.equals(((BareJID)b).localpart));
+							 && ((this.localpart == null)
+									 ? this.localpart == ((BareJID) b).localpart
+									 : this.localpart.equals(((BareJID) b).localpart));
 		}
 
 		return result;

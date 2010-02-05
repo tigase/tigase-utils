@@ -39,45 +39,35 @@ import tigase.util.TigaseStringprepException;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class JID implements Comparable<JID> {
-	private BareJID bareJid = null;
-	private String resource = null;
-	private String to_string = null;
+public final class JID implements Comparable<JID> {
+	private final BareJID bareJid;
+	private final String resource;
+	private final String to_string;
 
 	//~--- constructors ---------------------------------------------------------
 
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as a parameter. The resource part is set to null.<br/>
+	 * instance as user bare JID and <code>String</code> instance as a resource part.
+	 * <p/>
 	 * As the <code>BareJID</code> instances are immutable the constructor
 	 * doesn't create a copy of the given <code>BareJID</code>, instead it saves
-	 * the reference to a given object.
+	 * the reference to a given object.<br/>
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the
 	 * <code>JID</code> instance.
-	 */
-	public JID(BareJID bareJid) {
-		this.bareJid = bareJid;
-		to_string = BareJID.toString(bareJid, resource);
-	}
-
-	/**
-	 * Constructs a new <code>JID</code> instance using a JID parameter given
-	 * as a <code>String</code> instance. The parameter is parsed, checked and
-	 * run through stringprep processing. An exception is thrown if there is
-	 * an error while the JID is checked.
-	 *
-	 * @param jid a JID parameter given as a <code>String</code> instance.
-	 *
+	 * @param resource is a <code>String</code> instance representing JID's
+	 * resource part.
 	 * @throws TigaseStringprepException exception if there was an error during
 	 * stringprep processing.
 	 */
-	public JID(String jid) throws TigaseStringprepException {
-		String[] parsedJid = BareJID.parseJID(jid);
-
-		bareJid = BareJID.bareJIDInstance(parsedJid[0], parsedJid[1]);
-		setResource(parsedJid[2]);
+	private JID(BareJID bareJid, String resource) {
+		this.bareJid = bareJid;
+		this.resource = resource;
+		this.to_string = BareJID.toString(bareJid, resource);
 	}
+
+	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
@@ -91,14 +81,52 @@ public class JID implements Comparable<JID> {
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the
 	 * <code>JID</code> instance.
-	 * @param resource is a <code>String</code> instance representing JID's
+	 * @param p_resource is a <code>String</code> instance representing JID's
 	 * resource part.
+	 * @return <code>JID</code> class instance.
 	 * @throws TigaseStringprepException exception if there was an error during
 	 * stringprep processing.
 	 */
-	public JID(BareJID bareJid, String resource) throws TigaseStringprepException {
-		this.bareJid = bareJid;
-		setResource(resource);
+	public static JID jidInstance(BareJID bareJid, String p_resource)
+					throws TigaseStringprepException {
+		String f_resource = (p_resource == null)
+												? null : BareJID.stringPrep.resourceprep(p_resource);
+
+		return new JID(bareJid, f_resource);
+	}
+
+	/**
+	 * Creates a new <code>JID</code> instance using given <code>BareJID</code>
+	 * instance as a parameter. The resource part is set to null.<br/>
+	 * As the <code>BareJID</code> instances are immutable the constructor
+	 * doesn't create a copy of the given <code>BareJID</code>, instead it saves
+	 * the reference to a given object.
+	 *
+	 * @param bareJid is a <code>BareJID</code> instance used to create the
+	 * <code>JID</code> instance.
+	 * @return <code>JID</code> class instance.
+	 */
+	public static JID jidInstance(BareJID bareJid) {
+		return new JID(bareJid, null);
+	}
+
+	/**
+	 * Constructs a new <code>JID</code> instance using a JID parameter given
+	 * as a <code>String</code> instance. The parameter is parsed, checked and
+	 * run through stringprep processing. An exception is thrown if there is
+	 * an error while the JID is checked.
+	 *
+	 * @param jid a JID parameter given as a <code>String</code> instance.
+	 *
+	 *
+	 * @return <code>JID</code> class instance.
+	 * @throws TigaseStringprepException exception if there was an error during
+	 * stringprep processing.
+	 */
+	public static JID jidInstance(String jid) throws TigaseStringprepException {
+		String[] parsedJid = BareJID.parseJID(jid);
+
+		return jidInstance(parsedJid[0], parsedJid[1], parsedJid[2]);
 	}
 
 	/**
@@ -114,16 +142,70 @@ public class JID implements Comparable<JID> {
 	 * domain part.
 	 * @param resource is a <code>String</code> instance representing JID's
 	 * resource part.
+	 *
+	 * @return <code>JID</code> class instance.
 	 * @throws TigaseStringprepException exception if there was an error during
 	 * stringprep processing.
 	 */
-	public JID(String localpart, String domain, String resource)
+	public static JID jidInstance(String localpart, String domain, String resource)
 					throws TigaseStringprepException {
-		bareJid = BareJID.bareJIDInstance(localpart, domain);
-		setResource(resource);
+		return jidInstance(BareJID.bareJIDInstance(localpart, domain), resource);
 	}
 
-	//~--- methods --------------------------------------------------------------
+	/**
+	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
+	 * instance as user bare JID and <code>String</code> instance as a resource part.
+	 * <strong>Note, this method does not perform stringprep processing on input
+	 * parameters.</strong>
+	 * <p/>
+	 * As the <code>BareJID</code> instances are immutable the constructor
+	 * doesn't create a copy of the given <code>BareJID</code>, instead it saves
+	 * the reference to a given object.<br/>
+	 *
+	 * @param bareJid is a <code>BareJID</code> instance used to create the
+	 * <code>JID</code> instance.
+	 * @param p_resource is a <code>String</code> instance representing JID's
+	 * resource part.
+	 * @return <code>JID</code> class instance.
+	 */
+	public static JID jidInstanceNS(BareJID bareJid, String p_resource) {
+		return new JID(bareJid, p_resource);
+	}
+
+	/**
+	 * Constructs a new <code>JID</code> instance using a JID parameter given
+	 * as a <code>String</code> instance.
+	 * <strong>Note, this method does not perform stringprep processing on input
+	 * parameters.</strong>
+	 *
+	 * @param jid a JID parameter given as a <code>String</code> instance.
+	 * @return <code>JID</code> class instance.
+	 */
+	public static JID jidInstanceNS(String jid) {
+		String[] parsedJid = BareJID.parseJID(jid);
+
+		return jidInstanceNS(parsedJid[0], parsedJid[1], parsedJid[2]);
+	}
+
+	/**
+	 * Constructs a new <code>JID</code> instance using given <code>String</code>
+	 * parameters.
+	 * <strong>Note, this method does not perform stringprep processing on input
+	 * parameters.</strong>
+	 * <p/>
+	 *
+	 * @param localpart is a <code>String</code> instance representing JID's
+	 * localpart (nickname) part.
+	 * @param domain is a <code>String</code> instance representing JID's
+	 * domain part.
+	 * @param resource is a <code>String</code> instance representing JID's
+	 * resource part.
+	 *
+	 * @return <code>JID</code> class instance.
+	 */
+	public static JID jidInstanceNS(String localpart, String domain, String resource) {
+		return jidInstanceNS(BareJID.bareJIDInstanceNS(localpart, domain), resource);
+	}
 
 	/**
 	 * Method compares the <code>JID</code> instance with a given object.
@@ -156,7 +238,22 @@ public class JID implements Comparable<JID> {
 	 * @throws TigaseStringprepException if resource stringprep processing fails.
 	 */
 	public JID copyWithResource(String resource) throws TigaseStringprepException {
-		return new JID(bareJid, resource);
+		return jidInstance(bareJid, resource);
+	}
+
+	/**
+	 * The method returns a copy of the <code>JID</code> instance with a different
+	 * resource part given as a parameter.
+	 *
+	 * @param resource is a <code>String</code> instance representing JID's
+	 * new resource part.
+	 *
+	 * @return a new instance of the <code>JID</code> class with a new resource
+	 * part.
+	 *
+	 */
+	public JID copyWithResourceNS(String resource) {
+		return jidInstanceNS(bareJid, resource);
 	}
 
 	/**
@@ -168,7 +265,7 @@ public class JID implements Comparable<JID> {
 	 * part.
 	 */
 	public JID copyWithoutResource() {
-		return new JID(bareJid);
+		return new JID(bareJid, null);
 	}
 
 	/**
@@ -252,8 +349,6 @@ public class JID implements Comparable<JID> {
 		return to_string.hashCode();
 	}
 
-	//~--- set methods ----------------------------------------------------------
-
 ///**
 // * Method description
 // *
@@ -264,26 +359,23 @@ public class JID implements Comparable<JID> {
 //  this.bareJid = bareJid;
 //  to_string = BareJID.toString(bareJid, resource);
 //}
-
-	/**
-	 * Method sets an new resource for the <code>JID</code> instance. Due to a
-	 * nature of the JID processing it is generally not recommended to change the
-	 * JIDs resource part. Instead it is recommended to create a new instance with
-	 * a new resource. As the <code>BareJID</code> object is shared anyway the
-	 * overhead is very minimal.
-	 *
-	 * @param resource is a <code>String</code> instance of the new resource
-	 * part set for the <code>JID</code> instance.
-	 *
-	 * @throws TigaseStringprepException if stringprep processing fails for the given
-	 * resource parameter.
-	 */
-	public final void setResource(String resource) throws TigaseStringprepException {
-		this.resource = (resource == null) ? null : BareJID.stringPrep.resourceprep(resource);
-		to_string = BareJID.toString(bareJid, resource);
-	}
-
-	//~--- methods --------------------------------------------------------------
+//  /**
+//   * Method sets an new resource for the <code>JID</code> instance. Due to a
+//   * nature of the JID processing it is generally not recommended to change the
+//   * JIDs resource part. Instead it is recommended to create a new instance with
+//   * a new resource. As the <code>BareJID</code> object is shared anyway the
+//   * overhead is very minimal.
+//   *
+//   * @param resource is a <code>String</code> instance of the new resource
+//   * part set for the <code>JID</code> instance.
+//   *
+//   * @throws TigaseStringprepException if stringprep processing fails for the given
+//   * resource parameter.
+//   */
+//  public final void setResource(String resource) throws TigaseStringprepException {
+//    this.resource = (resource == null) ? null : BareJID.stringPrep.resourceprep(resource);
+//    to_string = BareJID.toString(bareJid, resource);
+//  }
 
 	/**
 	 * Method returns a <code>String</code> representation of the
