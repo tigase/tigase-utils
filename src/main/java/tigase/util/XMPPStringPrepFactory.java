@@ -32,8 +32,6 @@ import tigase.xmpp.JID;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 //~--- classes ----------------------------------------------------------------
 
@@ -46,10 +44,10 @@ import java.util.logging.Logger;
 public abstract class XMPPStringPrepFactory {
 
 	/** Field description */
-	public static final String STRINGPREP_PROCESSOR_PROP_KEY = "stringprep.processor";
+	public static final String STRINGPREP_PROCESSOR_PROP_KEY = "stringprep-processor";
 
 	/** Field description */
-	public static final String[] STRINGPREP_PROCESSORS = { "simple", "libidn", "empty" };
+	public static final String[] STRINGPREP_PROCESSORS = { "libidn", "simple", "empty" };
 
 	/** Field description */
 	public static String STRINGPREP_PROCESSOR = "simple";
@@ -66,7 +64,7 @@ public abstract class XMPPStringPrepFactory {
 	 */
 	public static XMPPStringPrepIfc getDefaultXMPPStringPrep() {
 		STRINGPREP_PROCESSOR = System.getProperty(STRINGPREP_PROCESSOR_PROP_KEY,
-						STRINGPREP_PROCESSOR);
+				STRINGPREP_PROCESSOR);
 
 		return getXMPPStringPrep(STRINGPREP_PROCESSOR);
 	}
@@ -133,8 +131,7 @@ public abstract class XMPPStringPrepFactory {
 			return (XMPPStringPrepIfc) Class.forName(stringprepProcessor).newInstance();
 		} catch (Exception ex) {
 			throw new IllegalArgumentException("Incorrect stringprep class name: "
-																				 + stringprepProcessor,
-																				 ex);
+					+ stringprepProcessor, ex);
 		}
 	}
 
@@ -150,12 +147,12 @@ public abstract class XMPPStringPrepFactory {
 	public static void main(String[] args) throws Exception {
 		long testTime = 30;    // 30 seconds by default
 
-		System.out.println("Each test time: " + testTime + " seconds");
+		System.out.printf("Each test time: %1$,d seconds\n", testTime);
 
 		for (String proc : STRINGPREP_PROCESSORS) {
 			long result = runTest(TimeUnit.SECONDS.toMillis(testTime), proc);
 
-			System.out.println("Stringprep processor: " + proc + ", result: " + result);
+			System.out.printf("Stringprep processor: %1$s, result: %2$,d\n", proc, result);
 		}
 	}
 
