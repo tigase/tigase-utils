@@ -32,8 +32,6 @@ import tigase.xmpp.JID;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 //~--- classes ----------------------------------------------------------------
 
@@ -65,7 +63,8 @@ public abstract class XMPPStringPrepFactory {
 	 * @return instance of XMPP Stringprep processor.
 	 */
 	public static XMPPStringPrepIfc getDefaultXMPPStringPrep() {
-		STRINGPREP_PROCESSOR = System.getProperty(STRINGPREP_PROCESSOR_PROP_KEY, STRINGPREP_PROCESSOR);
+		STRINGPREP_PROCESSOR = System.getProperty(STRINGPREP_PROCESSOR_PROP_KEY,
+				STRINGPREP_PROCESSOR);
 
 		return getXMPPStringPrep(STRINGPREP_PROCESSOR);
 	}
@@ -131,8 +130,8 @@ public abstract class XMPPStringPrepFactory {
 		try {
 			return (XMPPStringPrepIfc) Class.forName(stringprepProcessor).newInstance();
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Incorrect stringprep class name: " + stringprepProcessor,
-					ex);
+			throw new IllegalArgumentException("Incorrect stringprep class name: "
+					+ stringprepProcessor, ex);
 		}
 	}
 
