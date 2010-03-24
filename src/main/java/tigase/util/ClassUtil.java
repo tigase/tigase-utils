@@ -50,8 +50,7 @@ public class ClassUtil {
  {".ui.", ".swing", ".awt", ".sql.", ".xml."};
  private static final String[] SKIP_STARTS = 
  {"com.mysql", "tigase.pubsub.Utils", "org.apache.derby", "org.apache.xml",
- "groovy.lang", "org.postgresql", "com.sun", "groovy", "org.codehaus.groovy",
-	"org.netbeans"};
+ "org.postgresql", "com.sun", "groovy", "org.codehaus.groovy", "org.netbeans", "org.python"};
 
 	public static String getClassNameFromFileName(String fileName) {
     String class_name = null;
