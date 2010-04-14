@@ -54,7 +54,7 @@ public class DNSResolver {
 
 	private static final String LOCALHOST = "localhost";
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
-	private static final long DNS_CACHE_TIME = 1000*60*60;
+	private static final long DNS_CACHE_TIME = 1000*60;
 
 	private static Map<String, DNSEntry> cache =
 		Collections.synchronizedMap(new SimpleCache<String, DNSEntry>(100,
