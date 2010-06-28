@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -212,7 +213,7 @@ public class DNSResolver {
 		DNSEntry[] entries = null;
 
 		try {
-			Hashtable<String, String> env = new Hashtable<String, String>();
+			Hashtable<String, String> env = new Hashtable<String, String>(5);
 
 			env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
 
@@ -221,8 +222,7 @@ public class DNSResolver {
 				new String[] { "SRV" });
 			Attribute att = attrs.get("SRV");
 
-			System.out.println("SRV Attribute: " + att);
-
+			// System.out.println("SRV Attribute: " + att);
 			if ((att != null) && (att.size() > 0)) {
 				entries = new DNSEntry[att.size()];
 
@@ -259,20 +259,28 @@ public class DNSResolver {
 					entries[i] = new DNSEntry(hostname, ip_address, port, ttl, priority, weight);
 				}
 			} else {
-				InetAddress[] all = InetAddress.getAllByName(result_host);
-				String ip_address = all[0].getHostAddress();
-
-				if (ip_address.equals(opendns_hit_nxdomain_ip)) {
-					throw new UnknownHostException("OpenDNS NXDOMAIN");
-				}
-
-				entries = new DNSEntry[] { new DNSEntry(hostname, ip_address, port) };
+				log.log(Level.FINER, "Empty SRV DNS records set for domain: {0}", hostname);
 			}
 
 			ctx.close();
 		} catch (NamingException e) {
 			result_host = hostname;
+
+			if (log.isLoggable(Level.FINER)) {
+				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname, e);
+			}
 		}    // end of try-catch
+
+		if (entries == null) {
+			InetAddress[] all = InetAddress.getAllByName(result_host);
+			String ip_address = all[0].getHostAddress();
+
+			if (ip_address.equals(opendns_hit_nxdomain_ip)) {
+				throw new UnknownHostException("OpenDNS NXDOMAIN");
+			}
+
+			entries = new DNSEntry[] { new DNSEntry(hostname, ip_address, port) };
+		}
 
 		// System.out.println("Adding " + hostname + " to cache DNSEntry: " + entry.toString());
 		if (entries != null) {
