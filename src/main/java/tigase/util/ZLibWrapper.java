@@ -142,31 +142,29 @@ public class ZLibWrapper {
 			"Stream compression implementation for The Tigase XMPP Server.",
 			"Stream compression implementation for The Tigase XMPP Server.",
 			"<message to='kobit@some.domain' from='artur@another.domain'>" + "<thread>abcd</thread>"
-			+ "<subject>some subject</subject>" + "<body>This is a message body</body>"
-			+ "</message>",
-			"<presence to='kobit@some.domain' from='artur@another.domain'>"
-			+ "<status>away</status>" + "<show>I am away</show>" + "</presence>",
+			+ "<subject>some subject</subject>" + "<body>This is a message body</body>" + "</message>",
+			"<presence to='kobit@some.domain' from='artur@another.domain'>" + "<status>away</status>"
+			+ "<show>I am away</show>" + "</presence>",
 			"<message to='ala@some.domain' from='as@another.domain'>" + "<thread>abcd</thread>"
-			+ "<subject>Another subject</subject>"
-			+ "<body>This is a message body sent to as</body>" + "</message>",
+			+ "<subject>Another subject</subject>" + "<body>This is a message body sent to as</body>"
+			+ "</message>",
 			"<presence to='ala@some.domain' from='as@another.domain'>" + "<status>dnd</status>"
 			+ "<show>I am working really hard</show>" + "</presence>",
 			"<message to='santa@some.domain' from='elf@another.domain'>" + "<thread>abcd</thread>"
 			+ "<subject>Christmass presents</subject>"
 			+ "<body>We need to have a chat about Christmas presents.</body>" + "</message>",
-			"<presence to='kobit@some.domain' from='artur@another.domain'>"
-			+ "<status>away</status>" + "<show>I am away</show>" + "</presence>",
+			"<presence to='kobit@some.domain' from='artur@another.domain'>" + "<status>away</status>"
+			+ "<show>I am away</show>" + "</presence>",
 		};
 
 		for (String input : inputs) {
-			System.out.println("INPUT[" + input.length() + "]: \n" + input);
+			System.out.println("\nINPUT[" + input.length() + "]: \n" + input);
 
 			ByteBuffer compressedBuffer = zlib.compress(input);
 
-			System.out.println("  CREATED, compressedBuffer capacity: "
-					+ compressedBuffer.capacity() + ", remaining: " + compressedBuffer.remaining()
-						+ ", position: " + compressedBuffer.position() + ", limit: "
-							+ compressedBuffer.limit());
+			System.out.println("  CREATED, compressedBuffer capacity: " + compressedBuffer.capacity()
+					+ ", remaining: " + compressedBuffer.remaining() + ", position: "
+						+ compressedBuffer.position() + ", limit: " + compressedBuffer.limit());
 
 //    ByteBuffer decompressedBuffer = zlib.decompress(compressedBuffer);
 //    System.out.println(
@@ -190,6 +188,7 @@ public class ZLibWrapper {
 			String output = zlib.decompressToString(compressedBuffer);
 
 			System.out.println("OUTPUT[" + output.length() + "]: \n" + output);
+			System.out.println("input.equals(output)=" + (input.equals(output)));
 		}
 
 		System.out.println("Compression rate: " + zlib.lastCompressionRate());
@@ -231,10 +230,11 @@ public class ZLibWrapper {
 
 		System.out.println("OUTPUT[" + output.length() + "]: \n" + output);
 		System.out.println("Compression rate: " + zlib.lastCompressionRate());
+		System.out.println("inputstr.equals(output)=" + (inputstr.equals(output)) + "\n");
 
 		char[] chars = {
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-			'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z'
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+			'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z'
 		};
 		StringBuilder sb = new StringBuilder();
 
@@ -250,7 +250,7 @@ public class ZLibWrapper {
 
 		String input = sb.toString();
 
-		System.out.println("INPUT[" + input.length() + "]: \n");
+		System.out.println("INPUT[" + input.length() + "]:");
 		compressedBuffer = zlib.compress(input);
 		System.out.println("  CREATED, compressedBuffer capacity: " + compressedBuffer.capacity()
 				+ ", remaining: " + compressedBuffer.remaining() + ", position: "
@@ -275,8 +275,10 @@ public class ZLibWrapper {
 //      ", position: " + compressedBuffer.position() +
 //      ", limit: " + compressedBuffer.limit());
 		output = zlib.decompressToString(compressedBuffer);
-		System.out.println("OUTPUT[" + output.length() + "]: \n");
+		System.out.println("OUTPUT[" + output.length() + "]:");
 		System.out.println("Compression rate: " + zlib.lastCompressionRate());
+		System.out.println("input.equals(output)=" + (input.equals(output)) + "\n");
+		System.out.println("INPUT[" + input.length() + "]:");
 		compressedBuffer = zlib.compress(input);
 		System.out.println("  CREATED, compressedBuffer capacity: " + compressedBuffer.capacity()
 				+ ", remaining: " + compressedBuffer.remaining() + ", position: "
@@ -301,8 +303,9 @@ public class ZLibWrapper {
 //      ", position: " + compressedBuffer.position() +
 //      ", limit: " + compressedBuffer.limit());
 		output = zlib.decompressToString(compressedBuffer);
-		System.out.println("OUTPUT[" + output.length() + "]: \n");
+		System.out.println("OUTPUT[" + output.length() + "]:");
 		System.out.println("Compression rate: " + zlib.lastCompressionRate());
+		System.out.println("input.equals(output)=" + (input.equals(output)) + "\n");
 	}
 
 	/**
@@ -371,7 +374,9 @@ public class ZLibWrapper {
 			compresser.setLevel(compression_level);
 
 			// I am not really sure if this last call is needed, TODO: test it and remove it
-			// result_arr = deflate(result_arr);
+			// Absolutely sure that it is needed. Tested and confirmed, without the call
+			// the compression is broken. Why? I do not know.
+			result_arr = deflate(result_arr);
 		}
 
 		// If the compressed_output array is smaller assign result to the output
@@ -381,7 +386,7 @@ public class ZLibWrapper {
 			compress_output = result_arr;
 
 			if (log.isLoggable(Level.FINEST)) {
-				log.finest("Increasing compress_output size to: " + compress_output.length);
+				log.log(Level.FINEST, "Increasing compress_output size to: {0}", compress_output.length);
 			}
 		}
 
@@ -458,8 +463,7 @@ public class ZLibWrapper {
 			// can expect a few calls in this loop before we get all data
 			while ( !decompresser.needsInput() || (decompressed_size > 0)) {
 				try {
-					decompressed_size = decompresser.inflate(decompress_output, 0,
-							decompress_output.length);
+					decompressed_size = decompresser.inflate(decompress_output, 0, decompress_output.length);
 
 					// We might get 0 decompressed_size in case not all data are ready yet
 					// probably more data are needed from the network
