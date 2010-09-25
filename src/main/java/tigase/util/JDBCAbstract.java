@@ -38,18 +38,21 @@ import java.util.logging.Logger;
 //~--- classes ----------------------------------------------------------------
 
 /**
- * Describe class JDBCAbstract here.
+ * The class has been deprecated in favor of <code>DataRepository</code> class.
+ * Please update your code accordingly.
  *
  *
  * Created: Mon Mar  3 10:43:44 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
+ * @deprecated
  */
+@Deprecated
 public abstract class JDBCAbstract {
 
 	/**
-	 * Private logger for class instancess.
+	 * Private logger for class instance.
 	 */
 	private static final Logger log = Logger.getLogger(JDBCAbstract.class.getName());
 
