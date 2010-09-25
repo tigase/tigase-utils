@@ -94,8 +94,8 @@ public class DNSResolver {
 				InetAddress[] all = InetAddress.getAllByName(hostname);
 
 				for (InetAddress addr : all) {
-					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress()
-							|| addr.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
+					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() || addr.isLinkLocalAddress()
+							|| addr.isSiteLocalAddress()) {
 						continue;
 					}
 
@@ -115,8 +115,7 @@ public class DNSResolver {
 			@Override
 			public void run() {
 				try {
-					opendns_hit_nxdomain_ip =
-						InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
+					opendns_hit_nxdomain_ip = InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
 				} catch (UnknownHostException e) {
 					opendns_hit_nxdomain_ip = null;
 				}
@@ -218,8 +217,7 @@ public class DNSResolver {
 			env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
 
 			DirContext ctx = new InitialDirContext(env);
-			Attributes attrs = ctx.getAttributes("_xmpp-server._tcp." + hostname,
-				new String[] { "SRV" });
+			Attributes attrs = ctx.getAttributes("_xmpp-server._tcp." + hostname, new String[] { "SRV" });
 			Attribute att = attrs.get("SRV");
 
 			// System.out.println("SRV Attribute: " + att);
@@ -256,7 +254,7 @@ public class DNSResolver {
 						throw new UnknownHostException("OpenDNS NXDOMAIN");
 					}
 
-					entries[i] = new DNSEntry(hostname, ip_address, port, ttl, priority, weight);
+					entries[i] = new DNSEntry(hostname, result_host, ip_address, port, ttl, priority, weight);
 				}
 			} else {
 				log.log(Level.FINER, "Empty SRV DNS records set for domain: {0}", hostname);

@@ -31,6 +31,7 @@ package tigase.util;
  * @version $Rev$
  */
 public class DNSEntry {
+	private String dnsResultHost = null;
 	private String hostname = null;
 	private String ip = null;
 	private int port = 5269;
@@ -69,14 +70,17 @@ public class DNSEntry {
 	/**
 	 *
 	 * @param hostname
+	 * @param dnsResultHost
 	 * @param ip
 	 * @param port
 	 * @param ttl
 	 * @param priority
 	 * @param weight
 	 */
-	public DNSEntry(String hostname, String ip, int port, long ttl, int priority, int weight) {
+	public DNSEntry(String hostname, String dnsResultHost, String ip, int port, long ttl,
+			int priority, int weight) {
 		this.hostname = hostname;
+		this.dnsResultHost = dnsResultHost;
 		this.ip = ip;
 		this.port = port;
 		this.ttl = ttl;
@@ -85,6 +89,16 @@ public class DNSEntry {
 	}
 
 	//~--- get methods ----------------------------------------------------------
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @return
+	 */
+	public String getDnsResultHost() {
+		return dnsResultHost;
+	}
 
 	/**
 	 * Method description
@@ -132,7 +146,7 @@ public class DNSEntry {
 	 *
 	 * @return
 	 */
-	public long getTTL() {
+	public long getTtl() {
 		return ttl;
 	}
 
@@ -156,8 +170,8 @@ public class DNSEntry {
 	 */
 	@Override
 	public String toString() {
-		return "hostname: " + hostname + ", port: " + port + ", ip: " + ip + ", priority: "
-				+ priority + ", weight: " + weight + ", ttl: " + (ttl / 1000);
+		return "hostname: " + hostname + ", port: " + port + ", ip: " + ip + ", priority: " + priority
+				+ ", weight: " + weight + ", ttl: " + (ttl / 1000);
 	}
 }
 
