@@ -65,7 +65,7 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 	 */
 	@Override
 	public String nodeprep(String localpart) throws TigaseStringprepException {
-		String result = localpart.trim().toLowerCase();
+		String result = localpart.trim();
 
 		if ( !checkString(result)) {
 			throw new TigaseStringprepException("Illegal characters in string.");

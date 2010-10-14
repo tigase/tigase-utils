@@ -65,7 +65,7 @@ public final class BareJID implements Comparable<BareJID> {
 
 	private BareJID(String localpart, String domain) {
 		this.localpart = localpart;
-		this.domain = domain.intern();
+		this.domain = domain.toLowerCase().intern();
 		this.to_string = toString(this.localpart, this.domain);
 	}
 
@@ -124,7 +124,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 * JID part used to create the instance.
 	 */
 	public static BareJID bareJIDInstance(String p_localpart, String p_domain)
-					throws TigaseStringprepException {
+			throws TigaseStringprepException {
 		String f_localpart = (p_localpart == null) ? null : stringPrep.nodeprep(p_localpart);
 		String f_domain = stringPrep.nameprep(p_domain);
 
@@ -251,7 +251,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	public static String toString(String p_localpart, String p_domain) {
 		return (((p_localpart != null) && (p_localpart.length() > 0))
-						? (p_localpart + "@" + p_domain) : p_domain);
+				? (p_localpart + "@" + p_domain) : p_domain);
 	}
 
 	/**
@@ -270,9 +270,8 @@ public final class BareJID implements Comparable<BareJID> {
 	 * returns parameter given as domain part.
 	 */
 	public static String toString(String p_localpart, String p_domain, String p_resource) {
-		return toString(p_localpart,
-										p_domain) + (((p_resource != null) && (p_resource.length() > 0))
-																 ? "/" + p_resource : "");
+		return toString(p_localpart, p_domain)
+				+ (((p_resource != null) && (p_resource.length() > 0)) ? "/" + p_resource : "");
 	}
 
 	/**
@@ -289,7 +288,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	public static String toString(BareJID bareJid, String p_resource) {
 		return bareJid.toString()
-					 + (((p_resource != null) && (p_resource.length() > 0)) ? "/" + p_resource : "");
+				+ (((p_resource != null) && (p_resource.length() > 0)) ? "/" + p_resource : "");
 	}
 
 	/**
@@ -348,9 +347,9 @@ public final class BareJID implements Comparable<BareJID> {
 			// domain is processed through the String.intern() method
 			// NOPMD
 			result = (this.domain == ((BareJID) b).domain)
-							 && ((this.localpart == null)
-									 ? this.localpart == ((BareJID) b).localpart
-									 : this.localpart.equals(((BareJID) b).localpart));
+					&& ((this.localpart == null)
+						? this.localpart == ((BareJID) b).localpart
+							: this.localpart.equalsIgnoreCase(((BareJID) b).localpart));
 		}
 
 		return result;
