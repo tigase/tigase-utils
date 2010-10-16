@@ -80,6 +80,8 @@ import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 
+import javax.security.auth.x500.X500Principal;
+
 //~--- classes ----------------------------------------------------------------
 
 /**
@@ -252,6 +254,34 @@ public abstract class CertificateUtil {
 
 		return sb.toString();
 	}
+
+	//~--- get methods ----------------------------------------------------------
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param cert
+	 *
+	 * @return
+	 */
+	public static String getCertCName(X509Certificate cert) {
+		X500Principal princ = cert.getSubjectX500Principal();
+		String name = princ.getName();
+		String[] all = name.split(",");
+
+		for (String n : all) {
+			String[] ns = n.trim().split("=");
+
+			if (ns[0].equals("CN")) {
+				return ns[1];
+			}
+		}
+
+		return null;
+	}
+
+	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Method description
