@@ -50,30 +50,38 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.SignatureException;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.PKIXBuilderParameters;
+import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -279,6 +287,36 @@ public abstract class CertificateUtil {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param cert
+	 *
+	 * @return
+	 */
+	public static boolean isExpired(X509Certificate cert) {
+		try {
+			cert.checkValidity();
+
+			return false;
+		} catch (Exception e) {
+			return true;
+		}
+	}
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param cert
+	 *
+	 * @return
+	 */
+	public static boolean isSelfSigned(X509Certificate cert) {
+		return cert.getIssuerDN().equals(cert.getSubjectDN());
 	}
 
 	//~--- methods --------------------------------------------------------------
@@ -506,6 +544,54 @@ public abstract class CertificateUtil {
 
 		fw.write(pemFormat);
 		fw.close();
+	}
+
+	/**
+	 * Method description
+	 *
+	 *
+	 *
+	 * @param chain
+	 * @param revocationEnabled
+	 *
+	 * @param trustKeystore
+	 * @return
+	 *
+	 *
+	 * @throws CertificateException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyStoreException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static CertCheckResult validateCertificate(Certificate[] chain, KeyStore trustKeystore,
+			boolean revocationEnabled)
+			throws NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException,
+			CertificateException {
+		CertPathValidator certPathValidator =
+			CertPathValidator.getInstance(CertPathValidator.getDefaultType());
+		X509CertSelector selector = new X509CertSelector();
+		PKIXBuilderParameters params = new PKIXBuilderParameters(trustKeystore, selector);
+
+		params.setRevocationEnabled(false);
+
+		List<Certificate> certList = Arrays.asList(chain);
+		CertPath certPath = CertificateFactory.getInstance("X.509").generateCertPath(certList);
+
+		try {
+			certPathValidator.validate(certPath, params);
+
+			return CertCheckResult.trusted;
+		} catch (CertPathValidatorException ex) {
+			if (isExpired((X509Certificate) chain[0])) {
+				return CertCheckResult.expired;
+			}
+
+			if ((chain.length == 1) && isSelfSigned((X509Certificate) chain[0])) {
+				return CertCheckResult.self_signed;
+			} else {
+				return CertCheckResult.untrusted;
+			}
+		}
 	}
 
 	private static void appendName(StringBuilder sb, String prefix, String value) {
