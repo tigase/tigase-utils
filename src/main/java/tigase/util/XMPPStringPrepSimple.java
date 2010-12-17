@@ -22,6 +22,10 @@
 
 package tigase.util;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.regex.Pattern;
+
 //~--- classes ----------------------------------------------------------------
 
 /**
@@ -31,6 +35,9 @@ package tigase.util;
  * @version $Rev$
  */
 public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
+	private static final Pattern p = Pattern.compile("[ @&()\\[\\]\t\n\r\f\\a\\e]");
+
+	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Method description
@@ -90,7 +97,9 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 	}
 
 	private boolean checkString(String input) {
-		return !input.matches("[ @&()\\[\\]\t\n\r\f\\a\\e]");
+		return !p.matcher(input).matches();
+
+		// return !input.matches("[ @&()\\[\\]\t\n\r\f\\a\\e]");
 	}
 }
 
