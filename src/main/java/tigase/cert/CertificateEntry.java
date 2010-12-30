@@ -25,7 +25,6 @@ package tigase.cert;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.security.PrivateKey;
-import java.security.cert.CertPath;
 import java.security.cert.Certificate;
 
 //~--- classes ----------------------------------------------------------------

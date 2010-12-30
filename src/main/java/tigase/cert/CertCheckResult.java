@@ -31,7 +31,7 @@ package tigase.cert;
  * @version $Rev$
  */
 public enum CertCheckResult {
-	trusted, self_signed, untrusted, revoked, expired, invalid;
+	trusted, self_signed, untrusted, revoked, expired, invalid, none;
 }
 
 
