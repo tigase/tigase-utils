@@ -21,6 +21,8 @@
  */
 package tigase.util;
 
+import java.util.Arrays;
+
 /**
  * Describe class Base64 here.
  *
@@ -52,6 +54,12 @@ public class Base64 {
 
 	private Base64() {}
 
+	/**
+	 * Decodes base64 data
+	 *
+	 * @param input
+	 * @return
+	 */
 	public static byte[] decode(String input) {
 		int groups = input.length() / 4;
 		int pads = 0;
@@ -60,11 +68,14 @@ public class Base64 {
 			if (input.charAt(input.length()-2) == '=') {
 				++pads;
 			} // end of if (input.charAt(input.length()-2) == '=')
+			if (Base64.isWhiteSpace(input.charAt(input.length()-6)) ) groups--;
 		}
 		byte[] result = new byte[groups * 3 - pads];
 		int incnt = 0, outcnt = 0;
 		groups = (pads > 0 ? groups - 1 : groups);
-		for (int i = 0; i < groups; i++) {
+
+		while (incnt/4 < groups) {
+			while (isWhiteSpace(input.charAt(incnt))) ++incnt;
 			byte b1 = fromBase64[input.charAt(incnt++)];
 			byte b2 = fromBase64[input.charAt(incnt++)];
 			byte b3 = fromBase64[input.charAt(incnt++)];
@@ -74,6 +85,7 @@ public class Base64 {
 			result[outcnt++] = (byte)((b3 << 6) | b4);
 		} // end of for (int i = 0; i < groups; i++)
 		if (pads > 0) {
+			while (isWhiteSpace(input.charAt(incnt))) ++incnt;
 			byte b1 = fromBase64[input.charAt(incnt++)];
 			byte b2 = fromBase64[input.charAt(incnt++)];
 			result[outcnt++] = (byte)((b1 << 2) | (b2 >> 4));
@@ -82,10 +94,25 @@ public class Base64 {
 				result[outcnt++] = (byte)((b2 << 4) | (b3 >> 2));
 			} // end of if (pads == 1)
 		} // end of if (pads > 0)
-		return result;
+		return Arrays.copyOf(result, outcnt);
 	}
 
+	/**
+	 * Encodes data in base64
+	 * @param input
+	 * @return
+	 */
 	public static String encode(byte[] input) {
+		return encodeChunk(input, 0);
+	}
+
+	/**
+	 * Encodes data in base64 splited into lines od defigned lenght
+	 * @param input
+	 * @param chunkSize lenght of the line
+	 * @return
+	 */
+	public static String encodeChunk(byte[] input, int chunkSize) {
 		int groups = input.length / 3;
 		int pads = (groups * 3 + 3 - input.length) % 3;
 		StringBuilder result =
@@ -101,6 +128,9 @@ public class Base64 {
 			result.append(toBase64[c2]);
 			result.append(toBase64[c3]);
 			result.append(toBase64[c4]);
+			if (chunkSize !=0 && (i+1) % (chunkSize/4) == 0) {
+			    result.append("\r\n");
+                        }
 		} // end of for (int i = 0; i < groups; i++)
 		switch (pads) {
 		case 1: {
@@ -126,6 +156,18 @@ public class Base64 {
 			break;
 		} // end of switch (pads)
 		return result.toString();
+	}
+
+	private static boolean isWhiteSpace(char charToCheck) {
+	    switch (charToCheck) {
+		case ' ':
+		case '\n':
+		case '\r':
+		case '\t':
+		    return true;
+		default:
+		    return false;
+	    }
 	}
 
 	/**
