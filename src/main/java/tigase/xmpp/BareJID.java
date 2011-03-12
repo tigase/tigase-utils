@@ -322,7 +322,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	@Override
 	public int compareTo(BareJID o) {
-		return to_string.compareTo(o.to_string);
+		return to_string.compareToIgnoreCase(o.to_string);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	@Override
 	public int hashCode() {
-		return to_string.hashCode();
+		return to_string.toLowerCase().hashCode();
 	}
 
 	/**
