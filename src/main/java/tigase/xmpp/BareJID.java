@@ -60,6 +60,7 @@ public final class BareJID implements Comparable<BareJID> {
 	private final String domain;
 	private final String localpart;
 	private final String to_string;
+	private final int hashcode;
 
 	//~--- constructors ---------------------------------------------------------
 
@@ -67,6 +68,7 @@ public final class BareJID implements Comparable<BareJID> {
 		this.localpart = localpart;
 		this.domain = domain.toLowerCase().intern();
 		this.to_string = toString(this.localpart, this.domain);
+		this.hashcode = to_string.toLowerCase().hashCode();
 	}
 
 	//~--- methods --------------------------------------------------------------
@@ -388,7 +390,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 */
 	@Override
 	public int hashCode() {
-		return to_string.toLowerCase().hashCode();
+		return hashcode;
 	}
 
 	/**
