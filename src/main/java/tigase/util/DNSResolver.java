@@ -77,9 +77,11 @@ public class DNSResolver {
 		ip_cache.put(LOCALHOST, new DNSEntry(LOCALHOST, "127.0.0.1"));
 
 		try {
-			if (!LOCALHOST.equals(InetAddress.getLocalHost().getHostName().toLowerCase())) {
+			String newHostName =
+					InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
+			if (!LOCALHOST.equals(newHostName)) {
 				localnames = new String[2];
-				localnames[0] = InetAddress.getLocalHost().getHostName().toLowerCase();
+				localnames[0] = newHostName;
 				localnames[1] = LOCALHOST;
 
 				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
@@ -99,7 +101,7 @@ public class DNSResolver {
 						continue;
 					}
 
-					defaultHostname = addr.getHostName().toLowerCase();
+					defaultHostname = addr.getCanonicalHostName().toLowerCase();
 				}
 			}
 
