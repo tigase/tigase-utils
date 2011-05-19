@@ -22,8 +22,6 @@
 
 package tigase.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 
@@ -36,37 +34,33 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-//~--- classes ----------------------------------------------------------------
 
 /**
  * <code>ClassUtil</code> file contains code used for loading all
  * implementations of specified <em>interface</em> or <em>abstract class</em>
  * found in classpath. As a result of calling some functions you can have
  * <code>Set</code> containing all required classes.
- *
+ * 
  * <p>
- * Created: Wed Oct  6 08:25:52 2004
+ * Created: Wed Oct 6 08:25:52 2004
  * </p>
+ * 
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 public class ClassUtil {
-	private static final String[] SKIP_CONTAINS = {
-		".ui.", ".swing", ".awt", ".sql.", ".xml.", ".terracotta."
-	};
-	private static final String[] SKIP_STARTS = {
-		"com.mysql", "tigase.pubsub.Utils", "org.apache.derby", "org.apache.xml", "org.postgresql",
-		"com.sun", "groovy", "org.codehaus.groovy", "org.netbeans", "org.python"
-	};
-
-	//~--- get methods ----------------------------------------------------------
+	private static final String[] SKIP_CONTAINS = { ".ui.", ".swing", ".awt", ".sql.",
+			".xml.", ".terracotta." };
+	private static final String[] SKIP_STARTS = { "com.mysql", "tigase.pubsub.Utils",
+			"org.apache.derby", "org.apache.xml", "org.postgresql", "com.sun", "groovy",
+			"org.codehaus.groovy", "org.netbeans", "org.python" };
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param fileName
-	 *
+	 * 
 	 * @return
 	 */
 	public static String getClassNameFromFileName(String fileName) {
@@ -74,25 +68,26 @@ public class ClassUtil {
 
 		if (fileName.endsWith(".class")) {
 
-//    class_name = fileName.substring(0,
-//      fileName.length()-6).replace(File.separatorChar, '.');
+			// class_name = fileName.substring(0,
+			// fileName.length()-6).replace(File.separatorChar, '.');
 			// Above code does not works on MS Windows if we load
 			// files from jar file. Jar manipulation code always returns
 			// file names with unix style separators
-			String tmp_class_name = fileName.substring(0, fileName.length() - 6).replace('\\', '.');
+			String tmp_class_name =
+					fileName.substring(0, fileName.length() - 6).replace('\\', '.');
 
 			class_name = tmp_class_name.replace('/', '.');
-		}    // end of if (entry_name.endsWith(".class"))
+		} // end of if (entry_name.endsWith(".class"))
 
 		return class_name;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param dir
-	 *
+	 * 
 	 * @return
 	 */
 	public static Set<String> getClassNamesFromDir(File dir) {
@@ -106,20 +101,20 @@ public class ClassUtil {
 				result.add(class_name);
 
 				// System.out.println("class name: "+class_name);
-			}    // end of if (class_name != null)
-		}      // end of for ()
+			} // end of if (class_name != null)
+		} // end of for ()
 
 		return result;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param jarFile
-	 *
+	 * 
 	 * @return
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	public static Set<String> getClassNamesFromJar(File jarFile) throws IOException {
@@ -135,23 +130,23 @@ public class ClassUtil {
 				result.add(class_name);
 
 				// System.out.println("class name: "+class_name);
-			}    // end of if (entry_name.endsWith(".class"))
-		}      // end of while (jar_entries.hasMoreElements())
+			} // end of if (entry_name.endsWith(".class"))
+		} // end of while (jar_entries.hasMoreElements())
 
 		return result;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @return
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static Set<Class> getClassesFromClassPath()
-			throws IOException, ClassNotFoundException {
+	public static Set<Class> getClassesFromClassPath() throws IOException,
+			ClassNotFoundException {
 		Set<Class> classes_set = new TreeSet<Class>(new ClassComparator());
 		String classpath = System.getProperty("java.class.path");
 
@@ -169,7 +164,7 @@ public class ClassUtil {
 					Set<String> class_names = getClassNamesFromDir(file);
 
 					classes_set.addAll(getClassesFromNames(class_names));
-				}    // end of if (file.isDirectory())
+				} // end of if (file.isDirectory())
 
 				if (file.isFile()) {
 
@@ -179,21 +174,21 @@ public class ClassUtil {
 					classes_set.addAll(getClassesFromNames(class_names));
 
 					// System.out.println("Loaded jar file: "+path);
-				}    // end of if (file.isFile())
-			}      // end of if (file.exists())
-		}        // end of while (stok.hasMoreTokens())
+				} // end of if (file.isFile())
+			} // end of if (file.exists())
+		} // end of while (stok.hasMoreTokens())
 
 		return classes_set;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param names
-	 *
+	 * 
 	 * @return
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 */
 	public static Set<Class> getClassesFromNames(Set<String> names)
@@ -212,7 +207,7 @@ public class ClassUtil {
 					}
 				}
 
-				if ( !skip_class) {
+				if (!skip_class) {
 					for (String test_str : SKIP_STARTS) {
 						skip_class = name.startsWith(test_str);
 
@@ -222,16 +217,16 @@ public class ClassUtil {
 					}
 				}
 
-				if ( !skip_class) {
+				if (!skip_class) {
 
 					// System.out.println(new Date() + " - Class name: " + name);
-					Class cls = Class.forName(name);
+					Class cls = Class.forName(name, false, ClassLoader.getSystemClassLoader());
 
 					classes.add(cls);
 				}
-			} catch (NoClassDefFoundError e) {}
-			catch (UnsatisfiedLinkError e) {}
-			catch (Throwable e) {
+			} catch (NoClassDefFoundError e) {
+			} catch (UnsatisfiedLinkError e) {
+			} catch (Throwable e) {
 				Throwable cause = e.getCause();
 
 				System.out.println("Class name: " + name);
@@ -241,23 +236,24 @@ public class ClassUtil {
 					cause.printStackTrace();
 				}
 			}
-		}    // end of for ()
+		} // end of for ()
 
 		return classes;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param classes
 	 * @param cls
 	 * @param <T>
-	 *
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T extends Class> Set<T> getClassesImplementing(Set<Class> classes, T cls) {
+	public static <T extends Class> Set<T>
+			getClassesImplementing(Set<Class> classes, T cls) {
 		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
 
 		for (Class c : classes) {
@@ -266,24 +262,24 @@ public class ClassUtil {
 			if (cls.isAssignableFrom(c)) {
 				int mod = c.getModifiers();
 
-				if ( !Modifier.isAbstract(mod) &&!Modifier.isInterface(mod)) {
+				if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod)) {
 					classes_set.add((T) c);
-				}    // end of if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod))
-			}      // end of if (cls.isAssignableFrom(c))
-		}        // end of for ()
+				} // end of if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod))
+			} // end of if (cls.isAssignableFrom(c))
+		} // end of for ()
 
 		return classes_set;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cls
 	 * @param <T>
-	 *
+	 * 
 	 * @return
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
@@ -294,10 +290,10 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param path
-	 *
+	 * 
 	 * @return
 	 */
 	public static Set<String> getFileListDeep(File path) {
@@ -308,47 +304,44 @@ public class ClassUtil {
 
 			for (String file : files) {
 				walkInDirForFiles(path, file, set);
-			}    // end of for ()
+			} // end of for ()
 		} else {
 			set.add(path.toString());
-		}      // end of if (file.isDirectory()) else
+		} // end of if (file.isDirectory()) else
 
 		return set;
 	}
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param obj
 	 * @param <T>
-	 *
+	 * 
 	 * @return
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> getImplementations(Class<T> obj)
-			throws IOException, ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
+	public static <T> Set<T> getImplementations(Class<T> obj) throws IOException,
+			ClassNotFoundException, InstantiationException, IllegalAccessException {
 		Set<T> result = new TreeSet<T>(new ObjectComparator());
 
 		for (Class cls : getClassesImplementing(obj)) {
 			result.add((T) cls.newInstance());
-		}    // end of for ()
+		} // end of for ()
 
 		return result;
 	}
 
-	//~--- methods --------------------------------------------------------------
-
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param base_dir
 	 * @param path
 	 * @param set
@@ -361,17 +354,11 @@ public class ClassUtil {
 
 			for (String file : files) {
 				walkInDirForFiles(base_dir, new File(path, file).toString(), set);
-			}    // end of for ()
+			} // end of for ()
 		} else {
 
 			// System.out.println("File: " + path.toString());
 			set.add(path);
-		}    // end of if (file.isDirectory()) else
+		} // end of if (file.isDirectory()) else
 	}
-}    // ClassUtil
-
-
-//~ Formatted in Sun Code Convention
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
+} // ClassUtil
