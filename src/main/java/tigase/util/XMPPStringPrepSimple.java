@@ -97,8 +97,8 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 	}
 
 	private boolean checkString(String input) {
-		return !p.matcher(input).matches();
-
+		//return !p.matcher(input).matches();
+		return !p.matcher(input).find();
 		// return !input.matches("[ @&()\\[\\]\t\n\r\f\\a\\e]");
 	}
 }
