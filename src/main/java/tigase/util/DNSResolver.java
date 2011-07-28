@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +72,7 @@ public class DNSResolver {
 	private static String defaultHostname = null;
 	private static String opendns_hit_nxdomain_ip = null;
 	private static long resolveDefaultTime = 0;
+	private static Random rand = new Random();
 
 	// ~--- static initializers
 	// --------------------------------------------------
@@ -337,10 +339,15 @@ public class DNSResolver {
 		// Let's find the entry with the highest priority
 		int priority = Integer.MAX_VALUE;
 		DNSEntry result = null;
-		for (DNSEntry dnsEntry : entries) {
-			if (dnsEntry.getPriority() < priority) {
-				priority = dnsEntry.getPriority();
-				result = dnsEntry;
+		//for (DNSEntry dnsEntry : entries) {
+		// We try to get random entry here, in case there are multiple results and one
+		// is consistently broken
+		int start = rand.nextInt(entries.length);
+		for (int i = 0; i < entries.length; ++i) {
+			int idx = (i+start) % entries.length;
+			if (entries[idx].getPriority() < priority) {
+				priority = entries[idx].getPriority();
+				result = entries[idx];
 			}
 		}
 		if (result == null) {
