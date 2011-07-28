@@ -343,8 +343,9 @@ public class DNSResolver {
 		// We try to get random entry here, in case there are multiple results and one
 		// is consistently broken
 		int start = rand.nextInt(entries.length);
+		int idx = 0;
 		for (int i = 0; i < entries.length; ++i) {
-			int idx = (i+start) % entries.length;
+			idx = (i+start) % entries.length;
 			if (entries[idx].getPriority() < priority) {
 				priority = entries[idx].getPriority();
 				result = entries[idx];
@@ -358,6 +359,10 @@ public class DNSResolver {
 
 		}
 
+		if (log.isLoggable(Level.FINEST)) {
+			log.log(Level.FINEST, "Start idx: {0}, last idx: {1}, selected DNSEntry: {2}",
+					new Object[] {start, idx, result});
+		}
 		return result;
 	}
 
