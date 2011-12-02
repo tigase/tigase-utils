@@ -30,12 +30,14 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -79,6 +81,9 @@ public class DNSResolver {
 
 	static {
 		long start = System.currentTimeMillis();
+		// Turn the Java DNS Cache off, we are caching ourselves and we want
+		// to have a full control over it.
+		java.security.Security.setProperty("networkaddress.cache.ttl" , "0");
 
 		ip_cache.put(LOCALHOST, new DNSEntry(LOCALHOST, "127.0.0.1"));
 
@@ -399,7 +404,47 @@ public class DNSResolver {
 			host = args[0];
 		}
 
-		System.out.println(host + ": " + Arrays.toString(getHostSRV_Entries(host)));
+		System.out.println(host + ":getHostIP: " + getHostIP(host));
+		System.out.println(host + ":getHostSRV_IP: " + getHostSRV_IP(host));
+		System.out.println(host + ":getHostSRV_Entries: " + Arrays.toString(getHostSRV_Entries(host)));
+		System.out.println("-------------------");
+		System.out.println("-------------------");
+		InetAddress[] all = InetAddress.getAllByName(host);
+		for (InetAddress ia : all) {
+			System.out.println("Host:getAllByName: " + ia.toString());
+		} // end of for (InetAddress ia: all)
+		System.out.println("-------------------");
+		System.out.println("-------------------");
+		Hashtable env = new Hashtable();
+		env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+		// env.put("java.naming.provider.url", "dns://10.75.32.10");
+		DirContext ctx = new InitialDirContext(env);
+		Attributes attrs =
+				ctx.getAttributes("_xmpp-server._tcp." + host, new String[] { "SRV", "A" });
+		String id = "SRV";
+		Attribute att = attrs.get(id);
+		if (att == null) {
+			id = "A";
+			att = attrs.get(id);
+		} // end of if (attr == null)
+		System.out.println(id + ": " + att.get(0));
+		System.out.println("Class: " + att.get(0).getClass().getSimpleName());
+		for (NamingEnumeration<? extends Attribute> ae = attrs.getAll(); ae.hasMoreElements();) {
+			Attribute attr = (Attribute) ae.next();
+			String attrId = attr.getID();
+			for (Enumeration vals = attr.getAll(); vals.hasMoreElements(); System.out
+					.println(attrId + ": " + vals.nextElement()));
+		}
+		ctx.close();		
+		System.out.println("-------------------");
+		System.out.println("-------------------");
+		DNSEntry[] dns_entries = DNSResolver.getHostSRV_Entries(host);
+		for (DNSEntry entry: dns_entries) {
+			System.out.println(entry.toString());
+		}
+		System.out.println("-------------------");
+		System.out.println("-------------------");		
+		
 		System.out.println("Localhost name: " + InetAddress.getLocalHost().getHostName());
 		System.out.println("Localhost canonnical name: "
 				+ InetAddress.getLocalHost().getCanonicalHostName());
@@ -407,7 +452,7 @@ public class DNSResolver {
 				+ InetAddress.getLocalHost().isLoopbackAddress());
 
 		for (String hostname : localnames) {
-			InetAddress[] all = InetAddress.getAllByName(hostname);
+			all = InetAddress.getAllByName(hostname);
 
 			for (InetAddress addr : all) {
 				System.out.println("  ------   ");
@@ -421,34 +466,6 @@ public class DNSResolver {
 			}
 		}
 
-		// InetAddress[] all = InetAddress.getAllByName(host);
-		// for (InetAddress ia: all) {
-		// System.out.println("Host: " + ia.toString());
-		// } // end of for (InetAddress ia: all)
-		// Hashtable env = new Hashtable();
-		// env.put("java.naming.factory.initial",
-		// "com.sun.jndi.dns.DnsContextFactory");
-		// // env.put("java.naming.provider.url", "dns://10.75.32.10");
-		// DirContext ctx = new InitialDirContext(env);
-		// Attributes attrs =
-		// ctx.getAttributes("_xmpp-server._tcp." + host,
-		// new String[] {"SRV", "A"});
-		// String id = "SRV";
-		// Attribute att = attrs.get(id);
-		// if (att == null) {
-		// id = "A";
-		// att = attrs.get(id);
-		// } // end of if (attr == null)
-		// System.out.println(id + ": " + att.get(0));
-		// System.out.println("Class: " +
-		// att.get(0).getClass().getSimpleName());
-		// for (NamingEnumeration ae = attrs.getAll(); ae.hasMoreElements(); ) {
-		// Attribute attr = (Attribute)ae.next();
-		// String attrId = attr.getID();
-		// for (Enumeration vals = attr.getAll(); vals.hasMoreElements();
-		// System.out.println(attrId + ": " + vals.nextElement()));
-		// }
-		// ctx.close();
 	}
 } // DNSResolver
 
