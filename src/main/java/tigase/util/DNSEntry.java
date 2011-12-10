@@ -170,7 +170,7 @@ public class DNSEntry {
 	 */
 	@Override
 	public String toString() {
-		return "hostname: " + hostname + ", port: " + port + ", ip: " + ip + ", priority: " + priority
+		return "hostname: " + dnsResultHost + ", port: " + port + ", ip: " + ip + ", priority: " + priority
 				+ ", weight: " + weight + ", ttl: " + (ttl / 1000);
 	}
 }

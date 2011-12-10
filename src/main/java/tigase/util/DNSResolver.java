@@ -66,9 +66,9 @@ public class DNSResolver {
 	private static final String LOCALHOST = "localhost";
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
 	private static final long DNS_CACHE_TIME = 1000 * 60;
-	private static Map<String, DNSEntry[]> srv_cache = Collections
+	public static Map<String, DNSEntry[]> srv_cache = Collections
 			.synchronizedMap(new SimpleCache<String, DNSEntry[]>(100, DNS_CACHE_TIME));
-	private static Map<String, DNSEntry> ip_cache = Collections
+	public static Map<String, DNSEntry> ip_cache = Collections
 			.synchronizedMap(new SimpleCache<String, DNSEntry>(100, DNS_CACHE_TIME));
 	private static String[] localnames = null;
 	private static String defaultHostname = null;
