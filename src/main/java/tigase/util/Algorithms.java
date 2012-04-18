@@ -63,13 +63,23 @@ public class Algorithms {
     return bytesToHex(digest(id, secret, alg));
   }
 
-  public static final byte[] digest(final String id, final String secret,
-    final String alg) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance(alg);
-    String conc = id + secret;
-    md.update(conc.getBytes());
-    return md.digest();
-  }
+	private final static byte[] NULL_CHARS_ARRAY = new byte[] { 110, 117, 108, 108 };
+
+	public static final byte[] digest(final String id, final String secret, final String alg) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance(alg);
+
+		if (id == null)
+			md.update(NULL_CHARS_ARRAY);
+		else
+			md.update(id.getBytes());
+
+		if (secret == null)
+			md.update(NULL_CHARS_ARRAY);
+		else
+			md.update(secret.getBytes());
+
+		return md.digest();
+	}
 
 	public static final String bytesToHex(final byte[] buff) {
     StringBuilder res = new StringBuilder();
@@ -95,7 +105,7 @@ public class Algorithms {
 	 *
 	 * @param args a <code>String[]</code> value
 	 */
-	public static void main(final String[] args) throws Exception {
+	public static void $main(final String[] args) throws Exception {
 		String id = null;
 		String pass = null;
 		String alg = "MD5";
