@@ -398,7 +398,7 @@ public class DNSResolver {
 	 * @throws Exception
 	 */
 	public static void main(final String[] args) throws Exception {
-		String host = "jajcus.net";
+		String host = "tigase.org";
 
 		if (args.length > 0) {
 			host = args[0];
