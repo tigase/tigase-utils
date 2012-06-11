@@ -189,9 +189,9 @@ public abstract class CertificateUtil {
 
 		StringBuilder subject = new StringBuilder(1024);
 
-		appendName(subject, "EMAILADDRESS", email);
 		appendName(subject, "CN", domain);
 		appendName(subject, "CN", "*." + domain);
+		appendName(subject, "EMAILADDRESS", email);
 		appendName(subject, "OU", organizationUnit);
 		appendName(subject, "O", organization);
 		appendName(subject, "L", city);
@@ -472,20 +472,22 @@ public abstract class CertificateUtil {
 	 * @throws NoSuchAlgorithmException
 	 */
 	public static CertificateEntry parseCertificate(Reader data)
-			throws IOException, CertificateException, NoSuchAlgorithmException, InvalidKeySpecException {
+ throws IOException, CertificateException,
+			NoSuchAlgorithmException, InvalidKeySpecException {
 		BufferedReader br = new BufferedReader(data);
 		StringBuilder sb = new StringBuilder(4096);
 		List<Certificate> certs = new ArrayList<Certificate>(3);
 		PrivateKey privateKey = null;
-		String line = br.readLine();
+		String line;
 
-		while (line != null) {
-			if ( !line.contains(BEGIN_CERT) &&!line.contains(END_CERT) &&!line.contains(BEGIN_KEY)
-					&&!line.contains(END_KEY) &&!line.contains(BEGIN_RSA_KEY) &&!line.contains(END_RSA_KEY)) {
-				sb.append(line);
-			}
+		boolean addToBuffer = false;
 
-			if (line.contains(END_CERT)) {
+		while ((line = br.readLine()) != null) {
+
+			if (line.contains(BEGIN_CERT) || line.contains(BEGIN_KEY) || line.contains(BEGIN_RSA_KEY)) {
+				addToBuffer = true;
+			} else if (line.contains(END_CERT)) {
+				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 				CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -497,26 +499,24 @@ public abstract class CertificateUtil {
 				}
 
 				sb = new StringBuilder(4096);
-			}
-
-			if (line.contains(END_KEY)) {
+			} else if (line.contains(END_KEY)) {
+				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
 				privateKey = (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
 				sb = new StringBuilder(4096);
-			}
-
-			if (line.contains(END_RSA_KEY)) {
+			} else if (line.contains(END_RSA_KEY)) {
+				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				RSAPrivateKeyDecoder decoder = new RSAPrivateKeyDecoder(bytes);
 
 				privateKey = decoder.getPrivateKey();
 				sb = new StringBuilder(4096);
-			}
+			} else if (addToBuffer)
+				sb.append(line);
 
-			line = br.readLine();
 		}
 
 		CertificateEntry entry = new CertificateEntry();
