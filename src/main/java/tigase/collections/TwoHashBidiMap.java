@@ -2,15 +2,15 @@ package tigase.collections;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TwoHashBidiMap<K, V> implements BidiMap<K, V> {
 
-	private final HashMap<K, V> keyValueMap = new HashMap<K, V>();
+	private final Map<K, V> keyValueMap = new ConcurrentHashMap<K, V>();
 
-	private final HashMap<V, K> valueKeyMap = new HashMap<V, K>();
+	private final Map<V, K> valueKeyMap = new ConcurrentHashMap<V, K>();
 
 	@Override
 	public void clear() {
@@ -35,6 +35,8 @@ public class TwoHashBidiMap<K, V> implements BidiMap<K, V> {
 
 	@Override
 	public V get(Object key) {
+		if (key == null)
+			return null;
 		return keyValueMap.get(key);
 	}
 
