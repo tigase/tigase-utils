@@ -6,18 +6,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
+	<name>Tigase Utils</name>
 	<version>3.4.0-SNAPSHOT</version>
 	<description>Tigase Utils</description>
-	<name>TigaseUtils</name>
-	<organization>
-		<name>Tigase</name>
-		<url>http://www.tigase.org</url>
-	</organization>
-	<scm>
-		<connection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</connection>
-		<developerConnection>scm:svn:https://svn.tigase.org/reps/tigase-utils/trunk</developerConnection>
-		<url>https://svn.tigase.org/reps/tigase-utils</url>
-	</scm>
+	<url>http://www.tigase.org/</url>
+	<issueManagement>
+		<system>Redmine</system>
+		<url>https://projects.tigase.org/projects/tigase-utils</url>
+	</issueManagement>
 	<developers>
 		<developer>
 			<name>Artur Hefczyc</name>
@@ -30,14 +26,97 @@
 	<licenses>
 		<license>
 			<name>GNU Affero General Public License</name>
-			<url>http://www.gnu.org/licenses/gpl.txt</url>
+			<url>http://www.gnu.org/licenses/agpl.txt</url>
 		</license>
 	</licenses>
+	<scm>
+		<connection>scm:git:https://svn.tigase.org/git/tigase-utils.git</connection>
+		<developerConnection>scm:git:https://svn.tigase.org/git/tigase-utils.git</developerConnection>
+		<url>https://projects.tigase.org/projects/tigase-utils/repository</url>
+	</scm>
+	<organization>
+		<name>Tigase</name>
+		<url>http://www.tigase.org</url>
+	</organization>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<timestampFormat>{0,date} {0,time}</timestampFormat>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<shortRevisionLength>8</shortRevisionLength>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<packageName>tigase/</packageName>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Build>${buildNumber} (${timestamp})</Implementation-Build>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>2.2</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>tigase</groupId>
+			<artifactId>tigase-xmltools</artifactId>
+			<version>3.4.0-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 	<repositories>
 		<repository>
 			<id>tigase</id>
-			<name>Tigase rpos</name>
-			<layout>default</layout>
+			<name>Tigase repository</name>
 			<url>http://maven.tigase.org</url>
 			<snapshots>
 				<enabled>true</enabled>
@@ -47,47 +126,13 @@
 	<distributionManagement>
 		<repository>
 			<id>tigase</id>
-			<name>Tigase Repo</name>
-			<url>scpexe://maven.tigase.org:/home/webapp/maven-repository</url>
+			<name>Tigase repository</name>
+			<url>scp://maven.tigase.org:/home/webapp/maven-repository</url>
 		</repository>
 		<snapshotRepository>
 			<id>tigase</id>
-			<name>Tigase Repo</name>
-			<url>scpexe://maven.tigase.org:/home/webapp/maven-repository</url>
+			<name>Tigase snapshot repository</name>
+			<url>scp://maven.tigase.org:/home/webapp/maven-repository</url>
 		</snapshotRepository>
 	</distributionManagement>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-7</version>
-			</extension>
-		</extensions>
-	</build>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>tigase</groupId>
-			<artifactId>tigase-xmltools</artifactId>
-			<version>3.3.4</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
 </project>
