@@ -40,11 +40,11 @@ import java.util.jar.JarFile;
  * implementations of specified <em>interface</em> or <em>abstract class</em>
  * found in classpath. As a result of calling some functions you can have
  * <code>Set</code> containing all required classes.
- * 
+ *
  * <p>
  * Created: Wed Oct 6 08:25:52 2004
  * </p>
- * 
+ *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
@@ -57,10 +57,10 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param fileName
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getClassNameFromFileName(String fileName) {
@@ -84,10 +84,10 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param dir
-	 * 
+	 *
 	 * @return
 	 */
 	public static Set<String> getClassNamesFromDir(File dir) {
@@ -109,12 +109,12 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param jarFile
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public static Set<String> getClassNamesFromJar(File jarFile) throws IOException {
@@ -138,10 +138,10 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
@@ -183,12 +183,12 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param names
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 */
 	public static Set<Class> getClassesFromNames(Set<String> names)
@@ -224,6 +224,7 @@ public class ClassUtil {
 
 					classes.add(cls);
 				}
+			} catch (SecurityException e) {
 			} catch (NoClassDefFoundError e) {
 			} catch (UnsatisfiedLinkError e) {
 			} catch (Throwable e) {
@@ -243,12 +244,12 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param classes
 	 * @param cls
 	 * @param <T>
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked" })
@@ -273,13 +274,13 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param cls
 	 * @param <T>
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
@@ -290,10 +291,10 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param path
-	 * 
+	 *
 	 * @return
 	 */
 	public static Set<String> getFileListDeep(File path) {
@@ -314,13 +315,13 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param obj
 	 * @param <T>
-	 * 
+	 *
 	 * @return
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 * @throws IllegalAccessException
@@ -340,8 +341,8 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param base_dir
 	 * @param path
 	 * @param set
