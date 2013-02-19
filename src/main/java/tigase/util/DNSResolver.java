@@ -49,13 +49,10 @@ import sun.net.util.IPAddressUtil;
 //~--- classes ----------------------------------------------------------------
 
 /**
- * Describe class DNSResolver here.
- * 
- * 
- * Created: Mon Sep 11 09:59:02 2006
+ * DNSResolver class for handling DNS names
  * 
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
- * @version $Rev$
+ * @since Mon Sep 11 09:59:02 2006
  */
 public class DNSResolver {
 
@@ -208,16 +205,33 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Method description
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
 	 * 
 	 * 
-	 * @param hostname
+	 * @param hostname name to resolve
 	 * 
-	 * @return
+	 * @return Array of the DNSEntry objects containing DNS records
 	 * 
 	 * @throws UnknownHostException
 	 */
 	public static DNSEntry[] getHostSRV_Entries(String hostname)
+		throws UnknownHostException {
+		String service = "_xmpp-server._tcp";
+		int defPort = 5269;
+		return getHostSRV_Entries( hostname, service, defPort );
+	}
+
+
+	/**
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
+	 *
+	 * @param hostname name to resolve
+	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
+	 * @param defPort default port number in case DNS records is missing one.
+	 * @return Array of the DNSEntry records
+	 * @throws UnknownHostException
+	 */
+	public static DNSEntry[] getHostSRV_Entries(String hostname, String service, int defPort)
 			throws UnknownHostException {
 		DNSEntry[] cache_res = srv_cache.get(hostname);
 
@@ -226,7 +240,7 @@ public class DNSResolver {
 		} // end of if (result != null)
 
 		String result_host = hostname;
-		int port = 5269;
+		int port = defPort;
 		int priority = 0;
 		int weight = 0;
 		long ttl = 3600 * 1000;
@@ -239,7 +253,7 @@ public class DNSResolver {
 
 			DirContext ctx = new InitialDirContext(env);
 			Attributes attrs =
-					ctx.getAttributes("_xmpp-server._tcp." + hostname, new String[] { "SRV" });
+					ctx.getAttributes(service + "." + hostname, new String[] { "SRV" });
 			Attribute att = attrs.get("SRV");
 
 			// System.out.println("SRV Attribute: " + att);
@@ -263,7 +277,7 @@ public class DNSResolver {
 					try {
 						port = Integer.parseInt(dns_resp[2]);
 					} catch (Exception e) {
-						port = 5269;
+						port = defPort;
 					}
 
 					result_host = dns_resp[3];
@@ -274,15 +288,15 @@ public class DNSResolver {
 						InetAddress[] all = InetAddress.getAllByName(result_host);
 						String ip_address = all[0].getHostAddress();
 
-						// if (!IPAddressUtil.isIPv4LiteralAddress(ip_address))
-						// continue;
+							// if (!IPAddressUtil.isIPv4LiteralAddress(ip_address))
+							// continue;
 
-						if (ip_address.equals(opendns_hit_nxdomain_ip)) {
-							continue;
-						}
+							if (ip_address.equals(opendns_hit_nxdomain_ip)) {
+								continue;
+							}
 
-						entries.add(new DNSEntry(hostname, result_host, ip_address, port, ttl,
-								priority, weight));
+							entries.add(new DNSEntry(hostname, result_host, ip_address, port, ttl,
+									priority, weight));
 					} catch (Exception e) {
 						// There is no more processing anyway but for the sake of clarity
 						// and in case some more code is added in the future we call
@@ -325,17 +339,32 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Method description
+	 * Retrieves service DNS entry with highest priority for given <code>hostname</code>. Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
 	 * 
+	 * @param hostname name to resolve
 	 * 
-	 * @param hostname
-	 * 
-	 * @return
+	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
 	 * 
 	 * @throws UnknownHostException
 	 */
-	public static DNSEntry getHostSRV_Entry(String hostname) throws UnknownHostException {
-		DNSEntry[] entries = getHostSRV_Entries(hostname);
+
+	public static DNSEntry getHostSRV_Entry(String hostname)
+		throws UnknownHostException {
+		String service = "_xmpp-server._tcp";
+		int defPort = 5269;
+		return getHostSRV_Entry(hostname, service, defPort);
+	}
+
+	/**
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
+	 * @param hostname name to resolve
+	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
+	 * @param defPort default port number in case DNS records is missing one.
+	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
+	 *
+	 * @throws UnknownHostException
+	 */	public static DNSEntry getHostSRV_Entry(String hostname, String service, int defPort) throws UnknownHostException {
+		DNSEntry[] entries = getHostSRV_Entries(hostname, service, defPort);
 
 		if ((entries == null) || (entries.length == 0)) {
 			return null;
@@ -398,7 +427,7 @@ public class DNSResolver {
 	 * @throws Exception
 	 */
 	public static void main(final String[] args) throws Exception {
-		String host = "tigase.org";
+		String host = "tigase.im";
 
 		if (args.length > 0) {
 			host = args[0];
