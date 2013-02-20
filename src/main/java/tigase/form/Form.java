@@ -1,9 +1,13 @@
-/*  Tigase Project
- *  Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+/*
+ * Form.java
+ *
+ * Tigase Jabber/XMPP Server
+ * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License.
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,47 +18,55 @@
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
  *
- * $Rev$
- * Last modified by $Author$
- * $Date$
  */
+
+
+
 package tigase.form;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import tigase.xml.Element;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
-
-import tigase.xml.Element;
+import java.util.Map;
 
 /**
- * 
+ *
  * <p>
  * Created: 2007-05-27 11:41:02
  * </p>
- * 
+ *
  * @author bmalkow
  * @version $Rev:43 $
  */
 public class Form {
-
-	private List<Field> fields = new ArrayList<Field>();
-
+	private List<Field> fields             = new ArrayList<Field>();
 	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
-
+	private Logger log                     = Logger.getLogger(this.getClass().getName());
 	private String instruction;
-
-	private Logger log = Logger.getLogger(this.getClass().getName());
-
 	private String title;
-
 	private String type;
 
+	//~--- constructors ---------------------------------------------------------
+
+	/**
+	 * Constructs ...
+	 *
+	 *
+	 * @param form
+	 */
 	public Form(Element form) {
-		this.type = form.getAttribute("type");
+		this.type = form.getAttributeStaticStr("type");
 		log.finest("Retriving Data Form type " + this.type);
+
 		List<Element> children = form.getChildren();
+
 		if (children != null) {
 			for (Element sub : children) {
 				if ("title".equals(sub.getName())) {
@@ -65,6 +77,7 @@ public class Form {
 					log.finest("read Data Form instruction [" + this.instruction + "]");
 				} else if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
+
 					log.finest("read Data Form field [" + field.getVar() + "]");
 					this.fields.add(field);
 					this.fieldsByVar.put(field.getVar(), field);
@@ -73,16 +86,36 @@ public class Form {
 		}
 	}
 
+	/**
+	 * Constructs ...
+	 *
+	 *
+	 * @param type
+	 * @param title
+	 * @param instruction
+	 */
 	public Form(String type, String title, String instruction) {
-		this.type = type;
-		this.title = title;
+		this.type        = type;
+		this.title       = title;
 		this.instruction = instruction;
 	}
 
+	//~--- methods --------------------------------------------------------------
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param field
+	 */
 	public void addField(final Field field) {
-		Field cf = field.getVar() != null ? this.fieldsByVar.get(field.getVar()) : null;
+		Field cf = (field.getVar() != null)
+							 ? this.fieldsByVar.get(field.getVar())
+							 : null;
+
 		if (cf != null) {
 			int p = this.fields.indexOf(cf);
+
 			this.fields.remove(cf);
 			this.fields.add(p, field);
 		} else {
@@ -93,53 +126,100 @@ public class Form {
 		}
 	}
 
+	/**
+	 * Method description
+	 *
+	 */
 	public void clear() {
 		this.fields.clear();
 		this.fieldsByVar.clear();
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param form
+	 */
 	public void copyValuesFrom(Element form) {
 		log.finest("Copying values from form ");
+
 		List<Element> children = form.getChildren();
+
 		if (children != null) {
 			for (Element sub : children) {
 				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
+					Field f     = fieldsByVar.get(field.getVar());
 
-					Field f = fieldsByVar.get(field.getVar());
 					if (f != null) {
 						f.setValues(field.getValues());
 					} else {
-						log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+						log.warning("Field " + field.getVar() + " is not declared in form '" +
+												title + "'!");
 					}
 				}
 			}
 		}
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param form
+	 */
 	public void copyValuesFrom(Form form) {
 		for (Field field : form.fields) {
 			Field f = fieldsByVar.get(field.getVar());
+
 			if (f != null) {
 				f.setValues(field.getValues());
 			} else {
-				log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+				log.warning("Field " + field.getVar() + " is not declared in form '" + title +
+										"'!");
 			}
 		}
 	}
 
+	//~--- get methods ----------------------------------------------------------
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 *
+	 * @return
+	 */
 	public Field get(String var) {
 		return this.fieldsByVar.get(var);
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @return
+	 */
 	public List<Field> getAllFields() {
 		return this.fields;
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 *
+	 * @return
+	 */
 	public Boolean getAsBoolean(String var) {
 		Field f = get(var);
+
 		if (f != null) {
 			String v = f.getValue();
+
 			if (v == null) {
 				return null;
 			} else if ("1".equals(v) || "true".equals(v)) {
@@ -147,8 +227,9 @@ public class Form {
 			} else {
 				return Boolean.FALSE;
 			}
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -157,36 +238,67 @@ public class Form {
 	 */
 	public Integer getAsInteger(String var) {
 		Field f = get(var);
+
 		if (f != null) {
 			String v = f.getValue();
+
 			return Integer.parseInt(v);
-		} else
+		} else {
 			return null;
+		}
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 *
+	 * @return
+	 */
 	public String getAsString(String var) {
 		Field f = get(var);
+
 		if (f != null) {
 			String v = f.getValue();
+
 			return v;
-		} else
+		} else {
 			return null;
+		}
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 *
+	 * @return
+	 */
 	public String[] getAsStrings(String var) {
 		Field f = get(var);
+
 		if (f != null) {
 			String[] v = f.getValues();
+
 			return v;
-		} else
+		} else {
 			return null;
+		}
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @return
+	 */
 	public Element getElement() {
 		Element form = new Element("x");
+
 		form.setAttribute("xmlns", "jabber:x:data");
 		form.setAttribute("type", type);
-
 		if (this.title != null) {
 			form.addChild(new Element("title", this.title));
 		}
@@ -196,6 +308,7 @@ public class Form {
 		for (Field field : this.fields) {
 			form.addChild(field.getElement());
 		}
+
 		return form;
 	}
 
@@ -220,16 +333,35 @@ public class Form {
 		return type;
 	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 *
+	 * @return
+	 */
 	public boolean is(String var) {
 		return this.fieldsByVar.containsKey(var);
 	}
 
+	//~--- methods --------------------------------------------------------------
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param var
+	 */
 	public void removeField(final String var) {
 		Field cf = this.fieldsByVar.remove(var);
+
 		if (cf != null) {
 			this.fields.remove(cf);
 		}
 	}
+
+	//~--- set methods ----------------------------------------------------------
 
 	/**
 	 * @param instruction
@@ -255,3 +387,6 @@ public class Form {
 		this.type = type;
 	}
 }
+
+
+//~ Formatted in Tigase Code Convention on 13/02/20
