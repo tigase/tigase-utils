@@ -2,7 +2,7 @@
  * DNSResolver.java
  *
  * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+ * Copyright (C) 2004-2013 "Tigase, Inc." <office@tigase.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -411,6 +411,7 @@ public class DNSResolver {
 	 * @param args a <code>String[]</code> containing domains to query, if none provided default one will be used
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public static void main(final String[] args) throws Exception {
 		String host = "tigase.im";
 
@@ -490,6 +491,3 @@ public class DNSResolver {
 
 
 //~ Formatted in Tigase Code Convention on 13/02/21
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

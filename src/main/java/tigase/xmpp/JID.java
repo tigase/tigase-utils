@@ -1,10 +1,13 @@
 /*
+ * JID.java
+ *
  * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+ * Copyright (C) 2004-2013 "Tigase, Inc." <office@tigase.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, version 3 of the License.
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,18 +18,15 @@
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
  *
- * $Rev$
- * Last modified by $Author$
- * $Date$
  */
+
+
 
 package tigase.xmpp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import tigase.util.TigaseStringprepException;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * The class defines an instance of a single XMPP JID identifier.
@@ -39,7 +39,8 @@ import tigase.util.TigaseStringprepException;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public final class JID implements Comparable<JID> {
+public final class JID
+				implements Comparable<JID> {
 	private final BareJID bareJid;
 	private final String resource;
 	private final String to_string;
@@ -62,8 +63,8 @@ public final class JID implements Comparable<JID> {
 	 * stringprep processing.
 	 */
 	private JID(BareJID bareJid, String resource) {
-		this.bareJid = bareJid;
-		this.resource = resource;
+		this.bareJid   = bareJid;
+		this.resource  = resource;
 		this.to_string = BareJID.toString(bareJid, resource);
 	}
 
@@ -90,7 +91,8 @@ public final class JID implements Comparable<JID> {
 	public static JID jidInstance(BareJID bareJid, String p_resource)
 					throws TigaseStringprepException {
 		String f_resource = (p_resource == null)
-												? null : BareJID.stringPrep.resourceprep(p_resource);
+												? null
+												: BareJID.stringPrep.resourceprep(p_resource);
 
 		return new JID(bareJid, f_resource);
 	}
@@ -176,12 +178,18 @@ public final class JID implements Comparable<JID> {
 	 * Constructs a new <code>JID</code> instance using a JID parameter given
 	 * as a <code>String</code> instance.
 	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters.</strong>
+	 * parameters and it returns <code>null</code> if null is passed as parameter.</strong>
+	 * The method does not throw <code>NullPointerException</code> if the
+	 * <code>String</code> passed is null.
 	 *
 	 * @param jid a JID parameter given as a <code>String</code> instance.
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null.
 	 */
 	public static JID jidInstanceNS(String jid) {
+		if (jid == null) {
+			return null;
+		}
+
 		String[] parsedJid = BareJID.parseJID(jid);
 
 		return jidInstanceNS(parsedJid[0], parsedJid[1], parsedJid[2]);
@@ -287,9 +295,9 @@ public final class JID implements Comparable<JID> {
 		if (b instanceof JID) {
 			JID jid = (JID) b;
 
-			result = bareJid.equals(jid.bareJid)
-							 && ((resource == jid.resource)
-									 || ((resource != null) && resource.equals(jid.resource)));
+			result = bareJid.equals(jid.bareJid) &&
+							 ((resource == jid.resource) ||
+								((resource != null) && resource.equals(jid.resource)));
 		}
 
 		return result;
@@ -390,7 +398,4 @@ public final class JID implements Comparable<JID> {
 }
 
 
-//~ Formatted in Sun Code Convention
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
+//~ Formatted in Tigase Code Convention on 13/02/21
