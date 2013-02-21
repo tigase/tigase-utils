@@ -1,10 +1,13 @@
 /*
+ * DNSEntry.java
+ *
  * Tigase Jabber/XMPP Server
  * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, version 3 of the License.
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,146 +18,189 @@
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
  *
- * $Rev$
- * Last modified by $Author$
- * $Date$
  */
+
+
 
 package tigase.util;
 
-//~--- classes ----------------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Arrays;
 
 /**
- * Created: Dec 19, 2009 10:29:23 PM
+ * The class defines an instance of a single DNS entry.
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
- * @version $Rev$
+ * @since Dec 19, 2009 10:29:23 PM
  */
 public class DNSEntry {
 	private String dnsResultHost = null;
-	private String hostname = null;
-	private String ip = null;
-	private int port = 5269;
-	private int priority = 0;
-	private long ttl = 3600 * 1000;
-	private int weight = 0;
+	private String hostname      = null;
+	private String[] ips         = null;
+	private int port             = 5269;
+	private int priority         = 0;
+	private long ttl             = 3600 * 1000;
+	private int weight           = 0;
 
 	//~--- constructors ---------------------------------------------------------
 
 	/**
-	 * Constructs ...
+	 * Constructs DNS entry with hostname and IP to which it resolves.
 	 *
 	 *
-	 * @param hostname
-	 * @param ip
+	 * @param hostname the domain name for which this record is valid
+	 * @param ip <code>IP address</code> of the machine providing the service.
 	 */
 	public DNSEntry(String hostname, String ip) {
 		this.hostname = hostname;
-		this.ip = ip;
+		this.ips      = new String[1];
+		this.ips[0]   = ip;
 	}
 
 	/**
-	 * Constructs ...
+	 * Constructs DNS entry with hostname and multiple IP to which it resolves.
 	 *
 	 *
-	 * @param hostname
-	 * @param port
-	 * @param ip
+	 * @param hostname the domain name for which this record is valid
+	 * @param ips Array of all <code>IP addresses</code> on which target host provide service.
+	 */
+	public DNSEntry(String hostname, String[] ips) {
+		this.hostname = hostname;
+		this.ips      = ips;
+	}
+
+	/**
+	 * Constructs DNS entry with hostname, IP to which it resolves and a default port number used for connections.
+	 *
+	 *
+	 * @param hostname the domain name for which this record is valid
+	 * @param ip <code>IP address</code> of the machine providing the service.
+	 * @param port the TCP or UDP port on which the service is to be found
 	 */
 	public DNSEntry(String hostname, String ip, int port) {
-		this.hostname = hostname;
+		this(hostname, ip);
 		this.port = port;
-		this.ip = ip;
 	}
 
 	/**
+	 * Constructs complete SRV DNS entry.
 	 *
-	 * @param hostname
-	 * @param dnsResultHost
-	 * @param ip
-	 * @param port
-	 * @param ttl
-	 * @param priority
-	 * @param weight
+	 * @param hostname the domain name for which this record is valid
+	 * @param dnsResultHost the canonical hostname of the machine providing the service.
+	 * @param ip <code>IP address</code> of the machine providing the service.
+	 * @param port the TCP or UDP port on which the service is to be found
+	 * @param ttl standard DNS time to live field.
+	 * @param priority the priority of the target host, lower value means more preferred.
+	 * @param weight relative weight for records with the same priority.
 	 */
 	public DNSEntry(String hostname, String dnsResultHost, String ip, int port, long ttl,
-			int priority, int weight) {
-		this.hostname = hostname;
+									int priority, int weight) {
+		this(hostname, ip, port);
 		this.dnsResultHost = dnsResultHost;
-		this.ip = ip;
-		this.port = port;
-		this.ttl = ttl;
-		this.priority = priority;
-		this.weight = weight;
+		this.ttl           = ttl;
+		this.priority      = priority;
+		this.weight        = weight;
+	}
+
+	/**
+	 * Constructs complete SRV DNS entry.
+	 *
+	 * @param hostname the domain name for which this record is valid
+	 * @param dnsResultHost the canonical hostname of the machine providing the service.
+	 * @param ips Array of all <code>IP addresses</code> on which target host provide service.
+	 * @param port the TCP or UDP port on which the service is to be found
+	 * @param ttl standard DNS time to live field.
+	 * @param priority the priority of the target host, lower value means more preferred.
+	 * @param weight relative weight for records with the same priority.
+	 *
+	 */
+	public DNSEntry(String hostname, String dnsResultHost, String[] ips, int port,
+									long ttl, int priority, int weight) {
+		this(hostname, ips);
+		this.dnsResultHost = dnsResultHost;
+		this.port          = port;
+		this.ttl           = ttl;
+		this.priority      = priority;
+		this.weight        = weight;
 	}
 
 	//~--- get methods ----------------------------------------------------------
 
 	/**
-	 * Method description
+	 * Returns the domain name for which this record is valid
 	 *
 	 *
-	 * @return
+	 * @return the domain name for which this record is valid
 	 */
 	public String getDnsResultHost() {
 		return dnsResultHost;
 	}
 
 	/**
-	 * Method description
+	 * Returns the canonical hostname of the machine providing the service.
 	 *
-	 *
-	 * @return
+	 * @return the canonical hostname of the machine providing the service.
 	 */
 	public String getHostname() {
 		return hostname;
 	}
 
 	/**
-	 * Method description
+	 * Returns <code>IP address</code> of the machine providing the service.
 	 *
 	 *
-	 * @return
+	 * @return <code>IP address</code> of the machine providing the service.
 	 */
 	public String getIp() {
-		return ip;
+		return ips[0];
 	}
 
 	/**
-	 * Method description
+	 * Returns array containing all <code>IP addresses</code> on which service is available (in case hostname resolves to multiple IPs)
 	 *
 	 *
-	 * @return
+	 * @return array containing all <code>IP addresses</code> on which service is available
+	 */
+	public String[] getIps() {
+		return ips;
+	}
+
+	/**
+	 * Returns the TCP or UDP port on which the service is to be found
+	 *
+	 *
+	 * @return the TCP or UDP port on which the service is to be found
 	 */
 	public int getPort() {
 		return port;
 	}
 
 	/**
-	 * Method description
+	 * Returns the priority of the target host, lower value means more preferred.
 	 *
 	 *
-	 * @return
+	 * @return the priority of the target host, lower value means more preferred.
 	 */
 	public int getPriority() {
 		return priority;
 	}
 
 	/**
-	 * Method description
+	 * Returns standard DNS time to live field.
 	 *
 	 *
-	 * @return
+	 * @return standard DNS time to live field.
 	 */
 	public long getTtl() {
 		return ttl;
 	}
 
 	/**
-	 * Method description
+	 * Returns relative weight for records with the same priority.
 	 *
 	 *
-	 * @return
+	 * @return relative weight for records with the same priority.
 	 */
 	public int getWeight() {
 		return weight;
@@ -163,20 +209,21 @@ public class DNSEntry {
 	//~--- methods --------------------------------------------------------------
 
 	/**
-	 * Method description
+	 * Returns string interpretation of the DNS entry
 	 *
 	 *
-	 * @return
+	 * @return string interpretation of the DNS entry
 	 */
 	@Override
 	public String toString() {
-		return "hostname: " + dnsResultHost + ", port: " + port + ", ip: " + ip + ", priority: " + priority
-				+ ", weight: " + weight + ", ttl: " + (ttl / 1000);
+		return "hostname: " + dnsResultHost + ", port: " + port + ", ip(s): " +
+					 Arrays.toString(ips) + ", priority: " + priority + ", weight: " + weight +
+					 ", ttl: " + (ttl / 1000);
 	}
 }
 
 
-//~ Formatted in Sun Code Convention
+//~ Formatted in Tigase Code Convention on 13/02/21
 
 
 //~ Formatted by Jindent --- http://www.jindent.com
