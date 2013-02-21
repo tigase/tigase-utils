@@ -211,7 +211,8 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Retrieves list of SRV DNS entries for given <code>hostname</code>. Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
+	 * Retrieves list of SRV DNS entries for given <code>hostname</code>. Performs lookup
+	 * for <code>_xmpp-server._tcp</code> SRV records.
 	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @return Array of the DNSEntry objects containing SRV DNS records
@@ -226,7 +227,8 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying
+	 * particular type of SRV record.
 	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
@@ -324,10 +326,12 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Retrieves service DNS entry with highest priority for given <code>hostname</code>. Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
+	 * Retrieves service DNS entry with highest priority for given <code>hostname</code>.
+	 * Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
 	 *
 	 * @param hostname name to resolve
-	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
+	 * @return DNSEntry object containing DNS record with highest priority for given
+	 * <code>hostname</code>
 	 * @throws UnknownHostException
 	 */
 	public static DNSEntry getHostSRV_Entry(String hostname) throws UnknownHostException {
@@ -338,11 +342,13 @@ public class DNSResolver {
 	}
 
 	/**
-	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying
+	 * particular type of SRV record.
 	 * @param hostname name to resolve
 	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
 	 * @param defPort default port number in case DNS records is missing one.
-	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
+	 * @return DNSEntry object containing DNS record with highest priority for given
+	 * <code>hostname</code>
 	 *
 	 * @throws UnknownHostException
 	 */
@@ -408,7 +414,8 @@ public class DNSResolver {
 	/**
 	 * <code>main</code> method outputting various information about hostnames
 	 *
-	 * @param args a <code>String[]</code> containing domains to query, if none provided default one will be used
+	 * @param args a <code>String[]</code> containing domains to query, if none provided
+	 * default one will be used
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
