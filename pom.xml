@@ -79,7 +79,7 @@
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 						<manifestEntries>
-							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Version>${project.version} (${buildNumber})</Implementation-Version>
 							<Implementation-Build>${buildNumber} (${timestamp})</Implementation-Build>
 						</manifestEntries>
 					</archive>
