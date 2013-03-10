@@ -95,6 +95,9 @@ public class DNSResolver {
 			String newHostName =
 				InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
 
+			if (newHostName.equalsIgnoreCase(InetAddress.getLocalHost().getHostAddress())) {
+				newHostName = InetAddress.getLocalHost().getHostName();
+			}
 			if (!LOCALHOST.equals(newHostName)) {
 				localnames    = new String[2];
 				localnames[0] = newHostName;
@@ -116,6 +119,9 @@ public class DNSResolver {
 						continue;
 					}
 					defaultHostname = addr.getCanonicalHostName().toLowerCase();
+					if (defaultHostname.equalsIgnoreCase(addr.getHostAddress())) {
+						defaultHostname = addr.getHostName();
+					}
 				}
 			}
 			if (defaultHostname == null) {
@@ -475,6 +481,8 @@ public class DNSResolver {
 			System.out.println(entry.toString());
 		}
 		System.out.println("-------------------");
+		System.out.println("defaultHostname: " + defaultHostname);
+		System.out.println("-------------------");
 		System.out.println("Localhost name: " + InetAddress.getLocalHost().getHostName());
 		System.out.println("Localhost canonnical name: " +
 											 InetAddress.getLocalHost().getCanonicalHostName());
@@ -497,4 +505,4 @@ public class DNSResolver {
 }
 
 
-//~ Formatted in Tigase Code Convention on 13/02/21
+//~ Formatted in Tigase Code Convention on 13/03/09
