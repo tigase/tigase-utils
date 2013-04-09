@@ -7,7 +7,7 @@
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
 	<name>Tigase Utils</name>
-	<version>3.4.1</version>
+	<version>3.4.2-SNAPSHOT</version>
 	<description>Tigase Utils</description>
 	<url>http://www.tigase.org/</url>
 	<issueManagement>
