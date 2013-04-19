@@ -42,6 +42,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
@@ -63,7 +64,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -602,7 +606,7 @@ public abstract class CertificateUtil {
 			NoSuchAlgorithmException, InvalidKeySpecException {
 		BufferedReader br = new BufferedReader(data);
 		StringBuilder sb = new StringBuilder(4096);
-		List<Certificate> certs = new ArrayList<Certificate>(3);
+		List<X509Certificate> certs = new ArrayList<X509Certificate>();
 		PrivateKey privateKey = null;
 		String line;
 
@@ -621,7 +625,7 @@ public abstract class CertificateUtil {
 				while (bais.available() > 0) {
 					Certificate cert = cf.generateCertificate(bais);
 
-					certs.add(cert);
+					certs.add((X509Certificate) cert);
 				}
 
 				sb = new StringBuilder(4096);
@@ -651,6 +655,48 @@ public abstract class CertificateUtil {
 		entry.setPrivateKey(privateKey);
 
 		return entry;
+	}
+
+	public static Certificate[] sort(Certificate[] chain) {
+		List<Certificate> res = sort(new ArrayList<Certificate>(Arrays.asList(chain)));
+		return res.toArray(new Certificate[res.size()]);
+	}
+
+	public static List<Certificate> sort(List<Certificate> certs) {
+		Certificate rt = null;
+		for (Certificate x509Certificate : certs) {
+			Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
+			Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
+			if (i.equals(s))
+				rt = x509Certificate;
+		}
+
+		if (rt == null)
+			throw new RuntimeException("Can't find root certificate in chain!");
+
+		ArrayList<Certificate> res = new ArrayList<Certificate>();
+		certs.remove(rt);
+		res.add(rt);
+
+		while (!certs.isEmpty()) {
+			boolean found = false;
+			for (Certificate x509Certificate : certs) {
+				Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
+				if (i.equals(((X509Certificate) rt).getSubjectDN())) {
+					rt = x509Certificate;
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				certs.remove(rt);
+				res.add(0, rt);
+			} else {
+				throw new RuntimeException("Can't sort certificate chain!!!");
+			}
+		}
+
+		return res;
 	}
 
 	private static void printHelp() {
