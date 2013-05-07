@@ -1,189 +1,123 @@
-/*
- * Tigase Jabber/XMPP Utils
- * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. Look for COPYING file in the top folder.
- * If not, see http://www.gnu.org/licenses/.
- *
- * $Rev$
- * Last modified by $Author$
- * $Date$
- */
 package tigase.util;
 
 import java.util.Arrays;
 
-/**
- * Describe class Base64 here.
- *
- *
- * Created: Thu Dec 14 18:28:08 2006
- *
- * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
- * @version $Rev$
- */
 public class Base64 {
 
-	private static final char toBase64[] = {
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
-	};
+	private static final char[] ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
 
-	private static final byte fromBase64[] = {
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54,
-		55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4,
-		5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-		24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-		35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
-	};
+	private static final int[] ALPHABET_1 = new int[256];
 
-	private Base64() {}
+	static {
+		Arrays.fill(ALPHABET_1, -1);
+		for (int i = 0; i < ALPHABET.length; i++)
+			ALPHABET_1[ALPHABET[i]] = i;
+		ALPHABET_1['='] = 0;
+	}
 
-	/**
-	 * Decodes base64 data
-	 *
-	 * @param input
-	 * @return
-	 */
-	public static byte[] decode(String input) {
-		int groups = input.length() / 4;
-		int pads = 0;
-		if (input.endsWith("=")) {
-			++pads;
-			if (input.charAt(input.length()-2) == '=') {
-				++pads;
-			} // end of if (input.charAt(input.length()-2) == '=')
-			if (Base64.isWhiteSpace(input.charAt(input.length()-6)) ) groups--;
+	public static byte[] decode(String s) {
+		int separatorsCounter = 0;
+		final int inputLen = s.length();
+		for (int i = 0; i < inputLen; i++) {
+			int c = ALPHABET_1[s.charAt(i)];
+			if (c < 0 && c != '=')
+				separatorsCounter++;
 		}
-		byte[] result = new byte[groups * 3 - pads];
-		int incnt = 0, outcnt = 0;
-		groups = (pads > 0 ? groups - 1 : groups);
 
-		while (incnt/4 < groups) {
-			while (isWhiteSpace(input.charAt(incnt))) ++incnt;
-			byte b1 = fromBase64[input.charAt(incnt++)];
-			byte b2 = fromBase64[input.charAt(incnt++)];
-			byte b3 = fromBase64[input.charAt(incnt++)];
-			byte b4 = fromBase64[input.charAt(incnt++)];
-			result[outcnt++] = (byte)((b1 << 2) | (b2 >> 4));
-			result[outcnt++] = (byte)((b2 << 4) | (b3 >> 2));
-			result[outcnt++] = (byte)((b3 << 6) | b4);
-		} // end of for (int i = 0; i < groups; i++)
-		if (pads > 0) {
-			while (isWhiteSpace(input.charAt(incnt))) ++incnt;
-			byte b1 = fromBase64[input.charAt(incnt++)];
-			byte b2 = fromBase64[input.charAt(incnt++)];
-			result[outcnt++] = (byte)((b1 << 2) | (b2 >> 4));
-			if (pads == 1) {
-				byte b3 = fromBase64[input.charAt(incnt++)];
-				result[outcnt++] = (byte)((b2 << 4) | (b3 >> 2));
-			} // end of if (pads == 1)
-		} // end of if (pads > 0)
-		return Arrays.copyOf(result, outcnt);
-	}
-
-	/**
-	 * Encodes data in base64
-	 * @param input
-	 * @return
-	 */
-	public static String encode(byte[] input) {
-		return encodeChunk(input, 0);
-	}
-
-	/**
-	 * Encodes data in base64 splited into lines od defigned lenght
-	 * @param input
-	 * @param chunkSize lenght of the line
-	 * @return
-	 */
-	public static String encodeChunk(byte[] input, int chunkSize) {
-		int groups = input.length / 3;
-		int pads = (groups * 3 + 3 - input.length) % 3;
-		StringBuilder result =
-			new StringBuilder(groups * 4 + (pads > 0 ? 1 : 0));
-		for (int i = 0; i < groups; i++) {
-			int c1 = (input[i*3] & 0xff) >> 2;
-			int c2 = (((input[i*3] & 0xff) << 4) & 0x3f)
-				| ((input[i*3+1] & 0xff) >> 4);
-			int c3 = (((input[i*3+1] & 0xff) << 2) & 0x3f )
-				| ((input[i*3+2] & 0xff) >> 6);
-			int c4 = input[i*3+2] & 0x3f;
-			result.append(toBase64[c1]);
-			result.append(toBase64[c2]);
-			result.append(toBase64[c3]);
-			result.append(toBase64[c4]);
-			if (chunkSize !=0 && (i+1) % (chunkSize/4) == 0) {
-			    result.append("\r\n");
-                        }
-		} // end of for (int i = 0; i < groups; i++)
-		switch (pads) {
-		case 1: {
-			int c1 = (input[groups*3] & 0xff) >> 2;
-			int c2 = (((input[groups*3] & 0xff) << 4) & 0x3f)
-				| ((input[groups*3+1] & 0xff) >> 4);
-			int c3 = ((input[groups*3+1] & 0xff) << 2) & 0x3f;
-			result.append(toBase64[c1]);
-			result.append(toBase64[c2]);
-			result.append(toBase64[c3]);
-			result.append('=');
-			break;
+		int deltas = 0;
+		for (int i = inputLen - 1; i > 1 && ALPHABET_1[s.charAt(i)] <= 0; --i) {
+			if (s.charAt(i) == '=') {
+				++deltas;
+			}
 		}
-		case 2: {
-			int c1 = (input[groups*3] & 0xff) >> 2;
-			int c2 = (((input[groups*3] & 0xff) << 4) & 0x3f);
-			result.append(toBase64[c1]);
-			result.append(toBase64[c2]);
-			result.append("==");
-			break;
+
+		final int outputLen = (inputLen - separatorsCounter) * 3 / 4 - deltas;
+
+		byte[] buffer = new byte[outputLen];
+		int mask = 0xFF;
+		int index = 0;
+		int o;
+		for (o = 0; o < s.length();) {
+
+			int c0 = ALPHABET_1[s.charAt(o++)];
+			if (c0 == -1) {
+				o = findNexIt(s, --o);
+				c0 = ALPHABET_1[s.charAt(o++)];
+				if (c0 == -1)
+					break;
+			}
+			int c1 = ALPHABET_1[s.charAt(o++)];
+			if (c1 == -1) {
+				o = findNexIt(s, --o);
+				c1 = ALPHABET_1[s.charAt(o++)];
+				if (c1 == -1)
+					break;
+			}
+
+			buffer[index++] = (byte) (((c0 << 2) | (c1 >> 4)) & mask);
+			if (index >= buffer.length) {
+				break;
+			}
+			int c2 = ALPHABET_1[s.charAt(o++)];
+			if (c2 == -1) {
+				o = findNexIt(s, --o);
+				c2 = ALPHABET_1[s.charAt(o++)];
+				if (c2 == -1)
+					break;
+			}
+			buffer[index++] = (byte) (((c1 << 4) | (c2 >> 2)) & mask);
+			if (index >= buffer.length) {
+				break;
+			}
+			int c3 = ALPHABET_1[s.charAt(o++)];
+			if (c3 == -1) {
+				o = findNexIt(s, --o);
+				c3 = ALPHABET_1[s.charAt(o++)];
+				if (c3 == -1)
+					break;
+			}
+			buffer[index++] = (byte) (((c2 << 6) | c3) & mask);
 		}
-		default:
-			break;
-		} // end of switch (pads)
-		return result.toString();
+
+		return buffer;
 	}
 
-	private static boolean isWhiteSpace(char charToCheck) {
-	    switch (charToCheck) {
-		case ' ':
-		case '\n':
-		case '\r':
-		case '\t':
-		    return true;
-		default:
-		    return false;
-	    }
+	public static String encode(byte[] buf) {
+		final int size = buf.length;
+		int outputSize = ((size + 2) / 3) * 4;
+		final char[] output = new char[outputSize];
+		int a = 0;
+		int i = 0;
+		while (i < size) {
+			byte b0 = buf[i++];
+			byte b1 = (i < size) ? buf[i++] : 0;
+			byte b2 = (i < size) ? buf[i++] : 0;
+
+			int mask = 0x3F;
+			output[a++] = ALPHABET[(b0 >> 2) & mask];
+			output[a++] = ALPHABET[((b0 << 4) | ((b1 & 0xFF) >> 4)) & mask];
+			output[a++] = ALPHABET[((b1 << 2) | ((b2 & 0xFF) >> 6)) & mask];
+			output[a++] = ALPHABET[b2 & mask];
+		}
+		switch (size % 3) {
+		case 1:
+			output[--a] = '=';
+		case 2:
+			output[--a] = '=';
+		}
+		return new String(output);
 	}
 
-	/**
-	 * Describe <code>main</code> method here.
-	 *
-	 * @param args a <code>String[]</code> value
-	 */
-	public static void main(final String[] args) {
+	private static int findNexIt(String s, int i) {
+		final int sl = s.length() - 1;
+		int c2;
+		if (i >= sl)
+			return i;
+		do {
+			c2 = ALPHABET_1[s.charAt(++i)];
+		} while (c2 == -1 && i < sl);
 
-		if (args[0].equals("-decode")) {
-			System.out.println(new String(decode(args[1])));
-		} // end of if (args[0].equals("-decode"))
-		if (args[0].equals("-encode")) {
-			System.out.println(encode(args[1].getBytes()));
-		} // end of if (args[0].equals("-encode"))
+		return i;
 	}
 
-
-} // Base64
+}
