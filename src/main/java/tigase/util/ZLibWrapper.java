@@ -363,12 +363,12 @@ public class ZLibWrapper {
 				result_arr = deflate(result_arr);
 			}
 
-/*
+
  			// I am not really sure if this last call is needed, TODO: test it and remove it
 			// Absolutely sure that it is needed. Tested and confirmed, without the call
 			// the compression is broken. Why? I do not know.
 			result_arr = deflate(result_arr);
-*/
+
 		}
 
 		// If the compressed_output array is smaller assign result to the output
