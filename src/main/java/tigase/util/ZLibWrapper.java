@@ -363,6 +363,65 @@ public class ZLibWrapper {
 				result_arr = deflate(result_arr);
 			}
 
+
+ 			// I am not really sure if this last call is needed, TODO: test it and remove it
+			// Absolutely sure that it is needed. Tested and confirmed, without the call
+			// the compression is broken. Why? I do not know.
+			result_arr = deflate(result_arr);
+
+		}
+
+		// If the compressed_output array is smaller assign result to the output
+		// to make sure the next time there is enough space in the output array
+		// to limit memory allocation calls
+		if (result_arr.length > compress_output.length) {
+			compress_output = result_arr;
+
+			if (log.isLoggable(Level.FINEST)) {
+				log.log(Level.FINEST, "Increasing compress_output size to: {0}", compress_output.length);
+			}
+		}
+
+		// Calculate compression rate for statistics collection
+		last_compression_rate = (before - result_arr.length) / before;
+		average_compression_rate = (average_compression_rate + last_compression_rate) / 2;
+
+		// Create resulting buffer.
+		ByteBuffer result = ByteBuffer.wrap(result_arr);
+
+		return result;
+	}	
+	/*
+	public ByteBuffer compress(ByteBuffer input) {
+
+		// Arrays where all compressed bytes are saved.
+		byte[] result_arr = null;
+
+		// This is saved for compression rate calculation only
+		float before = input.remaining();
+
+		// Repeat compression procedure until the input buffer is empty
+		while (input.hasRemaining()) {
+
+			// ByteBuffer doesn't like calls with requested data size bigger than
+			// either remaining bytes in the buffer or input array size
+			int size = Math.min(compress_input.length, input.remaining());
+
+			input.get(compress_input, 0, size);
+
+			// From the Deflater source code it looks like each setInput() call
+			// overwrites previous data, so we have to run compression on each
+			// buffer separately.
+			compresser.setInput(compress_input, 0, size);
+
+			// Finish data preparation (from the Deflater source code it looks like
+			// this is really dummy call doing pretty much nothing)
+			// compresser.finish();
+			// While there are still data waiting for compression
+			while ( !compresser.needsInput()) {
+				result_arr = deflate(result_arr);
+			}
+
 			// We don't want to reset or finish the compresser to not loss the real
 			// compression benefits. Deflater however does not offer flushing so this
 			// is a workaround from:
@@ -399,6 +458,7 @@ public class ZLibWrapper {
 
 		return result;
 	}
+	*/
 
 	/**
 	 * Method description
@@ -577,6 +637,39 @@ public class ZLibWrapper {
 		byte[] result_arr = input_arr;
 
 		// Compress data and take number of bytes ready
+		int compressed_size = compresser.deflate(compress_output, 0, compress_output.length, Deflater.SYNC_FLUSH);
+
+		// Beware, we can get 0 compressed_size quite frequently as the zlib
+		// library buffers data for a better compression ratio
+		if (compressed_size > 0) {
+
+			// Copy compressed data to result array
+			if (result_arr == null) {
+
+				// On the first call just copy the array - data in the source array
+				// will be overwritten on the next call
+				result_arr = Arrays.copyOf(compress_output, compressed_size);
+			} else {
+
+				// If the method is called many times for a single input buffer
+				// we may need to resize the output array, in time however the
+				// output array size should automaticaly adjust to the data and
+				// resizing array should not be needed then
+				int old_size = result_arr.length;
+
+				result_arr = Arrays.copyOf(result_arr, old_size + compressed_size);
+				System.arraycopy(compress_output, 0, result_arr, old_size, compressed_size);
+			}
+		}
+
+		return result_arr;
+	}
+	
+	/*
+	private byte[] deflate(byte[] input_arr) {
+		byte[] result_arr = input_arr;
+
+		// Compress data and take number of bytes ready
 		int compressed_size = compresser.deflate(compress_output, 0, compress_output.length);
 
 		// Beware, we can get 0 compressed_size quite frequently as the zlib
@@ -604,6 +697,7 @@ public class ZLibWrapper {
 
 		return result_arr;
 	}
+	*/
 }
 
 
