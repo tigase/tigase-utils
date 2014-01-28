@@ -692,7 +692,7 @@ public abstract class CertificateUtil {
 				certs.remove(rt);
 				res.add(0, rt);
 			} else {
-				throw new RuntimeException("Can't sort certificate chain!!!");
+				throw new RuntimeException("Can't sort certificate chain! Certificate chain is missing item, verify that all entries are correct and match against each other!");
 			}
 		}
 
