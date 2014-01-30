@@ -692,7 +692,8 @@ public abstract class CertificateUtil {
 				certs.remove(rt);
 				res.add(0, rt);
 			} else {
-				throw new RuntimeException("Can't sort certificate chain! Certificate chain is missing item, verify that all entries are correct and match against each other!");
+				throw new RuntimeException("Can't find certificate " + ((X509Certificate) rt).getSubjectDN()
+						+ " in chain. Verify that all entries are correct and match against each other!");
 			}
 		}
 
@@ -790,7 +791,12 @@ public abstract class CertificateUtil {
 	 */
 	public static void storeCertificate(String file, CertificateEntry entry) throws CertificateEncodingException, IOException {
 		String pemFormat = exportToPemFormat(entry);
-		FileWriter fw = new FileWriter(file, false);
+
+		File f = new File(file);
+		if (f.exists())
+			f.renameTo(new File(file + ".bak"));
+
+		FileWriter fw = new FileWriter(f, false);
 
 		fw.write(pemFormat);
 		fw.close();
