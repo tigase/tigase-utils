@@ -57,27 +57,26 @@ import javax.naming.NamingException;
  * @since Mon Sep 11 09:59:02 2006
  */
 public class DNSResolver {
-	private static String defaultHostname    = null;
-	private static final long DNS_CACHE_TIME = 1000 * 60;
-	private static final String LOCALHOST    = "localhost";
-	private static String[] localnames       = null;
+	private static String       defaultHostname = null;
+	private static final long   DNS_CACHE_TIME  = 1000 * 60;
+	private static final String LOCALHOST       = "localhost";
+	private static String[]     localnames      = null;
 
 	/**
 	 * Variable <code>log</code> is a class logger.
 	 */
-	private static final Logger log                   =
-		Logger.getLogger(DNSResolver.class.getName());
+	private static final Logger log = Logger.getLogger(DNSResolver.class.getName());
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
 
 	/** Field description */
-	public static Map<String, DNSEntry[]> srv_cache =
-		Collections.synchronizedMap(new SimpleCache<String, DNSEntry[]>(100, DNS_CACHE_TIME));
+	public static Map<String, DNSEntry[]> srv_cache = Collections.synchronizedMap(
+			new SimpleCache<String, DNSEntry[]>(100, DNS_CACHE_TIME));
 
 	/** Field description */
-	public static Map<String, DNSEntry> ip_cache =
-		Collections.synchronizedMap(new SimpleCache<String, DNSEntry>(100, DNS_CACHE_TIME));
+	public static Map<String, DNSEntry> ip_cache = Collections.synchronizedMap(
+			new SimpleCache<String, DNSEntry>(100, DNS_CACHE_TIME));
 	private static String opendns_hit_nxdomain_ip = null;
-	private static long resolveDefaultTime        = 0;
+	private static long   resolveDefaultTime      = 0;
 	private static Random rand                    = new Random();
 
 	//~--- static initializers --------------------------------------------------
@@ -92,8 +91,8 @@ public class DNSResolver {
 		java.security.Security.setProperty("networkaddress.cache.ttl", "0");
 		ip_cache.put(LOCALHOST, new DNSEntry(LOCALHOST, "127.0.0.1"));
 		try {
-			String newHostName =
-				InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
+			String newHostName = InetAddress.getLocalHost().getCanonicalHostName()
+					.toLowerCase();
 
 			if (newHostName.equalsIgnoreCase(InetAddress.getLocalHost().getHostAddress())) {
 				newHostName = InetAddress.getLocalHost().getHostName();
@@ -105,8 +104,8 @@ public class DNSResolver {
 
 				InetAddress[] all = InetAddress.getAllByName(localnames[0]);
 
-				ip_cache.put(localnames[0],
-										 new DNSEntry(localnames[0], all[0].getHostAddress().toLowerCase()));
+				ip_cache.put(localnames[0], new DNSEntry(localnames[0], all[0].getHostAddress()
+						.toLowerCase()));
 			} else {
 				localnames = new String[] { LOCALHOST };
 			}
@@ -114,8 +113,8 @@ public class DNSResolver {
 				InetAddress[] all = InetAddress.getAllByName(hostname);
 
 				for (InetAddress addr : all) {
-					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() ||
-							addr.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
+					if (addr.isLoopbackAddress() || addr.isAnyLocalAddress() || addr
+							.isLinkLocalAddress() || addr.isSiteLocalAddress()) {
 						continue;
 					}
 					defaultHostname = addr.getCanonicalHostName().toLowerCase();
@@ -131,8 +130,8 @@ public class DNSResolver {
 			localnames      = new String[] { LOCALHOST };
 			defaultHostname = LOCALHOST;
 			log.severe(
-					"Most likely network misconfiguration problem, make sure the localhost " +
-					"name to whichever it is set does resolve to IP address, now using: " +
+					"Most likely network misconfiguration problem, make sure the local hostname " +
+					"to whichever it is set does resolve to IP address, now using: " +
 					defaultHostname);
 		}    // end of try-catch
 
@@ -142,8 +141,8 @@ public class DNSResolver {
 			@Override
 			public void run() {
 				try {
-					opendns_hit_nxdomain_ip =
-						InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN).getHostAddress();
+					opendns_hit_nxdomain_ip = InetAddress.getByName(OPEN_DNS_HIT_NXDOMAIN)
+							.getHostAddress();
 				} catch (UnknownHostException e) {
 					opendns_hit_nxdomain_ip = null;
 				}
@@ -155,18 +154,95 @@ public class DNSResolver {
 		}
 	}
 
-	//~--- get methods ----------------------------------------------------------
+	//~--- methods --------------------------------------------------------------
 
 	/**
-	 * Method description
+	 * <code>main</code> method outputting various information about hostnames
 	 *
-	 * @return
+	 * @param args a <code>String[]</code> containing domains to query, if none provided
+	 * default one will be used
+	 * @throws Exception
 	 */
-	public static String[] getDefHostNames() {
-		return ((localnames != null)
-						? Arrays.copyOf(localnames, localnames.length)
-						: null);
+	@SuppressWarnings("unchecked")
+	public static void main(final String[] args) throws Exception {
+		String host = "tigase.im";
+
+		if (args.length > 0) {
+			host = args[0];
+		}
+
+		String[]   hostIPs     = getHostIPs(host);
+		DNSEntry[] dns_entries = getHostSRV_Entries(host);
+
+		System.out.println(host + ":getHostIP: " + getHostIP(host));
+		System.out.println(host + ":getHostIPs (" + hostIPs.length + "): " + Arrays.toString(
+				hostIPs));
+		System.out.println(host + ":getHostSRV_IP: " + getHostSRV_IP(host));
+		System.out.println(host + ":getHostSRV_Entries: " + Arrays.toString(dns_entries));
+		System.out.println("-------------------");
+
+		InetAddress[] all = InetAddress.getAllByName(host);
+
+		for (InetAddress ia : all) {
+			System.out.println("Host:getAllByName: " + ia.toString());
+		}    // end of for (InetAddress ia: all)
+		System.out.println("-------------------");
+
+		Hashtable env = new Hashtable();
+
+		env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
+
+		// env.put("java.naming.provider.url", "dns://10.75.32.10");
+		DirContext ctx = new InitialDirContext(env);
+		Attributes attrs = ctx.getAttributes("_xmpp-server._tcp." + host, new String[] {
+				"SRV",
+				"A" });
+		String    id  = "SRV";
+		Attribute att = attrs.get(id);
+
+		if (att == null) {
+			id  = "A";
+			att = attrs.get(id);
+		}    // end of if (attr == null)
+		System.out.println(id + ": " + att.get(0));
+		System.out.println("Class: " + att.get(0).getClass().getSimpleName());
+		for (NamingEnumeration<? extends Attribute> ae = attrs.getAll(); ae
+				.hasMoreElements(); ) {
+			Attribute attr   = (Attribute) ae.next();
+			String    attrId = attr.getID();
+
+			for (Enumeration vals = attr.getAll(); vals.hasMoreElements();
+					System.out.println(attrId + ": " + vals.nextElement()));
+		}
+		ctx.close();
+		System.out.println("-------------------");
+		for (DNSEntry entry : dns_entries) {
+			System.out.println(entry.toString());
+		}
+		System.out.println("-------------------");
+		System.out.println("defaultHostname: " + defaultHostname);
+		System.out.println("-------------------");
+		System.out.println("Localhost name: " + InetAddress.getLocalHost().getHostName());
+		System.out.println("Localhost canonnical name: " + InetAddress.getLocalHost()
+				.getCanonicalHostName());
+		System.out.println("Is local loopback: " + InetAddress.getLocalHost()
+				.isLoopbackAddress());
+		for (String hostname : localnames) {
+			all = InetAddress.getAllByName(hostname);
+			for (InetAddress addr : all) {
+				System.out.println("  ------   ");
+				System.out.println("Host name: " + addr.getHostName());
+				System.out.println("Host getCanonicalHostName(): " + addr.getCanonicalHostName());
+				System.out.println("Host getHostAddress(): " + addr.getHostAddress());
+				System.out.println("Is isLoopbackAddress()  : " + addr.isLoopbackAddress());
+				System.out.println("Is isAnyLocalAddress()  : " + addr.isAnyLocalAddress());
+				System.out.println("Is isLinkLocalAddress() : " + addr.isLinkLocalAddress());
+				System.out.println("Is isSiteLocalAddress() : " + addr.isSiteLocalAddress());
+			}
+		}
 	}
+
+	//~--- get methods ----------------------------------------------------------
 
 	/**
 	 * Method description
@@ -175,6 +251,17 @@ public class DNSResolver {
 	 */
 	public static String getDefaultHostname() {
 		return defaultHostname;
+	}
+
+	/**
+	 * Method description
+	 *
+	 * @return
+	 */
+	public static String[] getDefHostNames() {
+		return ((localnames != null)
+				? Arrays.copyOf(localnames, localnames.length)
+				: null);
 	}
 
 	/**
@@ -202,8 +289,8 @@ public class DNSResolver {
 			return cache_res.getIps();
 		}    // end of if (result != null)
 
-		InetAddress[] all     = InetAddress.getAllByName(hostname);
-		String[] ip_addresses = new String[all.length];
+		InetAddress[] all          = InetAddress.getAllByName(hostname);
+		String[]      ip_addresses = new String[all.length];
 
 		for (int j = 0; j < all.length; j++) {
 			ip_addresses[j] = all[j].getHostAddress();
@@ -227,7 +314,7 @@ public class DNSResolver {
 	public static DNSEntry[] getHostSRV_Entries(String hostname)
 					throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
-		int defPort    = 5269;
+		int    defPort = 5269;
 
 		return getHostSRV_Entries(hostname, service, defPort);
 	}
@@ -243,7 +330,7 @@ public class DNSResolver {
 	 * @throws UnknownHostException
 	 */
 	public static DNSEntry[] getHostSRV_Entries(String hostname, String service,
-					int defPort)
+			int defPort)
 					throws UnknownHostException {
 		DNSEntry[] cache_res = srv_cache.get(hostname);
 
@@ -251,21 +338,21 @@ public class DNSResolver {
 			return cache_res;
 		}    // end of if (result != null)
 
-		String result_host                = hostname;
-		int port                          = defPort;
-		int priority                      = 0;
-		int weight                        = 0;
-		long ttl                          = 3600 * 1000;
-		final ArrayList<DNSEntry> entries = new ArrayList<DNSEntry>();
+		String                    result_host = hostname;
+		int                       port        = defPort;
+		int                       priority    = 0;
+		int                       weight      = 0;
+		long                      ttl         = 3600 * 1000;
+		final ArrayList<DNSEntry> entries     = new ArrayList<DNSEntry>();
 
 		try {
 			Hashtable<String, String> env = new Hashtable<String, String>(5);
 
 			env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
 
-			DirContext ctx   = new InitialDirContext(env);
-			Attributes attrs = ctx.getAttributes(service + "." + hostname,
-													 new String[] { "SRV" });
+			DirContext ctx = new InitialDirContext(env);
+			Attributes attrs = ctx.getAttributes(service + "." + hostname, new String[] {
+					"SRV" });
 			Attribute att = attrs.get("SRV");
 
 			// System.out.println("SRV Attribute: " + att);
@@ -296,7 +383,7 @@ public class DNSResolver {
 						String[] ip_addresses = getHostIPs(result_host);
 
 						entries.add(new DNSEntry(hostname, result_host, ip_addresses, port, ttl,
-																		 priority, weight));
+								priority, weight));
 					} catch (Exception e) {
 
 						// There is no more processing anyway but for the sake of clarity
@@ -313,7 +400,7 @@ public class DNSResolver {
 			result_host = hostname;
 			if (log.isLoggable(Level.FINER)) {
 				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname,
-								e);
+						e);
 			}
 		}    // end of try-catch
 		if (entries.isEmpty()) {
@@ -342,7 +429,7 @@ public class DNSResolver {
 	 */
 	public static DNSEntry getHostSRV_Entry(String hostname) throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
-		int defPort    = 5269;
+		int    defPort = 5269;
 
 		return getHostSRV_Entry(hostname, service, defPort);
 	}
@@ -367,8 +454,8 @@ public class DNSResolver {
 		}
 
 		// Let's find the entry with the highest priority
-		int priority    = Integer.MAX_VALUE;
-		DNSEntry result = null;
+		int      priority = Integer.MAX_VALUE;
+		DNSEntry result   = null;
 
 		// We try to get random entry here, in case there are multiple results and one
 		// is consistently broken
@@ -387,12 +474,12 @@ public class DNSResolver {
 			// Hm this should not happen, mistake in the algorithm?
 			result = entries[0];
 			log.log(Level.WARNING, "No result?? should not happen, an error in the code: {0}",
-							Arrays.toString(entries));
+					Arrays.toString(entries));
 		}
 		if (log.isLoggable(Level.FINEST)) {
 			log.log(Level.FINEST, "Start idx: {0}, last idx: {1}, selected DNSEntry: {2}",
-							new Object[] { start,
-														 idx, result });
+					new Object[] { start,
+					idx, result });
 		}
 
 		return result;
@@ -411,98 +498,10 @@ public class DNSResolver {
 		DNSEntry entry = getHostSRV_Entry(hostname);
 
 		return (entry != null)
-					 ? entry.getIp()
-					 : null;
-	}
-
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * <code>main</code> method outputting various information about hostnames
-	 *
-	 * @param args a <code>String[]</code> containing domains to query, if none provided
-	 * default one will be used
-	 * @throws Exception
-	 */
-	@SuppressWarnings("unchecked")
-	public static void main(final String[] args) throws Exception {
-		String host = "tigase.im";
-
-		if (args.length > 0) {
-			host = args[0];
-		}
-
-		String[] hostIPs       = getHostIPs(host);
-		DNSEntry[] dns_entries = getHostSRV_Entries(host);
-
-		System.out.println(host + ":getHostIP: " + getHostIP(host));
-		System.out.println(host + ":getHostIPs (" + hostIPs.length + "): " +
-											 Arrays.toString(hostIPs));
-		System.out.println(host + ":getHostSRV_IP: " + getHostSRV_IP(host));
-		System.out.println(host + ":getHostSRV_Entries: " + Arrays.toString(dns_entries));
-		System.out.println("-------------------");
-
-		InetAddress[] all = InetAddress.getAllByName(host);
-
-		for (InetAddress ia : all) {
-			System.out.println("Host:getAllByName: " + ia.toString());
-		}    // end of for (InetAddress ia: all)
-		System.out.println("-------------------");
-
-		Hashtable env = new Hashtable();
-
-		env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
-
-		// env.put("java.naming.provider.url", "dns://10.75.32.10");
-		DirContext ctx   = new InitialDirContext(env);
-		Attributes attrs = ctx.getAttributes("_xmpp-server._tcp." + host,
-												 new String[] { "SRV",
-						"A" });
-		String id     = "SRV";
-		Attribute att = attrs.get(id);
-
-		if (att == null) {
-			id  = "A";
-			att = attrs.get(id);
-		}    // end of if (attr == null)
-		System.out.println(id + ": " + att.get(0));
-		System.out.println("Class: " + att.get(0).getClass().getSimpleName());
-		for (NamingEnumeration<? extends Attribute> ae =
-						attrs.getAll(); ae.hasMoreElements(); ) {
-			Attribute attr = (Attribute) ae.next();
-			String attrId  = attr.getID();
-
-			for (Enumeration vals = attr.getAll(); vals.hasMoreElements();
-							System.out.println(attrId + ": " + vals.nextElement()));
-		}
-		ctx.close();
-		System.out.println("-------------------");
-		for (DNSEntry entry : dns_entries) {
-			System.out.println(entry.toString());
-		}
-		System.out.println("-------------------");
-		System.out.println("defaultHostname: " + defaultHostname);
-		System.out.println("-------------------");
-		System.out.println("Localhost name: " + InetAddress.getLocalHost().getHostName());
-		System.out.println("Localhost canonnical name: " +
-											 InetAddress.getLocalHost().getCanonicalHostName());
-		System.out.println("Is local loopback: " +
-											 InetAddress.getLocalHost().isLoopbackAddress());
-		for (String hostname : localnames) {
-			all = InetAddress.getAllByName(hostname);
-			for (InetAddress addr : all) {
-				System.out.println("  ------   ");
-				System.out.println("Host name: " + addr.getHostName());
-				System.out.println("Host getCanonicalHostName(): " + addr.getCanonicalHostName());
-				System.out.println("Host getHostAddress(): " + addr.getHostAddress());
-				System.out.println("Is isLoopbackAddress()  : " + addr.isLoopbackAddress());
-				System.out.println("Is isAnyLocalAddress()  : " + addr.isAnyLocalAddress());
-				System.out.println("Is isLinkLocalAddress() : " + addr.isLinkLocalAddress());
-				System.out.println("Is isSiteLocalAddress() : " + addr.isSiteLocalAddress());
-			}
-		}
+				? entry.getIp()
+				: null;
 	}
 }
 
 
-//~ Formatted in Tigase Code Convention on 13/03/09
+//~ Formatted in Tigase Code Convention on 14/02/07
