@@ -8,7 +8,7 @@
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
 	<name>Tigase Utils</name>
-	<version>3.4.2</version>
+	<version>3.4.3-SNAPSHOT</version>
 	<description>Tigase Utils</description>
 	<url>http://www.tigase.org/</url>
 	<issueManagement>
@@ -142,7 +142,7 @@
 		<dependency>
 			<groupId>tigase</groupId>
 			<artifactId>tigase-xmltools</artifactId>
-			<version>3.4.4</version>
+			<version>3.4.5-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
