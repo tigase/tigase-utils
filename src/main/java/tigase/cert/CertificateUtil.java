@@ -23,70 +23,22 @@ package tigase.cert;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Principal;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Security;
-import java.security.SignatureException;
-import java.security.cert.CertPath;
-import java.security.cert.CertPathValidator;
-import java.security.cert.CertPathValidatorException;
+import tigase.util.Algorithms;
+import tigase.util.Base64;
+
+import java.io.*;
+import java.security.*;
+import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.PKIXBuilderParameters;
-import java.security.cert.X509CertSelector;
-import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.security.auth.x500.X500Principal;
-
-import sun.security.x509.AlgorithmId;
-import sun.security.x509.CertificateAlgorithmId;
-import sun.security.x509.CertificateIssuerName;
-import sun.security.x509.CertificateSerialNumber;
-import sun.security.x509.CertificateSubjectName;
-import sun.security.x509.CertificateValidity;
-import sun.security.x509.CertificateVersion;
-import sun.security.x509.CertificateX509Key;
-import sun.security.x509.X500Name;
-import sun.security.x509.X509CertImpl;
-import sun.security.x509.X509CertInfo;
-import tigase.util.Algorithms;
-import tigase.util.Base64;
+import sun.security.x509.*;
 //~--- JDK imports ------------------------------------------------------------
 
 //~--- classes ----------------------------------------------------------------
@@ -384,6 +336,32 @@ public abstract class CertificateUtil {
 		}
 
 	}
+
+	/**
+	 * Method description
+	 *
+	 *
+	 * @param cert
+	 *
+	 * @return
+	 */
+	public static ArrayList<String> getCertAltCName( X509Certificate cert ) {
+		try {
+			ArrayList<String> result = new ArrayList<>();
+			Collection<List<?>> subjectAlternativeNames = cert.getSubjectAlternativeNames();
+
+			for ( List list : subjectAlternativeNames ) {
+				// we are only interested in dNSName
+				if ( list.get( 0 ).equals( 2 ) ){
+					result.add( list.get( 1 ).toString() );
+				}
+			}
+			return result;
+		} catch ( CertificateParsingException e ) {
+			return null;
+		}
+	}
+
 
 	/**
 	 * Method description
