@@ -24,6 +24,7 @@ package tigase.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -86,6 +87,8 @@ public class ZLibWrapper {
 	private int compressed_buff_size = COMPRESSED_BUFF_SIZE;
 	private float last_compression_rate = 0f;
 	private float last_decompression_rate = 0f;
+	
+	private IOListener listener = null;
 
 	//~--- constructors ---------------------------------------------------------
 
@@ -490,7 +493,7 @@ public class ZLibWrapper {
 	 *
 	 * @return
 	 */
-	public ByteBuffer decompress(ByteBuffer input) {
+	public ByteBuffer decompress(ByteBuffer input) throws IOException {
 
 		// Arrays where decompressed bytes are stored
 		byte[] result_arr = null;
@@ -542,6 +545,10 @@ public class ZLibWrapper {
 							// output array size should automaticaly adjust to the data and
 							// resizing array should not be needed then
 							int old_size = result_arr.length;
+							
+							if (listener != null && !listener.checkBufferLimit(old_size + decompressed_size)) {
+								throw new IOException("Input buffer size limit exceeded");
+							}
 
 							result_arr = Arrays.copyOf(result_arr, old_size + decompressed_size);
 							System.arraycopy(decompress_output, 0, result_arr, old_size, decompressed_size);
@@ -592,7 +599,7 @@ public class ZLibWrapper {
 	 *
 	 * @throws CharacterCodingException
 	 */
-	public String decompressToString(ByteBuffer input) throws CharacterCodingException {
+	public String decompressToString(ByteBuffer input) throws CharacterCodingException, IOException {
 		ByteBuffer decompressed_buff = decompress(input);
 		CharBuffer cb = decoder.decode(decompressed_buff);
 		String output = new String(cb.array());
@@ -633,6 +640,10 @@ public class ZLibWrapper {
 		return last_decompression_rate;
 	}
 
+	public void setIOListener(IOListener listener) {
+		this.listener = listener;
+	}
+	
 	private byte[] deflate(byte[] input_arr) {
 		byte[] result_arr = input_arr;
 
