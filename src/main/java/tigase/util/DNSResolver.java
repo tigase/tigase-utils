@@ -150,7 +150,7 @@ public class DNSResolver {
 		}.start();
 		resolveDefaultTime = System.currentTimeMillis() - start;
 		if (resolveDefaultTime > 0) {
-			log.warning("Resolving default host name took: " + resolveDefaultTime);
+			log.log(Level.WARNING, "Resolving default host name: {0} took: {1}",  new Object[] {defaultHostname, resolveDefaultTime});
 		}
 	}
 
