@@ -39,72 +39,35 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 
 	//~--- methods --------------------------------------------------------------
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param domain
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String nameprep(String domain) throws TigaseStringprepException {
 		String result = domain.trim().toLowerCase();
 
 		if ( !checkString(result)) {
-			throw new TigaseStringprepException("Illegal characters in string.");
+			throw new TigaseStringprepException("Illegal characters in string, domain = " + domain);
 		}
 
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param localpart
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String nodeprep(String localpart) throws TigaseStringprepException {
 		String result = localpart.trim();
 
 		if ( !checkString(result)) {
-			throw new TigaseStringprepException("Illegal characters in string.");
+			throw new TigaseStringprepException("Illegal characters in string, localpart = " + localpart);
 		}
 
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param resource
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String resourceprep(String resource) throws TigaseStringprepException {
 		return resource.trim();
 	}
 
 	private boolean checkString(String input) {
-		//return !p.matcher(input).matches();
 		return !p.matcher(input).find();
-		// return !input.matches("[ @&()\\[\\]\t\n\r\f\\a\\e]");
 	}
 }
 
-
-//~ Formatted in Sun Code Convention
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
