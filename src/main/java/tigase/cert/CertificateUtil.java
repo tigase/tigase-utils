@@ -1,6 +1,6 @@
 /*
  * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+ * Copyright (C) 2004-2014 "Tigase, Inc." <office@tigase.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -182,12 +182,22 @@ public abstract class CertificateUtil {
 		appendName(subject, "ST", state);
 		appendName(subject, "C", country);
 
+		// since JDK 1.8 we need to pass X500Name as ISSUER and SUBJECT
+		// while before JDK 1.8 we needed to pass special classes
+		// For now let's catch exception and use passing special classes
+		// as a fallback mechanism
 		X500Name issuerName = new X500Name(subject.toString());
-		CertificateIssuerName certIssuer = new CertificateIssuerName(issuerName);
-		CertificateSubjectName certSubject = new CertificateSubjectName(issuerName);
+		try {
+			certInfo.set(X509CertInfo.ISSUER, issuerName);
+			certInfo.set(X509CertInfo.SUBJECT, issuerName);
+		} catch (CertificateException ex) {
+			// trying older solution as a fallback
+			CertificateIssuerName certIssuer = new CertificateIssuerName(issuerName);
+			CertificateSubjectName certSubject = new CertificateSubjectName(issuerName);
 
-		certInfo.set(X509CertInfo.ISSUER, certIssuer);
-		certInfo.set(X509CertInfo.SUBJECT, certSubject);
+			certInfo.set(X509CertInfo.ISSUER, certIssuer);
+			certInfo.set(X509CertInfo.SUBJECT, certSubject);
+		}
 
 		// certInfo.set(X509CertInfo.ISSUER + "." +
 		// CertificateSubjectName.DN_NAME, issuerName);
