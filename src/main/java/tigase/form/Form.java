@@ -20,45 +20,43 @@
  *
  */
 
-
-
 package tigase.form;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import tigase.xml.Element;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.Map;
+//~--- JDK imports ------------------------------------------------------------
+import java.util.logging.Logger;
+
+import tigase.xml.Element;
 
 /**
- *
+ * 
  * <p>
  * Created: 2007-05-27 11:41:02
  * </p>
- *
+ * 
  * @author bmalkow
  * @version $Rev:43 $
  */
 public class Form {
-	private List<Field> fields             = new ArrayList<Field>();
+	private List<Field> fields = new ArrayList<Field>();
 	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
-	private Logger log                     = Logger.getLogger(this.getClass().getName());
 	private String instruction;
+	private Logger log = Logger.getLogger(this.getClass().getName());
 	private String title;
 	private String type;
 
-	//~--- constructors ---------------------------------------------------------
+	// ~--- constructors
+	// ---------------------------------------------------------
 
 	/**
 	 * Constructs ...
-	 *
-	 *
+	 * 
+	 * 
 	 * @param form
 	 */
 	public Form(Element form) {
@@ -88,30 +86,29 @@ public class Form {
 
 	/**
 	 * Constructs ...
-	 *
-	 *
+	 * 
+	 * 
 	 * @param type
 	 * @param title
 	 * @param instruction
 	 */
 	public Form(String type, String title, String instruction) {
-		this.type        = type;
-		this.title       = title;
+		this.type = type;
+		this.title = title;
 		this.instruction = instruction;
 	}
 
-	//~--- methods --------------------------------------------------------------
+	// ~--- methods
+	// --------------------------------------------------------------
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param field
 	 */
 	public void addField(final Field field) {
-		Field cf = (field.getVar() != null)
-							 ? this.fieldsByVar.get(field.getVar())
-							 : null;
+		Field cf = (field.getVar() != null) ? this.fieldsByVar.get(field.getVar()) : null;
 
 		if (cf != null) {
 			int p = this.fields.indexOf(cf);
@@ -128,7 +125,7 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
+	 * 
 	 */
 	public void clear() {
 		this.fields.clear();
@@ -137,8 +134,8 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param form
 	 */
 	public void copyValuesFrom(Element form) {
@@ -150,13 +147,12 @@ public class Form {
 			for (Element sub : children) {
 				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
-					Field f     = fieldsByVar.get(field.getVar());
+					Field f = fieldsByVar.get(field.getVar());
 
 					if (f != null) {
 						f.setValues(field.getValues());
 					} else {
-						log.warning("Field " + field.getVar() + " is not declared in form '" +
-												title + "'!");
+						log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
 					}
 				}
 			}
@@ -165,8 +161,8 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param form
 	 */
 	public void copyValuesFrom(Form form) {
@@ -176,20 +172,20 @@ public class Form {
 			if (f != null) {
 				f.setValues(field.getValues());
 			} else {
-				log.warning("Field " + field.getVar() + " is not declared in form '" + title +
-										"'!");
+				log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
 			}
 		}
 	}
 
-	//~--- get methods ----------------------------------------------------------
+	// ~--- get methods
+	// ----------------------------------------------------------
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
-	 *
+	 * 
 	 * @return
 	 */
 	public Field get(String var) {
@@ -198,8 +194,8 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @return
 	 */
 	public List<Field> getAllFields() {
@@ -208,10 +204,10 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
-	 *
+	 * 
 	 * @return
 	 */
 	public Boolean getAsBoolean(String var) {
@@ -248,12 +244,24 @@ public class Form {
 		}
 	}
 
+	public Long getAsLong(String var) {
+		Field f = get(var);
+
+		if (f != null) {
+			String v = f.getValue();
+
+			return Long.parseLong(v);
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
-	 *
+	 * 
 	 * @return
 	 */
 	public String getAsString(String var) {
@@ -270,10 +278,10 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
-	 *
+	 * 
 	 * @return
 	 */
 	public String[] getAsStrings(String var) {
@@ -290,8 +298,8 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @return
 	 */
 	public Element getElement() {
@@ -335,22 +343,23 @@ public class Form {
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
-	 *
+	 * 
 	 * @return
 	 */
 	public boolean is(String var) {
 		return this.fieldsByVar.containsKey(var);
 	}
 
-	//~--- methods --------------------------------------------------------------
+	// ~--- methods
+	// --------------------------------------------------------------
 
 	/**
 	 * Method description
-	 *
-	 *
+	 * 
+	 * 
 	 * @param var
 	 */
 	public void removeField(final String var) {
@@ -361,7 +370,8 @@ public class Form {
 		}
 	}
 
-	//~--- set methods ----------------------------------------------------------
+	// ~--- set methods
+	// ----------------------------------------------------------
 
 	/**
 	 * @param instruction
@@ -388,5 +398,4 @@ public class Form {
 	}
 }
 
-
-//~ Formatted in Tigase Code Convention on 13/02/20
+// ~ Formatted in Tigase Code Convention on 13/02/20
