@@ -24,9 +24,8 @@ package tigase.util;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.lang.reflect.Modifier;
-
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -145,9 +144,9 @@ public class ClassUtil {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static Set<Class> getClassesFromClassPath() throws IOException,
+	public static Set<Class<?>> getClassesFromClassPath() throws IOException,
 			ClassNotFoundException {
-		Set<Class> classes_set = new TreeSet<Class>(new ClassComparator());
+		Set<Class<?>> classes_set = new TreeSet<Class<?>>(new ClassComparator());
 		String classpath = System.getProperty("java.class.path");
 
 		// System.out.println("classpath: "+classpath);
@@ -191,9 +190,9 @@ public class ClassUtil {
 	 *
 	 * @throws ClassNotFoundException
 	 */
-	public static Set<Class> getClassesFromNames(Set<String> names)
+	public static Set<Class<?>> getClassesFromNames(Set<String> names)
 			throws ClassNotFoundException {
-		Set<Class> classes = new TreeSet<Class>(new ClassComparator());
+		Set<Class<?>> classes = new TreeSet<Class<?>>(new ClassComparator());
 
 		for (String name : names) {
 			try {
@@ -254,7 +253,7 @@ public class ClassUtil {
 	 */
 	@SuppressWarnings({ "unchecked" })
 	public static <T extends Class> Set<T>
-			getClassesImplementing(Set<Class> classes, T cls) {
+			getClassesImplementing(Collection<Class<?>> classes, T cls) {
 		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
 
 		for (Class c : classes) {
