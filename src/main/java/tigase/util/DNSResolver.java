@@ -26,29 +26,30 @@ package tigase.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sun.net.util.IPAddressUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
+import sun.net.util.IPAddressUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
 
 /**
  * DNSResolver class for handling DNS names
@@ -178,7 +179,7 @@ public class DNSResolver {
 		System.out.println(host + ":getHostIPs (" + hostIPs.length + "): " + Arrays.toString(
 				hostIPs));
 		System.out.println(host + ":getHostSRV_IP: " + getHostSRV_IP(host));
-		System.out.println(host + ":getHostSRV_Entries: " + Arrays.toString(dns_entries));
+		System.out.println(host + ":getHostSRV_Entries S2S: " + Arrays.toString(dns_entries));
 		System.out.println("-------------------");
 
 		InetAddress[] all = InetAddress.getAllByName(host);
@@ -187,7 +188,7 @@ public class DNSResolver {
 			System.out.println("Host:getAllByName: " + ia.toString());
 		}    // end of for (InetAddress ia: all)
 		System.out.println("-------------------");
-
+		
 		Hashtable env = new Hashtable();
 
 		env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
@@ -332,7 +333,8 @@ public class DNSResolver {
 	public static DNSEntry[] getHostSRV_Entries(String hostname, String service,
 			int defPort)
 					throws UnknownHostException {
-		DNSEntry[] cache_res = srv_cache.get(hostname);
+		String key = service + "." + hostname;
+		DNSEntry[] cache_res = srv_cache.get(key);
 
 		if (cache_res != null) {
 			return cache_res;
@@ -412,7 +414,7 @@ public class DNSResolver {
 		DNSEntry[] result = entries.toArray(new DNSEntry[] {});
 
 		if (result != null) {
-			srv_cache.put(hostname, result);
+			srv_cache.put(key, result);
 		}
 
 		return result;
