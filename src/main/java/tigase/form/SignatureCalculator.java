@@ -29,6 +29,8 @@ public class SignatureCalculator {
 	public static final String SUPPORTED_TYPE = "urn:xmpp:xdata:signature:oauth1";
 
 	protected static String escape(String s) {
+		if (s == null)
+			return "";
 		try {
 			return URLEncoder.encode(s, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -46,7 +48,7 @@ public class SignatureCalculator {
 
 		@Override
 		public int compare(Field o1, Field o2) {
-			return o1.getVar().compareTo(o2.getVar());
+			return o1.getVar().compareToIgnoreCase(o2.getVar());
 		}
 	};
 
@@ -108,6 +110,7 @@ public class SignatureCalculator {
 	}
 
 	public void addEmptyFields(Form form) {
+		form.addField(Field.fieldHidden("FORM_TYPE", SUPPORTED_TYPE));
 		form.addField(Field.fieldHidden("oauth_version", oauthVersion));
 		form.addField(Field.fieldHidden("oauth_signature_method", oauthSignatureMethod));
 		form.addField(Field.fieldHidden("oauth_token", oauthToken));
@@ -132,7 +135,7 @@ public class SignatureCalculator {
 		SecretKey key = key((escape(oauthConsumerSecret) + "&" + escape(oauthTokenSecret)).getBytes());
 
 		String pStr = pStr(form.getAllFields());
-		String bStr = escape(form.getType()) + "&" + escape(to.toString()) + "&" + escape(pStr);
+		String bStr = escape(form.getType()) + "&" + escape(to == null ? "" : (to.toString())) + "&" + escape(pStr);
 		String sig = escape(Base64.encode(hmac(key, bStr.getBytes())));
 
 		return sig;
