@@ -306,7 +306,8 @@ public class Form {
 		Element form = new Element("x");
 
 		form.setAttribute("xmlns", "jabber:x:data");
-		form.setAttribute("type", type);
+		if (type != null)
+			form.setAttribute("type", type);
 		if (this.title != null) {
 			form.addChild(new Element("title", this.title));
 		}
