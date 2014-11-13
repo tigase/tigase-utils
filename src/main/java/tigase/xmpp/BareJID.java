@@ -348,10 +348,10 @@ public final class BareJID implements Comparable<BareJID> {
 			// Intentionally comparing domains by reference instead of value
 			// domain is processed through the String.intern() method
 			// NOPMD
-			result = (this.domain == ((BareJID) b).domain)
-					&& ((this.localpart == null)
-						? this.localpart == ((BareJID) b).localpart
-							: this.localpart.equalsIgnoreCase(((BareJID) b).localpart));
+			result = ( this.domain.equalsIgnoreCase( ( (BareJID) b ).domain ) )
+							 && ( ( this.localpart == null )
+										? this.localpart == ( (BareJID) b ).localpart
+										: this.localpart.equalsIgnoreCase( ( (BareJID) b ).localpart ) );
 		}
 
 		return result;
@@ -406,8 +406,3 @@ public final class BareJID implements Comparable<BareJID> {
 	}
 }
 
-
-//~ Formatted in Sun Code Convention
-
-
-//~ Formatted by Jindent --- http://www.jindent.com
