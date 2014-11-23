@@ -77,6 +77,8 @@ public abstract class CertificateUtil {
 	// ~--- methods
 	// --------------------------------------------------------------
 
+	private static final String IPv4_IPv6_PATTERN = "^(((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))"
+			+ "|([0-9a-fA-F:]{2,}(:([0-9]{1,3}\\.){3}[0-9]{1,3})?))$";
 	private static final String STORE_CERT_SHORT = "-sc";
 
 	private static void appendName(StringBuilder sb, String prefix, String value) {
@@ -834,6 +836,123 @@ public abstract class CertificateUtil {
 			}
 		}
 	}
+
+	/**
+	 * Method used to verify if certificate if valid for particular domain
+	 * (if domain matches CN or ALT of certificate)
+	 * 
+	 * @param cert
+	 * @param hostname
+	 * @return true if certificate is valid
+	 * @throws CertificateParsingException
+	 */
+	public static boolean verifyCertificateForDomain(X509Certificate cert, String hostname) throws CertificateParsingException {
+		if (hostname.matches(IPv4_IPv6_PATTERN)) {
+			return verifyCertificateForIp(hostname, cert);
+		} else {
+			return verifyCertificateForHostname(hostname, cert);
+		}		
+	}
+	
+	/**
+	 * Extracts CN from principal
+	 * 
+	 * @param principal
+	 * @return 
+	 */
+	protected static String extractCN(X500Principal principal) {
+		String[] dd = principal.getName(X500Principal.RFC2253).split(",");
+		for (String string : dd) {
+			if (string.toLowerCase().startsWith("cn=")) {
+				return string.substring(3);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Checks if hostname matches name or wildcard
+	 * 
+	 * @param hostname
+	 * @param altName
+	 * @return true if there is a match
+	 */
+	public static boolean match(final String hostname, final String altName) {
+		if (hostname == null || hostname.isEmpty() || altName == null || altName.isEmpty())
+			return false;
+
+		final String normalizedAltName = altName.toLowerCase(Locale.US);
+		if (!normalizedAltName.contains("*")) {
+			return hostname.equals(normalizedAltName);
+		}
+
+		if (normalizedAltName.startsWith("*.")
+				&& hostname.regionMatches(0, normalizedAltName, 2, normalizedAltName.length() - 2))
+			return true;
+
+		int asteriskIdx = normalizedAltName.indexOf('*');
+		int dotIdx = normalizedAltName.indexOf('.');
+		if (asteriskIdx > dotIdx) {
+			return false;
+		}
+
+		if (!hostname.regionMatches(0, normalizedAltName, 0, asteriskIdx)) {
+			return false;
+		}
+
+		int suffixLength = normalizedAltName.length() - (asteriskIdx + 1);
+		int suffixStart = hostname.length() - suffixLength;
+		if (hostname.indexOf('.', asteriskIdx) < suffixStart) {
+			return false; // wildcard '*' can't match a '.'
+		}
+		if (!hostname.regionMatches(suffixStart, normalizedAltName, asteriskIdx + 1, suffixLength)) {
+			return false;
+		}
+		return true;
+	}	
+	
+	protected static boolean verifyCertificateForHostname(String hostname, X509Certificate x509Certificate) throws CertificateParsingException {
+		boolean altNamePresents = false;
+		Collection<List<?>> altNames = x509Certificate.getSubjectAlternativeNames();
+		if (altNames != null) {
+			for (List<?> entry : altNames) {
+				Integer altNameType = (Integer) entry.get(0);
+				if (altNameType != 2) {
+					continue;
+				}
+				altNamePresents = true;
+				String altName = (String) entry.get(1);
+				if (match(hostname, altName)) {
+					return true;
+				}
+			}
+		}
+
+		if (!altNamePresents) {
+			X500Principal principal = x509Certificate.getSubjectX500Principal();
+			String cn = extractCN(principal);
+			if (cn != null) {
+				return match(hostname, cn);
+			}
+		}
+		return false;
+
+	}
+
+	protected static boolean verifyCertificateForIp(String ipAddr, X509Certificate x509Certificate) throws CertificateParsingException {
+		for (List<?> entry : x509Certificate.getSubjectAlternativeNames()) {
+			Integer altNameType = (Integer) entry.get(0);
+			if (altNameType != 7)
+				continue;
+			String altName = (String) entry.get(1);
+			if (ipAddr.equalsIgnoreCase(altName)) {
+				return true;
+			}
+		}
+		return false;
+	}	
+	
+	
 }
 
 // ~ Formatted in Sun Code Convention

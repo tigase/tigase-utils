@@ -30,6 +30,7 @@ import javax.crypto.Cipher;
 import junit.framework.TestCase;
 import static tigase.cert.CertificateUtil.createKeyPair;
 import static tigase.cert.CertificateUtil.createSelfSignedCertificate;
+import static tigase.cert.CertificateUtil.verifyCertificateForDomain;
 import tigase.util.Algorithms;
 
 /**
@@ -89,5 +90,23 @@ public class CertificateUtilTest extends TestCase {
 		cert.verify(keyPair.getPublic());
 		assertTrue("Verified certificate with public key - done", true);
 	}
-	
+
+	public void testCertificateDomainVerification() throws Exception {
+		KeyPair keyPair = createKeyPair(1024, "secret");
+
+		// Certificate
+		String email = "artur.hefczyc@tigase.org";
+		String domain = "tigase.org";
+		String ou = "XMPP Service";
+		String o = "Tigase.org";
+		String l = "Cambourne";
+		String st = "Cambridgeshire";
+		String c = "UK";
+
+		//System.out.println("Creating self-signed certificate for issuer: " + domain);
+
+		X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
+		assertTrue("Verified certificate domain", verifyCertificateForDomain(cert, domain));
+		assertFalse("Verified certificate domain", verifyCertificateForDomain(cert, "fail.tigase.org"));
+	}
 }
