@@ -64,4 +64,48 @@ public class StringUtilities {
 		return result;
 	}
 
+	/**
+	 * Concatenate all elements of input array inserting separator between each
+	 *
+	 * @param arr an array to be concatenated
+	 * @param separator to be inserted between each element of array
+	 *
+	 * @return string representation of the array
+	 */
+	public static String stringArrayToString(String[] arr, String separator) {
+		if (arr == null) {
+			return null;
+		}
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < arr.length; i++) {
+			if (i > 0) {
+				buf.append(separator);
+			}
+			buf.append(arr[i]);
+		}
+		return buf.toString();
+	}
+
+	/**
+	 * Concatenate all elements of input array inserting separator between each
+	 *
+	 * @param arr an array to be concatenated
+	 * @param separator to be inserted between each element of array
+	 *
+	 * @return string representation of the array
+	 */
+	public static String intArrayToString(int[] arr, String separator) {
+		if (arr == null) {
+			return null;
+		}
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < arr.length; i++) {
+			if (i > 0) {
+				buf.append(separator);
+			}
+			buf.append(arr[i]);
+		}
+		return buf.toString();
+	}
+
 }
