@@ -37,7 +37,7 @@ public class DateTimeFormatter {
 
 	private static final String DATE = "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)";
 
-	private static final String TIME = "(\\d\\d):(\\d\\d):(\\d\\d)";
+	private static final String TIME = "(\\d\\d):(\\d\\d):(\\d\\d)(.\\d+)?";
 
 	private static final String TIME_ZONE = "(([+-]\\d\\d:\\d\\d)|Z)";
 
@@ -91,7 +91,8 @@ public class DateTimeFormatter {
 			int hh = Integer.valueOf(m.group(4));
 			int mm = Integer.valueOf(m.group(5));
 			int ss = Integer.valueOf(m.group(6));
-			String tzValue = m.group(7);
+			String ms = m.group(7);
+			String tzValue = m.group(8);
 			TimeZone tz;
 			if (tzValue.equals("Z")) {
 				tz = timeZoneUTC;
@@ -101,6 +102,9 @@ public class DateTimeFormatter {
 			Calendar calendar = Calendar.getInstance(tz);
 			calendar.clear();
 			calendar.set(yyyy, MM - 1, dd, hh, mm, ss);
+			if (ms != null) {
+				calendar.set(Calendar.MILLISECOND, Integer.valueOf(ms.substring(1)));
+			}
 			return calendar;
 		}
 
@@ -121,7 +125,8 @@ public class DateTimeFormatter {
 			int hh = Integer.valueOf(m.group(1));
 			int mm = Integer.valueOf(m.group(2));
 			int ss = Integer.valueOf(m.group(3));
-			String tzValue = m.group(4);
+			String ms = m.group(4);
+			String tzValue = m.group(5);
 			TimeZone tz;
 			if (tzValue == null || tzValue.equals("Z")) {
 				tz = timeZoneUTC;
@@ -133,6 +138,9 @@ public class DateTimeFormatter {
 			calendar.set(Calendar.SECOND, ss);
 			calendar.set(Calendar.MINUTE, mm);
 			calendar.set(Calendar.HOUR_OF_DAY, hh);
+			if (ms != null) {
+				calendar.set(Calendar.MILLISECOND, Integer.valueOf(ms.substring(1)));
+			}
 			return calendar;
 		}
 

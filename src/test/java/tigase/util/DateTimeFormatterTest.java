@@ -130,4 +130,13 @@ public class DateTimeFormatterTest extends TestCase {
 		expected.set(Calendar.SECOND, 13);
 		assertEquals(expected, actual);
 	}
+
+	public void testParse08() throws Exception {
+		Calendar actual = dt.parseDateTime("2015-01-06T20:12:26.584Z");
+		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		expected.clear();
+		expected.set(2015, 0, 6, 20, 12, 26);
+		expected.set(Calendar.MILLISECOND, 584);
+		assertEquals(expected, actual);
+	}
 }
