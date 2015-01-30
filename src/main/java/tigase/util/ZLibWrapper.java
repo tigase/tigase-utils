@@ -33,6 +33,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
@@ -158,8 +159,18 @@ public class ZLibWrapper {
 			+ "<body>We need to have a chat about Christmas presents.</body>" + "</message>",
 			"<presence to='kobit@some.domain' from='artur@another.domain'>" + "<status>away</status>"
 			+ "<show>I am away</show>" + "</presence>",
+			"<iq xmlns=\"jabber:client\" from=\"d96b6d3ba60e3714e98a094990bb6275e83ab46b@prime.kontalk.net\" id=\"oM179-6\" to=\"d96b6d3ba60e3714e98a094990bb6275e83ab46b@prime.kontalk.net/RlHH5gp7suWXT2Q5ulx7\" type=\"result\"><pubkey xmlns=\"urn:xmpp:pubkey:2\">"
+			+ "</pubkey></iq>"
 		};
+		
+		StringBuilder sb = new StringBuilder();
+		Random rand = new Random();
+		for (int i=0; i<1900; i++) {
+			sb.append((char) rand.nextInt(128));
+		}
+		inputs[inputs.length - 1] = inputs[inputs.length - 1] + sb.toString();
 
+		int idx=0;
 		for (String input : inputs) {
 			System.out.println("\nINPUT[" + input.length() + "]: \n" + input);
 
@@ -189,9 +200,11 @@ public class ZLibWrapper {
 //        ", position: " + compressedBuffer.position() +
 //        ", limit: " + compressedBuffer.limit());
 			String output = zlib.decompressToString(compressedBuffer);
-
 			System.out.println("OUTPUT[" + output.length() + "]: \n" + output);
+			System.out.println("input[" + idx + "]\n");
 			System.out.println("input.equals(output)=" + (input.equals(output)));
+			
+			idx++;
 		}
 
 		System.out.println("Compression rate: " + zlib.lastCompressionRate());
@@ -239,7 +252,7 @@ public class ZLibWrapper {
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
 			'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'W', 'X', 'Y', 'Z'
 		};
-		StringBuilder sb = new StringBuilder();
+		sb = new StringBuilder();
 
 		for (char c : chars) {
 			for (int i = 0; i < 10; i++) {
@@ -367,10 +380,10 @@ public class ZLibWrapper {
 			}
 
 
- 			// I am not really sure if this last call is needed, TODO: test it and remove it
-			// Absolutely sure that it is needed. Tested and confirmed, without the call
-			// the compression is broken. Why? I do not know.
-			result_arr = deflate(result_arr);
+// 			// I am not really sure if this last call is needed, TODO: test it and remove it
+//			// Absolutely sure that it is needed. Tested and confirmed, without the call
+//			// the compression is broken. Why? I do not know.
+//			result_arr = deflate(result_arr);
 
 		}
 
@@ -647,29 +660,32 @@ public class ZLibWrapper {
 	private byte[] deflate(byte[] input_arr) {
 		byte[] result_arr = input_arr;
 
-		// Compress data and take number of bytes ready
-		int compressed_size = compresser.deflate(compress_output, 0, compress_output.length, Deflater.SYNC_FLUSH);
+		int compressed_size = Integer.MAX_VALUE;
+		while (compressed_size >= compress_output.length) {
+			// Compress data and take number of bytes ready
+			compressed_size = compresser.deflate(compress_output, 0, compress_output.length, Deflater.SYNC_FLUSH);
 
 		// Beware, we can get 0 compressed_size quite frequently as the zlib
-		// library buffers data for a better compression ratio
-		if (compressed_size > 0) {
+			// library buffers data for a better compression ratio
+			if (compressed_size > 0) {
 
-			// Copy compressed data to result array
-			if (result_arr == null) {
+				// Copy compressed data to result array
+				if (result_arr == null) {
 
-				// On the first call just copy the array - data in the source array
-				// will be overwritten on the next call
-				result_arr = Arrays.copyOf(compress_output, compressed_size);
-			} else {
+					// On the first call just copy the array - data in the source array
+					// will be overwritten on the next call
+					result_arr = Arrays.copyOf(compress_output, compressed_size);
+				} else {
 
-				// If the method is called many times for a single input buffer
-				// we may need to resize the output array, in time however the
-				// output array size should automaticaly adjust to the data and
-				// resizing array should not be needed then
-				int old_size = result_arr.length;
+					// If the method is called many times for a single input buffer
+					// we may need to resize the output array, in time however the
+					// output array size should automaticaly adjust to the data and
+					// resizing array should not be needed then
+					int old_size = result_arr.length;
 
-				result_arr = Arrays.copyOf(result_arr, old_size + compressed_size);
-				System.arraycopy(compress_output, 0, result_arr, old_size, compressed_size);
+					result_arr = Arrays.copyOf(result_arr, old_size + compressed_size);
+					System.arraycopy(compress_output, 0, result_arr, old_size, compressed_size);
+				}
 			}
 		}
 
