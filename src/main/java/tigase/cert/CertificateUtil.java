@@ -462,6 +462,25 @@ public abstract class CertificateUtil {
 			NoSuchAlgorithmException, InvalidKeySpecException {
 		return parseCertificate(new FileReader(file));
 	}
+	
+	/**
+	 * Loads a certificate from a DER byte buffer.
+	 *
+	 * @param bytes
+	 *
+	 * @return
+	 *
+	 * @throws CertificateException
+	 * @throws NoSuchProviderException
+	 */
+	public static CertificateEntry loadCertificate(byte[] bytes) throws CertificateException, NoSuchProviderException {
+		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		Certificate certificate = cf.generateCertificate(bais);
+		CertificateEntry entry = new CertificateEntry();
+		entry.setCertChain(new Certificate[] { certificate });
+		return entry;
+	}
 
 	/**
 	 * Method description
