@@ -34,6 +34,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
@@ -82,6 +84,8 @@ public abstract class CertificateUtil {
 	private static final String STORE_CERT_SHORT = "-sc";
 
 	private static void appendName(StringBuilder sb, String prefix, String value) {
+		log.log( Level.INFO, "appending value: {0} with prefix: {1} to sb: {2}",
+						 new Object[] { value, prefix, sb.toString() } );
 		if (value != null) {
 			if (sb.length() > 0) {
 				sb.append(", ");
@@ -92,6 +96,8 @@ public abstract class CertificateUtil {
 	}
 
 	private static int calculateLength(byte[] buffer, int start) throws ArrayIndexOutOfBoundsException {
+		log.log( Level.INFO, "calculating length, buffer: {0}, start: {1}",
+						 new Object[] { new String(buffer), start } );
 		int offset = start + 1;
 		int b = (buffer[offset] & 0xff);
 		if (b < 0x80)
@@ -107,6 +113,8 @@ public abstract class CertificateUtil {
 	}
 
 	private final static int calculateOffset(byte[] buffer, int offset) throws ArrayIndexOutOfBoundsException {
+		log.log( Level.INFO, "calculating offset, buffer: {0}, start: {1}",
+						 new Object[] { new String(buffer), offset } );
 		int b = (buffer[(offset + 1)] & 0xff);
 		if (b < 0x80)
 			return (offset + 2);
@@ -114,53 +122,28 @@ public abstract class CertificateUtil {
 		return (offset + len + 2);
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * 
-	 * @param size
-	 * @param password
-	 * 
-	 * @return
-	 * 
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static KeyPair createKeyPair(int size, String password) throws NoSuchAlgorithmException {
+		log.log( Level.INFO, "creating KeyPair, size: {0}, password: {1}",
+						 new Object[] { size, password } );
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 
 		keyPairGenerator.initialize(size);
 
 		KeyPair keyPair = keyPairGenerator.genKeyPair();
+		log.log( Level.INFO, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
+						 new Object[] { keyPairGenerator, keyPair } );
 
 		return keyPair;
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * 
-	 * @param email
-	 * @param domain
-	 * @param organizationUnit
-	 * @param organization
-	 * @param city
-	 * @param state
-	 * @param country
-	 * @param keyPair
-	 * @return
-	 * 
-	 * @throws CertificateException
-	 * @throws IOException
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeyException
-	 * @throws NoSuchProviderException
-	 * @throws SignatureException
-	 */
-	public static X509Certificate createSelfSignedCertificate(String email, String domain, String organizationUnit,
-			String organization, String city, String state, String country, KeyPair keyPair) throws CertificateException,
-			IOException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException {
+	public static X509Certificate createSelfSignedCertificate( String email, String domain, String organizationUnit,
+																														 String organization, String city, String state,
+																														 String country, KeyPair keyPair )
+			throws CertificateException, IOException, NoSuchAlgorithmException,
+						 InvalidKeyException, NoSuchProviderException, SignatureException {
+		log.log( Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2},"
+				+ "organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
+						 new Object[] { email, domain, organizationUnit, organization, city, state, country, keyPair } );
 		X509CertInfo certInfo = new X509CertInfo();
 		CertificateVersion certVersion = new CertificateVersion();
 
@@ -218,6 +201,8 @@ public abstract class CertificateUtil {
 
 		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
 
+		log.log( Level.FINEST, "creating self signed cert, newCert: {0}", newCert );
+
 		return newCert;
 	}
 
@@ -249,17 +234,8 @@ public abstract class CertificateUtil {
 		System.out.println("Decripted text: " + new String(plainText));
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param entry
-	 * 
-	 * @return
-	 * 
-	 * @throws CertificateEncodingException
-	 */
 	public static String exportToPemFormat(CertificateEntry entry) throws CertificateEncodingException {
+		log.log( Level.FINEST, "exportToPemFormat cert, entry: {0}", new Object[] { entry } );
 		StringBuilder sb = new StringBuilder(4096);
 
 		if ((entry.getCertChain() != null) && (entry.getCertChain().length > 0)) {
@@ -285,13 +261,15 @@ public abstract class CertificateUtil {
 			}
 		}
 
+		log.log( Level.FINEST, "exportToPemFormat cert, string: {0}", new Object[] { sb.toString() } );
+
 		return sb.toString();
 	}
 
-	// ~--- get methods
-	// ----------------------------------------------------------
 
 	private static String extractValue(byte[] buffer, byte[] id) {
+		log.log( Level.INFO, "extracting value, buffer: {0}, id: {1}",
+													 new Object[] { new String(buffer), new String(id) } );
 		try {
 			if (buffer[0] != 0x30)
 				return null;
@@ -325,6 +303,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static List<String> extractXmppAddrs(final X509Certificate x509Certificate) {
+		log.log( Level.FINEST, "extractXmppAddrs, x509Certificate: {0}", new Object[] { x509Certificate.toString() } );
 		final ArrayList<String> result = new ArrayList<String>();
 		try {
 			Collection<List<?>> altNames = x509Certificate.getSubjectAlternativeNames();
@@ -342,22 +321,15 @@ public abstract class CertificateUtil {
 
 				}
 			}
+			log.log( Level.FINEST, "extractXmppAddrs, result: {0}", new Object[] { result } );
 			return result;
 		} catch (Exception e) {
 			return result;
 		}
-
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param cert
-	 *
-	 * @return
-	 */
 	public static ArrayList<String> getCertAltCName( X509Certificate cert ) {
+		log.log( Level.INFO, "getCertAltCName, x509Certificate: {0}", new Object[] { cert.toString() } );
 		try {
 			ArrayList<String> result = new ArrayList<>();
 			Collection<List<?>> subjectAlternativeNames = cert.getSubjectAlternativeNames();
@@ -368,6 +340,7 @@ public abstract class CertificateUtil {
 					result.add( list.get( 1 ).toString() );
 				}
 			}
+			log.log( Level.INFO, "getCertAltCName, AltCName: {0}", new Object[] { result } );
 			return result;
 		} catch ( CertificateParsingException e ) {
 			return null;
@@ -375,15 +348,8 @@ public abstract class CertificateUtil {
 	}
 
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param cert
-	 * 
-	 * @return
-	 */
 	public static String getCertCName(X509Certificate cert) {
+		log.log( Level.FINEST, "getCertCName, X509Certificate: {0}", new Object[] { cert } );
 		X500Principal princ = cert.getSubjectX500Principal();
 		String name = princ.getName();
 		String[] all = name.split(",");
@@ -392,6 +358,7 @@ public abstract class CertificateUtil {
 			String[] ns = n.trim().split("=");
 
 			if (ns[0].equals("CN")) {
+				log.log( Level.INFO, "getCertCName, AltCName: {0}", new Object[] { ns[1] } );
 				return ns[1];
 			}
 		}
@@ -399,17 +366,6 @@ public abstract class CertificateUtil {
 		return null;
 	}
 
-	// ~--- methods
-	// --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param cert
-	 * 
-	 * @return
-	 */
 	public static boolean isExpired(X509Certificate cert) {
 		try {
 			cert.checkValidity();
@@ -420,16 +376,11 @@ public abstract class CertificateUtil {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param cert
-	 * 
-	 * @return
-	 */
 	public static boolean isSelfSigned(X509Certificate cert) {
-		return cert.getIssuerDN().equals(cert.getSubjectDN());
+		final boolean result = cert.getIssuerDN().equals( cert.getSubjectDN() );
+		log.log( Level.INFO, "isSelfSigned, result: {0}", new Object[] { result } );
+		log.log( Level.FINEST, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[] { result, cert } );
+		return result;
 	}
 
 	private static void keyPairTest() throws Exception {
@@ -444,20 +395,6 @@ public abstract class CertificateUtil {
 		System.out.println(" done, private key: " + keyPair.getPrivate() + ", public key: " + keyPair.getPublic());
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param file
-	 * 
-	 * @return
-	 * 
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static CertificateEntry loadCertificate(File file) throws FileNotFoundException, IOException, CertificateException,
 			NoSuchAlgorithmException, InvalidKeySpecException {
 		return parseCertificate(new FileReader(file));
@@ -482,41 +419,14 @@ public abstract class CertificateUtil {
 		return entry;
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param file
-	 * 
-	 * @return
-	 * 
-	 * 
-	 * @throws CertificateException
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static CertificateEntry loadCertificate(String file) throws FileNotFoundException, IOException,
 			CertificateException, NoSuchAlgorithmException, InvalidKeySpecException {
 		return loadCertificate(new File(file));
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param file
-	 * 
-	 * @return
-	 * 
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static PrivateKey loadPrivateKeyFromDER(File file) throws FileNotFoundException, IOException,
 			NoSuchAlgorithmException, InvalidKeySpecException {
+		log.log( Level.INFO, "loadPrivateKeyFromDER, file: {0}", new Object[] { file } );
 		DataInputStream dis = new DataInputStream(new FileInputStream(file));
 		byte[] privKeyBytes = new byte[(int) file.length()];
 
@@ -530,44 +440,42 @@ public abstract class CertificateUtil {
 		return privKey;
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param args
-	 * 
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-		if ((args != null) && (args.length > 0)) {
-			if (args[0].equals(PRINT_PROVIDERS) || args[0].equals(PRINT_PROVIDERS_SHORT)) {
-				printProviders(false);
+	public static void main( String[] args ) throws Exception {
+		final Level lvl = Level.INFO;
+		log.setLevel(lvl);
+		ConsoleHandler consoleHandler = new ConsoleHandler();
+		consoleHandler.setLevel(lvl);
+		log.addHandler( consoleHandler );
+
+		if ( ( args != null ) && ( args.length > 0 ) ){
+			if ( args[0].equals( PRINT_PROVIDERS ) || args[0].equals( PRINT_PROVIDERS_SHORT ) ){
+				printProviders( false );
 			}
 
-			if (args[0].equals(PRINT_SERVICES) || args[0].equals(PRINT_SERVICES_SHORT)) {
-				printProviders(true);
+			if ( args[0].equals( PRINT_SERVICES ) || args[0].equals( PRINT_SERVICES_SHORT ) ){
+				printProviders( true );
 			}
 
-			if (args[0].equals(KEY_PAIR) || args[0].equals(KEY_PAIR_SHORT)) {
+			if ( args[0].equals( KEY_PAIR ) || args[0].equals( KEY_PAIR_SHORT ) ){
 				keyPairTest();
 			}
 
-			if (args[0].equals(ENCRIPT_TEST) || args[0].equals(ENCRIPT_TEST_SHORT)) {
+			if ( args[0].equals( ENCRIPT_TEST ) || args[0].equals( ENCRIPT_TEST_SHORT ) ){
 				encriptTest();
 			}
 
-			if (args[0].equals(SELF_SIGNED_CERT) || args[0].equals(SELF_SIGNED_CERT_SHORT)) {
+			if ( args[0].equals( SELF_SIGNED_CERT ) || args[0].equals( SELF_SIGNED_CERT_SHORT ) ){
 				selfSignedCertTest();
 			}
 
-			if (args[0].equals(LOAD_CERT) || args[0].equals(LOAD_CERT_SHORT)) {
+			if ( args[0].equals( LOAD_CERT ) || args[0].equals( LOAD_CERT_SHORT ) ){
 				String file = args[1];
-				CertificateEntry ce = loadCertificate(file);
+				CertificateEntry ce = loadCertificate( file );
 
-				System.out.println(ce.toString());
+				System.out.println( ce.toString() );
 			}
 
-			if (args[0].equals(STORE_CERT) || args[0].equals(STORE_CERT_SHORT)) {
+			if ( args[0].equals( STORE_CERT ) || args[0].equals( STORE_CERT_SHORT ) ){
 				String file = args[1];
 
 				// Certificate
@@ -578,39 +486,26 @@ public abstract class CertificateUtil {
 				String l = "Cambourne";
 				String st = "Cambridgeshire";
 				String c = "UK";
-				KeyPair keyPair = createKeyPair(1024, "secret");
-				X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
+				KeyPair keyPair = createKeyPair( 1024, "secret" );
+				X509Certificate cert = createSelfSignedCertificate( email, domain, ou, o, l, st, c, keyPair );
 				CertificateEntry entry = new CertificateEntry();
 
-				entry.setPrivateKey(keyPair.getPrivate());
-				entry.setCertChain(new Certificate[] { cert });
-				storeCertificate(file, entry);
+				entry.setPrivateKey( keyPair.getPrivate() );
+				entry.setCertChain( new Certificate[] { cert } );
+				storeCertificate( file, entry );
 			}
 
-			if (args[0].equals(LOAD_DER_PRIVATE_KEY) || args[0].equals(LOAD_DER_PRIVATE_KEY_SHORT)) {
+			if ( args[0].equals( LOAD_DER_PRIVATE_KEY ) || args[0].equals( LOAD_DER_PRIVATE_KEY_SHORT ) ){
 				String file = args[1];
-				PrivateKey key = loadPrivateKeyFromDER(new File(file));
+				PrivateKey key = loadPrivateKeyFromDER( new File( file ) );
 
-				System.out.println(key.toString());
+				System.out.println( key.toString() );
 			}
 		} else {
 			printHelp();
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param data
-	 * 
-	 * @return
-	 * 
-	 * @throws CertificateException
-	 * @throws IOException
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static CertificateEntry parseCertificate(Reader data) throws IOException, CertificateException,
 			NoSuchAlgorithmException, InvalidKeySpecException {
 		BufferedReader br = new BufferedReader(data);
@@ -634,6 +529,7 @@ public abstract class CertificateUtil {
 				while (bais.available() > 0) {
 					Certificate cert = cf.generateCertificate(bais);
 
+//					log.log( Level.FINEST, "parseCertificate, cert: {0}", new Object[] { cert } );
 					certs.add((X509Certificate) cert);
 				}
 
@@ -645,6 +541,7 @@ public abstract class CertificateUtil {
 				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
 				privateKey = keyFactory.generatePrivate(keySpec);
+				log.log( Level.FINEST, "parseCertificate, privateKey: {0}", new Object[] { privateKey } );
 				sb = new StringBuilder(4096);
 			} else if (line.contains(END_RSA_KEY)) {
 				addToBuffer = false;
@@ -652,6 +549,7 @@ public abstract class CertificateUtil {
 				RSAPrivateKeyDecoder decoder = new RSAPrivateKeyDecoder(bytes);
 
 				privateKey = decoder.getPrivateKey();
+				log.log( Level.FINEST, "parseCertificate, privateKey: {0}", new Object[] { privateKey } );
 				sb = new StringBuilder(4096);
 			} else if (addToBuffer)
 				sb.append(line);
@@ -662,6 +560,8 @@ public abstract class CertificateUtil {
 
 		entry.setCertChain(certs.toArray(new Certificate[certs.size()]));
 		entry.setPrivateKey(privateKey);
+
+		log.log( Level.FINEST, "parseCertificate, entry: {0}", new Object[] { entry } );
 
 		return entry;
 	}
@@ -788,17 +688,9 @@ public abstract class CertificateUtil {
 		System.out.println(cert.toString());
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param file
-	 * @param entry
-	 * 
-	 * @throws CertificateEncodingException
-	 * @throws IOException
-	 */
 	public static void storeCertificate(String file, CertificateEntry entry) throws CertificateEncodingException, IOException {
+		log.log( Level.FINEST, "storeCertificate, file: {0}, entry: {1}", new Object[] { file, entry } );
+
 		String pemFormat = exportToPemFormat(entry);
 
 		File f = new File(file);
@@ -811,25 +703,10 @@ public abstract class CertificateUtil {
 		fw.close();
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * 
-	 * @param chain
-	 * @param revocationEnabled
-	 * 
-	 * @param trustKeystore
-	 * @return
-	 * 
-	 * 
-	 * @throws CertificateException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
-	 * @throws InvalidAlgorithmParameterException
-	 */
 	public static CertCheckResult validateCertificate(Certificate[] chain, KeyStore trustKeystore, boolean revocationEnabled)
 			throws NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException, CertificateException {
+		log.log( Level.FINEST, "validateCertificate, chain: {0}, trustKeystore: {1}, revocationEnabled: {2}",
+													 new Object[] { chain, trustKeystore, revocationEnabled } );
 		CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
 		X509CertSelector selector = new X509CertSelector();
 		PKIXBuilderParameters params = new PKIXBuilderParameters(trustKeystore, selector);
@@ -873,16 +750,12 @@ public abstract class CertificateUtil {
 		}		
 	}
 	
-	/**
-	 * Extracts CN from principal
-	 * 
-	 * @param principal
-	 * @return 
-	 */
 	protected static String extractCN(X500Principal principal) {
 		String[] dd = principal.getName(X500Principal.RFC2253).split(",");
 		for (String string : dd) {
 			if (string.toLowerCase().startsWith("cn=")) {
+				log.log( Level.FINEST, "extractCN, principal: {0}, result: {1}",
+								 new Object[] { principal, string.substring(3) } );
 				return string.substring(3);
 			}
 		}
@@ -900,37 +773,39 @@ public abstract class CertificateUtil {
 		if (hostname == null || hostname.isEmpty() || altName == null || altName.isEmpty())
 			return false;
 
-		final String normalizedAltName = altName.toLowerCase(Locale.US);
-		if (!normalizedAltName.contains("*")) {
+			final String normalizedAltName = altName.toLowerCase( Locale.US );
+			if ( !normalizedAltName.contains( "*" ) ){
 			return hostname.equals(normalizedAltName);
-		}
+			}
 
-		if (normalizedAltName.startsWith("*.")
+			if ( normalizedAltName.startsWith( "*." )
 				&& hostname.regionMatches(0, normalizedAltName, 2, normalizedAltName.length() - 2))
 			return true;
 
-		int asteriskIdx = normalizedAltName.indexOf('*');
-		int dotIdx = normalizedAltName.indexOf('.');
-		if (asteriskIdx > dotIdx) {
+			int asteriskIdx = normalizedAltName.indexOf( '*' );
+			int dotIdx = normalizedAltName.indexOf( '.' );
+			if ( asteriskIdx > dotIdx ){
 			return false;
-		}
+			}
 
-		if (!hostname.regionMatches(0, normalizedAltName, 0, asteriskIdx)) {
+			if ( !hostname.regionMatches( 0, normalizedAltName, 0, asteriskIdx ) ){
 			return false;
-		}
+			}
 
-		int suffixLength = normalizedAltName.length() - (asteriskIdx + 1);
-		int suffixStart = hostname.length() - suffixLength;
-		if (hostname.indexOf('.', asteriskIdx) < suffixStart) {
+			int suffixLength = normalizedAltName.length() - ( asteriskIdx + 1 );
+			int suffixStart = hostname.length() - suffixLength;
+			if ( hostname.indexOf( '.', asteriskIdx ) < suffixStart ){
 			return false; // wildcard '*' can't match a '.'
-		}
-		if (!hostname.regionMatches(suffixStart, normalizedAltName, asteriskIdx + 1, suffixLength)) {
+			}
+			if ( !hostname.regionMatches( suffixStart, normalizedAltName, asteriskIdx + 1, suffixLength ) ){
 			return false;
-		}
+			}
 		return true;
-	}	
+		}
 	
 	protected static boolean verifyCertificateForHostname(String hostname, X509Certificate x509Certificate) throws CertificateParsingException {
+		log.log( Level.FINEST, "verifyCertificateForHostname, hostname: {0}, x509Certificate: {1}",
+						 new Object[] { hostname, x509Certificate } );
 		boolean altNamePresents = false;
 		Collection<List<?>> altNames = x509Certificate.getSubjectAlternativeNames();
 		if (altNames != null) {
@@ -955,10 +830,11 @@ public abstract class CertificateUtil {
 			}
 		}
 		return false;
-
 	}
 
 	protected static boolean verifyCertificateForIp(String ipAddr, X509Certificate x509Certificate) throws CertificateParsingException {
+		log.log( Level.FINEST, "verifyCertificateForIp, ipAddr: {0}, x509Certificate: {1}",
+						 new Object[] { ipAddr, x509Certificate } );
 		for (List<?> entry : x509Certificate.getSubjectAlternativeNames()) {
 			Integer altNameType = (Integer) entry.get(0);
 			if (altNameType != 7)
@@ -970,10 +846,5 @@ public abstract class CertificateUtil {
 		}
 		return false;
 	}	
-	
-	
 }
 
-// ~ Formatted in Sun Code Convention
-
-// ~ Formatted by Jindent --- http://www.jindent.com

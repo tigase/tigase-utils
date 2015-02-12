@@ -39,59 +39,22 @@ public class CertificateEntry {
 	private Certificate[] chain = null;
 	private PrivateKey privateKey = null;
 
-	//~--- get methods ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	public Certificate[] getCertChain() {
 		return chain;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	public PrivateKey getPrivateKey() {
 		return privateKey;
 	}
 
-	//~--- set methods ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 *
-	 * @param chain
-	 */
 	public void setCertChain(Certificate[] chain) {
 		this.chain = chain;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param privateKey
-	 */
 	public void setPrivateKey(PrivateKey privateKey) {
 		this.privateKey = privateKey;
 	}
 
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(4096);
@@ -100,12 +63,6 @@ public class CertificateEntry {
 			sb.append(cert.toString());
 		}
 
-		return "Private key: " + privateKey.toString() + '\n' + sb;
+		return "Private key: " + (privateKey != null ? privateKey.toString() : "private key missing!!! \n\n\n") + '\n' + sb;
 	}
 }
-
-
-//~ Formatted in Sun Code Convention
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

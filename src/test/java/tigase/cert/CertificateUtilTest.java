@@ -106,7 +106,7 @@ public class CertificateUtilTest extends TestCase {
 		//System.out.println("Creating self-signed certificate for issuer: " + domain);
 
 		X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
-		assertTrue("Verified certificate domain", verifyCertificateForDomain(cert, domain));
-		assertFalse("Verified certificate domain", verifyCertificateForDomain(cert, "fail.tigase.org"));
+		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
+		assertFalse("Verified certificate domain - fail.tigase.org", verifyCertificateForDomain(cert, "fail.tigase.org"));
 	}
 }
