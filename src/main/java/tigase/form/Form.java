@@ -22,16 +22,13 @@
 
 package tigase.form;
 
-//~--- non-JDK imports --------------------------------------------------------
+import tigase.xml.Element;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//~--- JDK imports ------------------------------------------------------------
 import java.util.logging.Logger;
-
-import tigase.xml.Element;
 
 /**
  *

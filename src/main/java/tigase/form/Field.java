@@ -20,15 +20,9 @@
  *
  */
 
-
-
 package tigase.form;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.xml.Element;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.LinkedList;
 import java.util.List;
