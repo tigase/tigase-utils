@@ -34,13 +34,12 @@ import java.util.logging.Logger;
 import tigase.xml.Element;
 
 /**
- * 
+ *
  * <p>
  * Created: 2007-05-27 11:41:02
  * </p>
- * 
+ *
  * @author bmalkow
- * @version $Rev:43 $
  */
 public class Form {
 	private List<Field> fields = new ArrayList<Field>();
@@ -50,15 +49,6 @@ public class Form {
 	private String title;
 	private String type;
 
-	// ~--- constructors
-	// ---------------------------------------------------------
-
-	/**
-	 * Constructs ...
-	 * 
-	 * 
-	 * @param form
-	 */
 	public Form(Element form) {
 		this.type = form.getAttributeStaticStr("type");
 		log.finest("Retriving Data Form type " + this.type);
@@ -84,29 +74,12 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Constructs ...
-	 * 
-	 * 
-	 * @param type
-	 * @param title
-	 * @param instruction
-	 */
 	public Form(String type, String title, String instruction) {
 		this.type = type;
 		this.title = title;
 		this.instruction = instruction;
 	}
 
-	// ~--- methods
-	// --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param field
-	 */
 	public void addField(final Field field) {
 		Field cf = (field.getVar() != null) ? this.fieldsByVar.get(field.getVar()) : null;
 
@@ -123,21 +96,11 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 */
 	public void clear() {
 		this.fields.clear();
 		this.fieldsByVar.clear();
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param form
-	 */
 	public void copyValuesFrom(Element form) {
 		log.finest("Copying values from form ");
 
@@ -159,12 +122,6 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param form
-	 */
 	public void copyValuesFrom(Form form) {
 		for (Field field : form.fields) {
 			Field f = fieldsByVar.get(field.getVar());
@@ -177,39 +134,14 @@ public class Form {
 		}
 	}
 
-	// ~--- get methods
-	// ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 * 
-	 * @return
-	 */
 	public Field get(String var) {
 		return this.fieldsByVar.get(var);
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @return
-	 */
 	public List<Field> getAllFields() {
 		return this.fields;
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 * 
-	 * @return
-	 */
 	public Boolean getAsBoolean(String var) {
 		Field f = get(var);
 
@@ -228,10 +160,6 @@ public class Form {
 		}
 	}
 
-	/**
-	 * @param var
-	 * @return
-	 */
 	public Integer getAsInteger(String var) {
 		Field f = get(var);
 
@@ -256,14 +184,6 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 * 
-	 * @return
-	 */
 	public String getAsString(String var) {
 		Field f = get(var);
 
@@ -276,14 +196,6 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 * 
-	 * @return
-	 */
 	public String[] getAsStrings(String var) {
 		Field f = get(var);
 
@@ -296,12 +208,6 @@ public class Form {
 		}
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @return
-	 */
 	public Element getElement() {
 		Element form = new Element("x");
 
@@ -321,48 +227,22 @@ public class Form {
 		return form;
 	}
 
-	/**
-	 * @return Returns the instruction.
-	 */
 	public String getInstruction() {
 		return instruction;
 	}
 
-	/**
-	 * @return Returns the title.
-	 */
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * @return Returns the type.
-	 */
 	public String getType() {
 		return type;
 	}
 
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 * 
-	 * @return
-	 */
 	public boolean is(String var) {
 		return this.fieldsByVar.containsKey(var);
 	}
 
-	// ~--- methods
-	// --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 * 
-	 * 
-	 * @param var
-	 */
 	public void removeField(final String var) {
 		Field cf = this.fieldsByVar.remove(var);
 
@@ -371,32 +251,15 @@ public class Form {
 		}
 	}
 
-	// ~--- set methods
-	// ----------------------------------------------------------
-
-	/**
-	 * @param instruction
-	 *            The instruction to set.
-	 */
 	public void setInstruction(String instruction) {
 		this.instruction = instruction;
 	}
 
-	/**
-	 * @param title
-	 *            The title to set.
-	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	/**
-	 * @param type
-	 *            The type to set.
-	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 }
-
-// ~ Formatted in Tigase Code Convention on 13/02/20

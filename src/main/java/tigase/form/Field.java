@@ -40,7 +40,6 @@ import java.util.List;
  * </p>
  *
  * @author bmalkow
- * @version $Rev:43 $
  */
 public class Field {
 	private String description;
@@ -52,14 +51,6 @@ public class Field {
 	private String[] values;
 	private String var;
 
-	//~--- constructors ---------------------------------------------------------
-
-	/**
-	 * Constructs ...
-	 *
-	 *
-	 * @param fieldElement
-	 */
 	public Field(Element fieldElement) {
 		this.var = fieldElement.getAttributeStaticStr("var");
 
@@ -112,12 +103,6 @@ public class Field {
 		this.var  = var;
 	}
 
-	//~--- enums ----------------------------------------------------------------
-
-	/**
-	 * Enum description
-	 *
-	 */
 	public static enum FieldType {
 		bool("boolean"), fixed("fixed"), hidden("hidden"), jid_single("jid-single"),
 		list_multi("list-multi"), list_single("list-single"), text_multi("text-multi"),
@@ -125,22 +110,11 @@ public class Field {
 
 		private String desc;
 
-		//~--- constructors -------------------------------------------------------
 
 		private FieldType(String desc) {
 			this.desc = desc;
 		}
 
-		//~--- get methods --------------------------------------------------------
-
-		/**
-		 * Method description
-		 *
-		 *
-		 * @param name
-		 *
-		 * @return
-		 */
 		public static FieldType getFieldTypeByName(String name) {
 			if ("boolean".equals(name)) {
 				return bool;
@@ -149,32 +123,12 @@ public class Field {
 			}
 		}
 
-		//~--- methods ------------------------------------------------------------
-
-		/**
-		 * Method description
-		 *
-		 *
-		 * @return
-		 */
 		@Override
 		public String toString() {
 			return desc;
 		}
 	}
 
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldBoolean(String var, Boolean value, String label) {
 		Field field = new Field(FieldType.bool);
 
@@ -189,14 +143,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param value
-	 *
-	 * @return
-	 */
 	public static Field fieldFixed(String value) {
 		Field field = new Field(FieldType.fixed);
 
@@ -205,15 +151,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 *
-	 * @return
-	 */
 	public static Field fieldHidden(String var, String value) {
 		Field field = new Field(FieldType.hidden, var);
 
@@ -222,16 +159,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldJidSingle(String var, String value, String label) {
 		Field field = new Field(FieldType.jid_single, var);
 
@@ -241,18 +168,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param values
-	 * @param label
-	 * @param optionsLabel
-	 * @param optionsValue
-	 *
-	 * @return
-	 */
 	public static Field fieldListMulti(String var, String[] values, String label,
 																		 String[] optionsLabel, String[] optionsValue) {
 		if ((optionsLabel != null) && (optionsLabel.length != optionsValue.length)) {
@@ -269,18 +184,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 * @param optionsLabel
-	 * @param optionsValue
-	 *
-	 * @return
-	 */
 	public static Field fieldListSingle(String var, String value, String label,
 					String[] optionsLabel, String[] optionsValue) {
 		if ((optionsLabel != null) && (optionsLabel.length != optionsValue.length)) {
@@ -297,16 +200,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldTextMulti(String var, String value, String label) {
 		Field field = new Field(FieldType.text_multi, var);
 
@@ -316,16 +209,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param values
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldTextMulti(String var, String[] values, String label) {
 		Field field = new Field(FieldType.text_multi, var);
 
@@ -335,16 +218,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldTextPrivate(String var, String value, String label) {
 		Field field = new Field(FieldType.text_private, var);
 
@@ -354,16 +227,6 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param var
-	 * @param value
-	 * @param label
-	 *
-	 * @return
-	 */
 	public static Field fieldTextSingle(String var, String value, String label) {
 		Field field = new Field(FieldType.text_single, var);
 
@@ -373,16 +236,6 @@ public class Field {
 		return field;
 	}
 
-	//~--- get methods ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param f
-	 *
-	 * @return
-	 */
 	public static Boolean getAsBoolean(Field f) {
 		if (f != null) {
 			String v = f.getValue();
@@ -399,14 +252,6 @@ public class Field {
 		}
 	}
 
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param args
-	 */
 	public static void main(String[] args) {
 
 		// <field var='pubsub#presence_based_delivery'
@@ -423,21 +268,10 @@ public class Field {
 		System.out.println(getAsBoolean(f));
 	}
 
-	//~--- get methods ----------------------------------------------------------
-
-	/**
-	 * @return Returns the description.
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	public Element getElement() {
 		Element field = new Element("field");
 
@@ -482,40 +316,22 @@ public class Field {
 		return field;
 	}
 
-	/**
-	 * @return Returns the label.
-	 */
 	public String getLabel() {
 		return label;
 	}
 
-	/**
-	 * @return Returns the optionLabels.
-	 */
 	public String[] getOptionLabels() {
 		return optionLabels;
 	}
 
-	/**
-	 * @return Returns the optionValues.
-	 */
 	public String[] getOptionValues() {
 		return optionValues;
 	}
 
-	/**
-	 * @return Returns the type.
-	 */
 	public FieldType getType() {
 		return type;
 	}
 
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	public String getValue() {
 		if ((this.values != null) && (this.values.length > 0)) {
 			return this.values[0];
@@ -524,101 +340,50 @@ public class Field {
 		}
 	}
 
-	/**
-	 * @return Returns the values.
-	 */
 	public String[] getValues() {
 		return values;
 	}
 
-	/**
-	 * @return Returns the var.
-	 */
 	public String getVar() {
 		return var;
 	}
 
-	/**
-	 * @return Returns the required.
-	 */
 	public boolean isRequired() {
 		return required;
 	}
 
-	//~--- set methods ----------------------------------------------------------
-
-	/**
-	 * @param description
-	 *            The description to set.
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * @param label
-	 *            The label to set.
-	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
-	/**
-	 * @param optionLabels
-	 *            The optionLabels to set.
-	 */
 	public void setOptionLabels(String[] optionLabels) {
 		this.optionLabels = optionLabels;
 	}
 
-	/**
-	 * @param optionValues
-	 *            The optionValues to set.
-	 */
 	public void setOptionValues(String[] optionValues) {
 		this.optionValues = optionValues;
 	}
 
-	/**
-	 * @param required
-	 *            The required to set.
-	 */
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
 
-	/**
-	 * @param type
-	 *            The type to set.
-	 */
 	public void setType(FieldType type) {
 		this.type = type;
 	}
 
-	/**
-	 * @param values
-	 *            The values to set.
-	 */
 	public void setValues(String[] values) {
 		this.values = values;
 	}
 
-	/**
-	 * @param var
-	 *            The var to set.
-	 */
 	public void setVar(String var) {
 		this.var = var;
 	}
 
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -637,5 +402,3 @@ public class Field {
 	}
 }
 
-
-//~ Formatted in Tigase Code Convention on 13/02/20
