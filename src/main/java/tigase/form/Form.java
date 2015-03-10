@@ -24,11 +24,7 @@ package tigase.form;
 
 import tigase.xml.Element;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  *
@@ -38,64 +34,37 @@ import java.util.logging.Logger;
  *
  * @author bmalkow
  */
-public class Form {
-	private List<Field> fields = new ArrayList<Field>();
-	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
-	private String instruction;
-	private Logger log = Logger.getLogger(this.getClass().getName());
-	private String title;
-	private String type;
+public class Form extends AbstractForm {
+	private Fields fields = new Fields();
 
 	public Form(Element form) {
-		this.type = form.getAttributeStaticStr("type");
-		log.finest("Retriving Data Form type " + this.type);
+
+		super(form );
 
 		List<Element> children = form.getChildren();
 
 		if (children != null) {
 			for (Element sub : children) {
-				if ("title".equals(sub.getName())) {
-					this.title = sub.getCData();
-					log.finest("read Data Form title [" + this.title + "]");
-				} else if ("instructions".equals(sub.getName())) {
-					this.instruction = sub.getCData();
-					log.finest("read Data Form instruction [" + this.instruction + "]");
-				} else if ("field".equals(sub.getName())) {
+				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
 
 					log.finest("read Data Form field [" + field.getVar() + "]");
-					this.fields.add(field);
-					this.fieldsByVar.put(field.getVar(), field);
+					fields.addField( field );
 				}
 			}
 		}
 	}
 
 	public Form(String type, String title, String instruction) {
-		this.type = type;
-		this.title = title;
-		this.instruction = instruction;
+		super(type, title, instruction );
 	}
 
 	public void addField(final Field field) {
-		Field cf = (field.getVar() != null) ? this.fieldsByVar.get(field.getVar()) : null;
-
-		if (cf != null) {
-			int p = this.fields.indexOf(cf);
-
-			this.fields.remove(cf);
-			this.fields.add(p, field);
-		} else {
-			this.fields.add(field);
-		}
-		if (field.getVar() != null) {
-			this.fieldsByVar.put(field.getVar(), field);
-		}
+		fields.addField( field );
 	}
 
 	public void clear() {
-		this.fields.clear();
-		this.fieldsByVar.clear();
+		fields.clear();
 	}
 
 	public void copyValuesFrom(Element form) {
@@ -107,7 +76,7 @@ public class Form {
 			for (Element sub : children) {
 				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
-					Field f = fieldsByVar.get(field.getVar());
+					Field f = fields.get(field.getVar());
 
 					if (f != null) {
 						f.setValues(field.getValues());
@@ -120,8 +89,8 @@ public class Form {
 	}
 
 	public void copyValuesFrom(Form form) {
-		for (Field field : form.fields) {
-			Field f = fieldsByVar.get(field.getVar());
+		for (Field field : form.fields.getAllFields()) {
+			Field f = fields.get(field.getVar());
 
 			if (f != null) {
 				f.setValues(field.getValues());
@@ -132,130 +101,78 @@ public class Form {
 	}
 
 	public Field get(String var) {
-		return this.fieldsByVar.get(var);
+		return this.fields.get( var );
 	}
 
 	public List<Field> getAllFields() {
-		return this.fields;
+		return this.fields.getAllFields();
 	}
 
 	public Boolean getAsBoolean(String var) {
-		Field f = get(var);
-
-		if (f != null) {
-			String v = f.getValue();
-
-			if (v == null) {
-				return null;
-			} else if ("1".equals(v) || "true".equals(v)) {
-				return Boolean.TRUE;
-			} else {
-				return Boolean.FALSE;
-			}
-		} else {
-			return null;
-		}
+		return fields.getAsBoolean( var );
 	}
 
 	public Integer getAsInteger(String var) {
-		Field f = get(var);
-
-		if (f != null) {
-			String v = f.getValue();
-
-			return Integer.parseInt(v);
-		} else {
-			return null;
-		}
+		return fields.getAsInteger( var );
 	}
 
 	public Long getAsLong(String var) {
-		Field f = get(var);
-
-		if (f != null) {
-			String v = f.getValue();
-
-			return Long.parseLong(v);
-		} else {
-			return null;
-		}
+		return fields.getAsLong( var );
 	}
 
 	public String getAsString(String var) {
-		Field f = get(var);
-
-		if (f != null) {
-			String v = f.getValue();
-
-			return v;
-		} else {
-			return null;
-		}
+		return fields.getAsString( var );
 	}
 
 	public String[] getAsStrings(String var) {
-		Field f = get(var);
-
-		if (f != null) {
-			String[] v = f.getValues();
-
-			return v;
-		} else {
-			return null;
-		}
+		return fields.getAsStrings( var );
 	}
 
+	@Override
 	public Element getElement() {
-		Element form = new Element("x");
+		Element form = super.getElement();
 
-		form.setAttribute("xmlns", "jabber:x:data");
-		if (type != null)
-			form.setAttribute("type", type);
-		if (this.title != null) {
-			form.addChild(new Element("title", this.title));
-		}
-		if (this.instruction != null) {
-			form.addChild(new Element("instructions", this.instruction));
-		}
-		for (Field field : this.fields) {
+		for (Field field : this.fields.getAllFields()) {
 			form.addChild(field.getElement());
 		}
 
 		return form;
 	}
 
+	@Override
 	public String getInstruction() {
 		return instruction;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
 
 	public boolean is(String var) {
-		return this.fieldsByVar.containsKey(var);
+		return this.fields.is( var );
 	}
 
 	public void removeField(final String var) {
-		Field cf = this.fieldsByVar.remove(var);
-
-		if (cf != null) {
-			this.fields.remove(cf);
-		}
+		fields.removeField( var );
 	}
 
+	@Override
 	public void setInstruction(String instruction) {
 		this.instruction = instruction;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public void setType(String type) {
 		this.type = type;
 	}

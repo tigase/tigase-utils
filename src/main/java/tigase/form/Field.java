@@ -262,20 +262,30 @@ public class Field {
 		System.out.println(getAsBoolean(f));
 	}
 
+	public Field cloneShalow() {
+		Field field = new Field( type, var );
+		field.setLabel( label );
+		return field;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public Element getElement() {
+		return getElement( true, true);
+	}
+
+	public Element getElement(boolean type, boolean label) {
 		Element field = new Element("field");
 
 		if (this.var != null) {
 			field.setAttribute("var", var);
 		}
-		if (this.type != null) {
+		if (type && this.type != null) {
 			field.setAttribute("type", this.type.toString());
 		}
-		if (this.label != null) {
+		if (label && this.label != null) {
 			field.setAttribute("label", this.label);
 		}
 		if (this.description != null) {
