@@ -22,7 +22,7 @@ package tigase.xmpp;
 import tigase.xml.Element;
 
 public class RSM {
-	protected static final String XMLNS           = "http://jabber.org/protocol/rsm";
+	public static final String XMLNS           = "http://jabber.org/protocol/rsm";
 	private static final String[] SET_AFTER_PATH  = { "set", "after" };
 	private static final String[] SET_BEFORE_PATH = { "set", "before" };
 	private static final String[] SET_INDEX_PATH = { "set", "index" };
@@ -65,6 +65,10 @@ public class RSM {
 	
 	public Integer getCount() {
 		return count;
+	}
+
+	public void setCount( Integer count ) {
+		this.count = count;
 	}
 	
 	public void setFirst(String first) {
