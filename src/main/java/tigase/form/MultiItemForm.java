@@ -46,6 +46,9 @@ public class MultiItemForm extends AbstractForm {
 
 	@Override
 	public Element getElement() {
+		if (reported == null || items == null ) {
+			return null;
+		}
 		Element form = super.getElement();
 		Element report = new Element("reported");
 		for ( Field field : reported.getAllFields() ) {
@@ -101,6 +104,11 @@ public class MultiItemForm extends AbstractForm {
 		f.addField( Field.fieldTextSingle( "var5", "val32", null));
 		multiItemForm.addItem( f );
 
+
+		System.out.println( multiItemForm.getElement() );
+
+
+		multiItemForm = new MultiItemForm("tytul");
 
 		System.out.println( multiItemForm.getElement() );
 
