@@ -141,4 +141,9 @@ public class Fields {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Fields{" + "fields=" + fields + ", fieldsByVar=" + fieldsByVar + ", log=" + log + '}';
+	}
+
 }

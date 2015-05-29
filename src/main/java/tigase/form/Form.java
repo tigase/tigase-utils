@@ -176,4 +176,9 @@ public class Form extends AbstractForm {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "Form{" + "fields=" + fields + '}';
+	}
 }
