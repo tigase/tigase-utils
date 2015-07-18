@@ -96,7 +96,7 @@ public class DNSResolver {
 					.toLowerCase();
 
 			if (newHostName.equalsIgnoreCase(InetAddress.getLocalHost().getHostAddress())) {
-				newHostName = InetAddress.getLocalHost().getHostName();
+				newHostName = InetAddress.getLocalHost().getHostName().toLowerCase();
 			}
 			if (!LOCALHOST.equals(newHostName)) {
 				localnames    = new String[2];
