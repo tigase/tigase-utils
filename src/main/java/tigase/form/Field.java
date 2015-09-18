@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author bmalkow
  */
-public class Field {
+public class Field implements Comparable<Field>{
 	private String description;
 	private String label;
 	private String[] optionLabels;
@@ -95,6 +95,11 @@ public class Field {
 	private Field(FieldType type, String var) {
 		this.type = type;
 		this.var  = var;
+	}
+
+	@Override
+	public int compareTo( Field o ) {
+		return this.var.compareTo( o.getVar());
 	}
 
 	public static enum FieldType {

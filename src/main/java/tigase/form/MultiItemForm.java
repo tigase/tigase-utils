@@ -21,7 +21,11 @@ package tigase.form;
 import tigase.xml.Element;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  *
@@ -32,7 +36,7 @@ public class MultiItemForm extends AbstractForm {
 	private final List<Fields> items = new ArrayList<>();
 	private Fields reported = null;
 
-	public MultiItemForm( ) {
+	public MultiItemForm() {
 		super( "result", null, null );
 	}
 
@@ -44,74 +48,109 @@ public class MultiItemForm extends AbstractForm {
 		super( form );
 	}
 
+	public MultiItemForm( Form form ) {
+		super( "result", null, null );
+		setReported( form.getAllFields());
+	}
+
 	@Override
 	public Element getElement() {
-		if (reported == null || items == null ) {
+		if ( reported == null || items == null ){
 			return null;
 		}
 		Element form = super.getElement();
-		Element report = new Element("reported");
+		Element report = new Element( "reported" );
 		for ( Field field : reported.getAllFields() ) {
 			report.addChild( field.getElement() );
 		}
-		form.addChild( report);
-		for (Fields fields : this.items) {
-			Element item = new Element("item");
-			for ( Field field : fields.getAllFields()) {
-				if ( reported.is( field.getVar() ) ){
+		form.addChild( report );
+		for ( Fields fields : this.items ) {
+			Element item = new Element( "item" );
+			for ( Field field : fields.getAllFields() ) {
 					item.addChild( field.getElement( false, false ) );
-				}
 			}
-			if (item.getChildren() != null && !item.getChildren().isEmpty()) {
-			form.addChild(item);
+			if ( item.getChildren() != null && !item.getChildren().isEmpty() ){
+				form.addChild( item );
 			}
 		}
 
 		return form;
 	}
 
-	public void addItem(Fields i) {
-		items.add( i);
+	public void addItem( Fields i ) {
 		if ( reported == null ){
 			reported = new Fields();
-			for ( Field field : i.getAllFields()) {
+			for ( Field field : i.getAllFields() ) {
 				reported.addField( field.cloneShalow() );
 			}
+			if ( log.isLoggable( Level.WARNING ) ){
+				log.log( Level.WARNING, "Initialised MultiItemForm with first item vars: {0}", reported.getAllFields() );
+			}
 		}
+
+
+		Iterator<Field> iterator = i.getAllFields().iterator();
+		while ( iterator.hasNext() ) {
+			Field field = iterator.next();
+			if ( !reported.is( field.getVar() ) ){
+				if ( log.isLoggable( Level.FINEST ) ){
+					log.log( Level.FINEST,
+									 "variable {0} of added {1} does not match reported fields: {2} - removing!",
+									 new Object[] { field.getVar(), i.getAllFields(), reported.getAllFields() } );
+				}
+				iterator.remove();
+			}
+		}
+		Collections.sort( i.getAllFields());
+
+		if ( i.getAllFields().size() > 0 ){
+			for ( Field repField : reported.getAllFields() ) {
+				if ( i.get( repField.getVar() ) == null ){
+					i.addField( Field.fieldTextSingle( repField.getVar(), null, null ) );
+				}
+			}
+		}
+
+		items.add( i );
 	}
 
 	public List<Fields> getAllItems() {
 		return items;
 	}
 
-
 	public static void main( String[] args ) {
 
-		MultiItemForm multiItemForm = new MultiItemForm("tytul");
-		multiItemForm.setInstruction( "bla");
+		MultiItemForm multiItemForm = new MultiItemForm( "tytul" );
+		multiItemForm.setInstruction( "bla" );
 
 		Fields f = new Fields();
-		f.addField( Field.fieldTextSingle( "var1", "val11", null));
-		f.addField( Field.fieldTextSingle( "var2", "val12", null));
-		f.addField( Field.fieldTextSingle( "var3", "val13", null));
+		f.addField( Field.fieldTextSingle( "var1", "val11", null ) );
+		f.addField( Field.fieldTextSingle( "var2", "val12", null ) );
+		f.addField( Field.fieldTextSingle( "var3", "val13", null ) );
 		multiItemForm.addItem( f );
 		f = new Fields();
-		f.addField( Field.fieldTextSingle( "var1", "val21", null));
-		f.addField( Field.fieldTextSingle( "var5", "val22", null));
+		f.addField( Field.fieldTextSingle( "var1", "val21", null ) );
+		f.addField( Field.fieldTextSingle( "var5", "val22", null ) );
 		multiItemForm.addItem( f );
 		f = new Fields();
-		f.addField( Field.fieldTextSingle( "var4", "val31", null));
-		f.addField( Field.fieldTextSingle( "var5", "val32", null));
+		f.addField( Field.fieldTextSingle( "var4", "val31", null ) );
+		f.addField( Field.fieldTextSingle( "var5", "val32", null ) );
 		multiItemForm.addItem( f );
 
+		System.out.println( multiItemForm.getElement().toStringPretty() );
+
+		multiItemForm = new MultiItemForm( "tytul" );
 
 		System.out.println( multiItemForm.getElement() );
 
+	}
 
-		multiItemForm = new MultiItemForm("tytul");
-
-		System.out.println( multiItemForm.getElement() );
-
-
+	public void setReported(  List<Field> fields ) {
+		if ( reported == null ){
+			reported = new Fields();
+		}
+		for ( Field field : fields ) {
+			reported.addField( field.cloneShalow() );
+		}
 	}
 }
