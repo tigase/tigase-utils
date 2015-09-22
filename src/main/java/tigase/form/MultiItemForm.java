@@ -31,7 +31,7 @@ import java.util.logging.Level;
  *
  * @author Wojciech Kapcia
  */
-public class MultiItemForm extends AbstractForm {
+public class MultiItemForm extends Form {
 
 	private final List<Fields> items = new ArrayList<>();
 	private Fields reported = null;
@@ -64,9 +64,9 @@ public class MultiItemForm extends AbstractForm {
 			report.addChild( field.getElement() );
 		}
 		form.addChild( report );
-		for ( Fields fields : this.items ) {
+		for ( Fields fieldsItems : this.items ) {
 			Element item = new Element( "item" );
-			for ( Field field : fields.getAllFields() ) {
+			for ( Field field : fieldsItems.getAllFields() ) {
 					item.addChild( field.getElement( false, false ) );
 			}
 			if ( item.getChildren() != null && !item.getChildren().isEmpty() ){
@@ -150,6 +150,9 @@ public class MultiItemForm extends AbstractForm {
 			reported = new Fields();
 		}
 		for ( Field field : fields ) {
+			if (field.getType().equals( Field.FieldType.hidden) || field.getType().equals( Field.FieldType.fixed)) {
+				continue;
+			}
 			reported.addField( field.cloneShalow() );
 		}
 	}

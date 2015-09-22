@@ -35,7 +35,7 @@ import java.util.List;
  * @author bmalkow
  */
 public class Form extends AbstractForm {
-	private Fields fields = new Fields();
+	protected Fields fields = new Fields();
 
 	public Form(Element form) {
 
