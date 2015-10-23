@@ -331,13 +331,15 @@ public abstract class CertificateUtil {
 	public static ArrayList<String> getCertAltCName( X509Certificate cert ) {
 		log.log( Level.INFO, "getCertAltCName, x509Certificate: {0}", new Object[] { cert.toString() } );
 		try {
-			ArrayList<String> result = new ArrayList<>();
 			Collection<List<?>> subjectAlternativeNames = cert.getSubjectAlternativeNames();
+			ArrayList<String> result = new ArrayList<>();
 
-			for ( List list : subjectAlternativeNames ) {
-				// we are only interested in dNSName
-				if ( list.get( 0 ).equals( 2 ) ){
-					result.add( list.get( 1 ).toString() );
+			if ( subjectAlternativeNames != null && subjectAlternativeNames.size() > 0 ){
+				for ( List list : subjectAlternativeNames ) {
+					// we are only interested in dNSName
+					if ( list.get( 0 ).equals( 2 ) ){
+						result.add( list.get( 1 ).toString() );
+					}
 				}
 			}
 			log.log( Level.INFO, "getCertAltCName, AltCName: {0}", new Object[] { result } );
