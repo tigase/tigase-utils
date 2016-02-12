@@ -88,7 +88,8 @@ public abstract class JIDUtils {
   public static final String getNodeHostIP(final String jid)
 		throws UnknownHostException {
     String domain = getNodeHost(jid);
-    return DNSResolver.getHostSRV_IP(domain);
+		DNSResolverIfc resolver = DNSResolverFactory.getInstance();
+    return resolver.getHostSRV_IP(domain);
   }
 
   /**

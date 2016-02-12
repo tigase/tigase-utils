@@ -56,7 +56,10 @@ import sun.net.util.IPAddressUtil;
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @since Mon Sep 11 09:59:02 2006
+ *
+ * @deprecated {@code tigase.util.DNSResolverFactory.getInstance()} should be used instead
  */
+@Deprecated
 public class DNSResolver {
 	private static String       defaultHostname = null;
 	private static final long   DNS_CACHE_TIME  = 1000 * 60;
