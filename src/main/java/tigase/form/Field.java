@@ -103,7 +103,7 @@ public class Field implements Comparable<Field>{
 	}
 
 	public static enum FieldType {
-		bool("boolean"), fixed("fixed"), hidden("hidden"), jid_single("jid-single"),
+		bool("boolean"), fixed("fixed"), hidden("hidden"), jid_single("jid-single"), jid_multi("jid-multi"),
 		list_multi("list-multi"), list_single("list-single"), text_multi("text-multi"),
 		text_private("text-private"), text_single("text-single");
 
@@ -158,6 +158,15 @@ public class Field implements Comparable<Field>{
 		return field;
 	}
 
+	public static Field fieldJidMulti(String var, String[] values, String label) {
+		Field field = new Field(FieldType.jid_multi, var);
+
+		field.label  = label;
+		field.values = values;
+
+		return field;
+	}
+	
 	public static Field fieldJidSingle(String var, String value, String label) {
 		Field field = new Field(FieldType.jid_single, var);
 
