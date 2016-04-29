@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,7 +68,15 @@ public class DNSResolverDefault implements DNSResolverIfc {
 		// to have a full control over it.
 		java.security.Security.setProperty( "networkaddress.cache.ttl", "0" );
 		ip_cache.put( LOCALHOST, new DNSEntry( LOCALHOST, "127.0.0.1" ) );
+		String tigasePrimaryHost = System.getProperty(TIGASE_PRIMARY_ADDRESS );
+		boolean isTigasePrimaryHostValid = false;
+
 		try {
+			if ( tigasePrimaryHost != null ){
+				InetAddress.getByName( tigasePrimaryHost );
+				isTigasePrimaryHostValid = true;
+			}
+
 			String newHostName = InetAddress.getLocalHost().getCanonicalHostName()
 					.toLowerCase();
 
@@ -107,18 +114,22 @@ public class DNSResolverDefault implements DNSResolverIfc {
 			}
 
 			//override
-			String property = System.getProperty(TIGASE_PRIMARY_ADDRESS );
-			if ( property != null ){
-				InetAddress.getByName( property );
-				defaultHost = property;
+			if ( isTigasePrimaryHostValid ){
+				defaultHost = tigasePrimaryHost;
+				log.log( Level.WARNING, "Explicit configuring default hostname: {0}", new Object[] { defaultHost } );
 			}
 
 		} catch ( UnknownHostException e ) {
-			localnames = new String[] { LOCALHOST };
-			defaultHost = LOCALHOST;
-			log.severe( "Most likely network misconfiguration problem, make sure the local hostname "
-									+ "to whichever it is set does resolve to IP address, now using: "
-									+ defaultHost );
+			if ( isTigasePrimaryHostValid ){
+				localnames = new String[] { tigasePrimaryHost };
+				defaultHost = tigasePrimaryHost;
+			} else {
+				localnames = new String[] { LOCALHOST };
+				defaultHost = LOCALHOST;
+			}
+			log.log( Level.SEVERE, "Retrieval of default hostnames failed! Most likely network misconfiguration problem,"
+														 + "make sure the local hostname to whichever it is set does resolve to IP address,"
+														 + "fallback to: " + defaultHost, e );
 		}
 
 		// OpenDNS workaround, but this may take a while so let's do it in
