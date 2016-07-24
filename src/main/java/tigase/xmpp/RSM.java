@@ -59,8 +59,16 @@ public class RSM {
 		return after;
 	}
 
+	public void setAfter(String after) {
+		this.after = after;
+	}
+
 	public String getBefore() {
 		return before;
+	}
+
+	public void setBefore(String before) {
+		this.before = before;
 	}
 
 	public boolean hasBefore() {
@@ -78,11 +86,19 @@ public class RSM {
 	public void setCount( Integer count ) {
 		this.count = count;
 	}
-	
+
+	public String getFirst() {
+		return first;
+	}
+
 	public void setFirst(String first) {
 		this.first = first;
 	}
-	
+
+	public String getLast() {
+		return last;
+	}
+
 	public void setLast(String last) {
 		this.last = last;
 	}
