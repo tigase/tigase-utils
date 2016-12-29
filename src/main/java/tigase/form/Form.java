@@ -25,6 +25,7 @@ package tigase.form;
 import tigase.xml.Element;
 
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  *
@@ -48,7 +49,9 @@ public class Form extends AbstractForm {
 				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
 
-					log.finest("read Data Form field [" + field.getVar() + "]");
+					if (log.isLoggable(Level.FINEST)) {
+						log.finest("read Data Form field [" + field.getVar() + "]");
+					}
 					fields.addField( field );
 				}
 			}
@@ -80,8 +83,8 @@ public class Form extends AbstractForm {
 
 					if (f != null) {
 						f.setValues(field.getValues());
-					} else {
-						log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+					} else if (log.isLoggable(Level.FINER)) {
+						log.finer("Field " + field.getVar() + " is not declared in form '" + title + "'!");
 					}
 				}
 			}
@@ -94,8 +97,8 @@ public class Form extends AbstractForm {
 
 			if (f != null) {
 				f.setValues(field.getValues());
-			} else {
-				log.warning("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+			} else if (log.isLoggable(Level.FINER)) {
+				log.finer("Field " + field.getVar() + " is not declared in form '" + title + "'!");
 			}
 		}
 	}
