@@ -157,8 +157,21 @@ public class Form extends AbstractForm {
 		return type;
 	}
 
+	@Override
+	public String getTypeOrElse(String defValue) {
+		if (type == null) {
+			return defValue;
+		}
+		return type;
+	}
+
 	public boolean is(String var) {
 		return this.fields.is( var );
+	}
+
+	@Override
+	public boolean isType(String type) {
+		return this.type != null && this.type.equals(type);
 	}
 
 	public void removeField(final String var) {

@@ -95,6 +95,17 @@ public class AbstractForm {
 		return type;
 	}
 
+	public String getTypeOrElse(String defValue) {
+		if (type == null) {
+			return defValue;
+		}
+		return type;
+	}
+
+	public boolean isType(String type) {
+		return this.type != null && this.type.equals(type);
+	}
+
 	public void setInstruction( String instruction ) {
 		this.instruction = instruction;
 	}
