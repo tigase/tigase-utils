@@ -8,7 +8,7 @@
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
 	<name>Tigase Utils</name>
-	<version>3.5.0-SNAPSHOT</version>
+	<version>3.5.0</version>
 	<description>Tigase Utils</description>
 	<url>http://www.tigase.org/</url>
 	<issueManagement>
@@ -34,7 +34,8 @@
 		<connection>scm:git:https://repository.tigase.org/git/tigase-utils.git</connection>
 		<developerConnection>scm:git:https://repository.tigase.org/git/tigase-utils.git</developerConnection>
 		<url>https://projects.tigase.org/projects/tigase-utils/repository</url>
-	</scm>
+	  <tag>tigase-utils-3.5.0</tag>
+  </scm>
 	<organization>
 		<name>Tigase</name>
 		<url>http://www.tigase.org</url>
@@ -180,7 +181,7 @@
 		<dependency>
 			<groupId>tigase</groupId>
 			<artifactId>tigase-xmltools</artifactId>
-			<version>3.5.0-SNAPSHOT</version>
+			<version>3.5.0</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
