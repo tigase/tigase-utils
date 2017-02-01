@@ -25,11 +25,7 @@ package tigase.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -48,8 +44,10 @@ import java.util.jar.JarFile;
  * @version $Rev$
  */
 public class ClassUtil {
+	private static final String[] SKIP_WHITELIST = { "tigase."};
 	private static final String[] SKIP_CONTAINS = { ".ui.", ".swing", ".awt", ".sql.",
 			".xml.", ".terracotta." };
+
 	private static final String[] SKIP_STARTS = { "com.mysql", "tigase.pubsub.Utils",
 			"org.apache.derby", "org.apache.xml", "org.postgresql", "com.sun", "groovy",
 			"org.codehaus.groovy", "org.netbeans", "org.python" };
@@ -213,6 +211,13 @@ public class ClassUtil {
 						if (skip_class) {
 							break;
 						}
+					}
+				}
+
+				for (String test_str : SKIP_WHITELIST) {
+					if (name.startsWith(test_str)) {
+						skip_class = false;
+						break;
 					}
 				}
 
