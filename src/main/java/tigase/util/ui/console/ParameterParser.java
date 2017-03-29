@@ -160,15 +160,15 @@ public class ParameterParser {
 	 * accordingly)
 	 */
 	public ParameterParser(List<CommandlineParameter> options, boolean interactiveMode) {
+		this.options = new ArrayList<>();
+		this.optionsByName = new HashMap<>();
+		this.optionsByLetter = new HashMap<>();
+		this.interactiveMode = interactiveMode;
 		addOption(helpOption);
 
 		if (interactiveMode) {
 			addInteractiveModeCommand();
 		}
-		this.options = new ArrayList<>();
-		this.optionsByName = new HashMap<>();
-		this.optionsByLetter = new HashMap<>();
-		this.interactiveMode = interactiveMode;
 		if (null != options && !options.isEmpty()) {
 			addOptions(options);
 		}
