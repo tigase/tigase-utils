@@ -31,12 +31,12 @@ public class ExceptionUtilities {
 		Throwable cause = e;
 		int idx = 1;
 		while (cause.getCause() != null) {
+			cause = cause.getCause();
 			final String indent = String.join("", Collections.nCopies(idx++, "   "));
 			sb.append("\n").append(indent).append("-> ").append(cause);
 			if (includeSource) {
 				sb.append("\n").append(indent).append("   [").append(cause.getStackTrace()[0]).append("]");
 			}
-			cause = cause.getCause();
 		}
 		return sb.toString();
 	}
