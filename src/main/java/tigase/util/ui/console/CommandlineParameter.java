@@ -16,6 +16,7 @@ public class CommandlineParameter {
 	private final List<String> selectionOptions;
 	private final String singleLetter;
 	private String value;
+	private Class type;
 
 	private CommandlineParameter(Builder builder) {
 		this.singleLetter = builder.singleLetter;
@@ -26,6 +27,7 @@ public class CommandlineParameter {
 		this.requireArguments = builder.requireArguments;
 		this.required = builder.required;
 		this.selectionOptions = builder.selectionOptions;
+		this.type = builder.type;
 	}
 
 	// TODO: add fields dependency? for example admin pass on admin JID local-part?
@@ -118,6 +120,15 @@ public class CommandlineParameter {
 	}
 
 	/**
+	 * Retrives expected class of a parameter
+	 *
+	 * @return
+	 */
+	public Class getType() {
+		return type;
+	}
+
+	/**
 	 * Retrieves stored value for this parameter option
 	 *
 	 * @return Optional with the stored value
@@ -168,7 +179,7 @@ public class CommandlineParameter {
 	public boolean isSecret() {
 		return secret;
 	}
-
+	
 	/**
 	 * Sets the value from the configured default if present
 	 */
@@ -217,6 +228,7 @@ public class CommandlineParameter {
 		private boolean required = false;
 		private boolean secret = false;
 		private List<String> selectionOptions = null;
+		private Class type = String.class;
 
 		/**
 		 * Constructs a {@link CommandlineParameter} builder. It takes as parameters both "single-letter" and
@@ -319,5 +331,9 @@ public class CommandlineParameter {
 			return this;
 		}
 
+		public Builder type(Class type) {
+			this.type = type;
+			return this;
+		}
 	}
 }
