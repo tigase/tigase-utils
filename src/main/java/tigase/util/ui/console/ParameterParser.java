@@ -26,6 +26,8 @@ public class ParameterParser {
 			"Enable interactive mode, which will result in prompting for missing parameters")
 			.requireArguments(false)
 			.build();
+	private Optional<Task> task = Optional.empty();
+	private Optional<List<Task>> tasks = Optional.empty();
 
 	public static void main(String[] args) {
 
@@ -236,7 +238,7 @@ public class ParameterParser {
 	 */
 	public String getHelp(String executionCommand) {
 		if (null == executionCommand) {
-			executionCommand = "$ java -cp \"path_to_binary.jar\" some.package.Class [options]" + "\n\t\t" +
+			executionCommand = "$ java -cp \"path_to_binary.jar\" some.package.Class " + (tasks.isPresent() ? "[task] " : "") + "[options]" + "\n\t\t" +
 					"if the option defines default then <value> is optional";
 		}
 
@@ -244,6 +246,15 @@ public class ParameterParser {
 		sb.append("Usage:").append("\n");
 		sb.append("\t").append(executionCommand).append("\n");
 		sb.append("\n");
+		if (tasks.isPresent()) {
+			sb.append("Tasks:");
+			for (Task task : tasks.get()) {
+				sb.append("\n\t");
+				sb.append(task.getName());
+				task.getDescription().ifPresent(str -> sb.append("\t-\t").append(str));
+			}
+			sb.append("\n\n");
+		}
 		sb.append("Options:");
 		for (CommandlineParameter option : options) {
 			sb.append("\n\n\t");
@@ -335,6 +346,10 @@ public class ParameterParser {
 				.collect(Collectors.toList());
 	}
 
+	public Optional<Task> getTask() {
+		return task;
+	}
+
 	public boolean isInteractiveMode() {
 		return interactiveMode;
 	}
@@ -359,12 +374,25 @@ public class ParameterParser {
 			p.setValue(null);
 		}
 
+		int i = 0;
+		task = Optional.empty();
+		if (tasks.isPresent()) {
+			if (args.length > 0) {
+				task = tasks.get().stream().filter(t -> t.getName().equals(args[0])).findAny();
+				if (task.isPresent()) {
+					i++;
+				}
+			}
+			if (!task.isPresent()) {
+				return null;
+			}
+		}
 		// lets parse input, options are detected as follows
 		// * if "-" -> single-letter + space separator
 		// * if "--" -> full-name + "=" as separator
 		// if the value for the parameter is provided - use it
 		// if it's missing - use default (but only for the passed options)
-		for (int i = 0; i < args.length; i++) {
+		for (; i < args.length; i++) {
 			String key = null;
 			String value = null;
 			final Optional<CommandlineParameter> option;
@@ -481,6 +509,7 @@ public class ParameterParser {
 				props.putIfAbsent(e.getFullName().get(), e.getValue().get());
 			}
 		}
+
 		return props;
 	}
 
@@ -515,5 +544,9 @@ public class ParameterParser {
 	public void removeOptionByName(String name) {
 		final Optional<CommandlineParameter> option = getOptionByName(name);
 		option.ifPresent(this::removeOption);
+	}
+
+	public void setTasks(Task[] supportedTasks) {
+		this.tasks = Optional.ofNullable(supportedTasks == null ? null : Arrays.asList(supportedTasks));
 	}
 }
