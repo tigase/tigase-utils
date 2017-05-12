@@ -1,7 +1,10 @@
 package tigase.util.ui.console;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 
 /**
  * Created by andrzej on 09.05.2017.
@@ -11,11 +14,13 @@ public class Task {
 	private final String name;
 	private Executor<Properties> function;
 	private final Optional<String> description;
+	private final Optional<Supplier<List<CommandlineParameter>>> additionalParameterSupplier;
 
 	private Task(Builder builder) {
 		this.name = builder.name;
 		this.function = builder.function;
 		this.description = Optional.ofNullable(builder.description);
+		this.additionalParameterSupplier = Optional.ofNullable(builder.additionalParameterSupplier);
 	}
 
 	public String getName() {
@@ -24,6 +29,13 @@ public class Task {
 
 	public Optional<String> getDescription() {
 		return description;
+	}
+
+	public List<CommandlineParameter> getAdditionalParameters() {
+		if (additionalParameterSupplier.isPresent()) {
+			return additionalParameterSupplier.get().get();
+		}
+		return Collections.emptyList();
 	}
 
 	public void execute(Properties props) throws Exception {
@@ -35,6 +47,7 @@ public class Task {
 		private String name;
 		private String description;
 		private Executor<Properties> function;
+		private Supplier<List<CommandlineParameter>> additionalParameterSupplier;
 
 		public Builder() {
 			
@@ -52,6 +65,11 @@ public class Task {
 
 		public Builder function(Executor<Properties> function) {
 			this.function = function;
+			return this;
+		}
+
+		public Builder additionalParameterSupplier(Supplier<List<CommandlineParameter>> supplier) {
+			this.additionalParameterSupplier = supplier;
 			return this;
 		}
 

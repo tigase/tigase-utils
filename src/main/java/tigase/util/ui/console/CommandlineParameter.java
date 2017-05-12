@@ -1,9 +1,7 @@
 package tigase.util.ui.console;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 
 public class CommandlineParameter {
 
@@ -15,6 +13,7 @@ public class CommandlineParameter {
 	private final boolean secret;
 	private final List<String> selectionOptions;
 	private final String singleLetter;
+	private final Optional<Function<String, List<CommandlineParameter>>> valueDependentParametersProvider;
 	private String value;
 	private Class type;
 
@@ -28,6 +27,7 @@ public class CommandlineParameter {
 		this.required = builder.required;
 		this.selectionOptions = builder.selectionOptions;
 		this.type = builder.type;
+		this.valueDependentParametersProvider = Optional.ofNullable(builder.valueDependentParametersProvider);
 	}
 
 	// TODO: add fields dependency? for example admin pass on admin JID local-part?
@@ -146,6 +146,13 @@ public class CommandlineParameter {
 		this.value = value;
 	}
 
+	public List<CommandlineParameter> getValueDependentParameters() {
+		if (valueDependentParametersProvider.isPresent() && getValue().isPresent()) {
+			return valueDependentParametersProvider.get().apply(value);
+		}
+		return Collections.emptyList();
+	}
+
 	@Override
 	public int hashCode() {
 		int result = singleLetter != null ? singleLetter.hashCode() : 0;
@@ -229,6 +236,7 @@ public class CommandlineParameter {
 		private boolean secret = false;
 		private List<String> selectionOptions = null;
 		private Class type = String.class;
+		private Function<String, List<CommandlineParameter>> valueDependentParametersProvider;
 
 		/**
 		 * Constructs a {@link CommandlineParameter} builder. It takes as parameters both "single-letter" and
@@ -333,6 +341,11 @@ public class CommandlineParameter {
 
 		public Builder type(Class type) {
 			this.type = type;
+			return this;
+		}
+
+		public Builder valueDependentParametersProvider(Function<String, List<CommandlineParameter>> provider) {
+			this.valueDependentParametersProvider = provider;
 			return this;
 		}
 	}

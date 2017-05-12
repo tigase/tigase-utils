@@ -221,6 +221,16 @@ public class ParameterParser {
 		}
 	}
 
+	private boolean addOptionsIfMissing(List<CommandlineParameter> options) {
+		if (null != options && !options.isEmpty()) {
+			return options.stream().filter(option -> !this.options.contains(option)).map(option -> {
+				this.addOption(option);
+				return option;
+			}).count() > 0;
+		}
+		return false;
+	}
+
 	/**
 	 * Generates help output with default instruction.
 	 *
@@ -385,74 +395,13 @@ public class ParameterParser {
 			}
 			if (!task.isPresent()) {
 				return null;
+			} else {
+				addOptions(task.get().getAdditionalParameters());
 			}
 		}
-		// lets parse input, options are detected as follows
-		// * if "-" -> single-letter + space separator
-		// * if "--" -> full-name + "=" as separator
-		// if the value for the parameter is provided - use it
-		// if it's missing - use default (but only for the passed options)
-		for (; i < args.length; i++) {
-			String key = null;
-			String value = null;
-			final Optional<CommandlineParameter> option;
-			if (args[i].startsWith("--")) {
-				if (args[i].contains("=")) {
-					key = args[i].substring(2, args[i].indexOf("="));
-				} else {
-					key = args[i].substring(2);
-				}
-				option = getOptionByName(key);
-				if (option.isPresent()) {
-					if (option.get().isRequireArguments()) {
-						if (args[i].contains("=")) {
-							value = args[i].substring(args[i].indexOf("=") + 1, args[i].length());
-							option.get().setValue(value);
-						} else if (option.get().getDefaultValue().isPresent()) {
-							value = option.get().getDefaultValue().get();
-							option.get().setValue(value);
-						}
-					} else {
-						Boolean b = true;
-						if (option.get().getDefaultValue().isPresent()) {
-							// let's flip the default
-							b = !Boolean.valueOf(option.get().getDefaultValue().get());
-						}
-						option.get().setValue(b.toString());
-					}
-				}
-			} else if (args[i].startsWith("-")) {
-				key = args[i].substring(1, args[i].length());
-				option = getOptionByLetter(key);
 
-				if (option.isPresent() && option.get().getFullName().isPresent()) {
-					key = option.get().getFullName().get();
-				}
-
-				if (option.isPresent()) {
-					if (option.get().isRequireArguments()) {
-						if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
-							value = args[i + 1];
-							option.get().setValue(value);
-						} else if (option.get().getDefaultValue().isPresent()) {
-							value = option.get().getDefaultValue().get();
-							option.get().setValue(value);
-						}
-					} else {
-						Boolean b = true;
-						if (option.get().getDefaultValue().isPresent()) {
-							// let's flip the default
-							b = !Boolean.valueOf(option.get().getDefaultValue().get());
-						}
-						option.get().setValue(b.toString());
-					}
-				}
-			} else {
-				log.log(Level.FINE, "Checked item is not valid: %1$s, possibly value of parameter", args[i]);
-			}
-			if (null != key && null != value) {
-				props.put(key, value);
-			}
+		while (parseArgsToProperties(props, i, args)) {
+			
 		}
 
 		// let's check if this is interactive mode and if it wasn't disabled in passed argument
@@ -486,6 +435,7 @@ public class ParameterParser {
 				String val = e.isSecret() ? new String(console.readPassword(label)) : console.readLine(label);
 				if (null != val && !val.isEmpty()) {
 					e.setValue(val);
+					addOptionsIfMissing(e.getValueDependentParameters());
 				}
 			}
 		}
@@ -511,6 +461,88 @@ public class ParameterParser {
 		}
 
 		return props;
+	}
+
+	private boolean parseArgsToProperties(Properties props, int i, String[] args) {
+		boolean added = false;
+		// lets parse input, options are detected as follows
+		// * if "-" -> single-letter + space separator
+		// * if "--" -> full-name + "=" as separator
+		// if the value for the parameter is provided - use it
+		// if it's missing - use default (but only for the passed options)
+		for (; i < args.length; i++) {
+			String arg = args[i];
+			String key = null;
+			String value = null;
+			final Optional<CommandlineParameter> optionOption;
+			if (args[i].startsWith("--")) {
+				if (args[i].contains("=")) {
+					key = args[i].substring(2, args[i].indexOf("="));
+				} else {
+					key = args[i].substring(2);
+				}
+				optionOption = getOptionByName(key);
+
+				if (!optionOption.isPresent()) {
+					continue;
+				}
+
+				CommandlineParameter option = optionOption.get();
+				if (option.isRequireArguments()) {
+					if (args[i].contains("=")) {
+						value = args[i].substring(arg.indexOf("=") + 1, args[i].length());
+						option.setValue(value);
+					} else if (option.getDefaultValue().isPresent()) {
+						value = option.getDefaultValue().get();
+						option.setValue(value);
+					}
+				} else {
+					Boolean b = true;
+					if (option.getDefaultValue().isPresent()) {
+						// let's flip the default
+						b = !Boolean.valueOf(option.getDefaultValue().get());
+					}
+					option.setValue(b.toString());
+				}
+				added |= addOptionsIfMissing(option.getValueDependentParameters());
+			} else if (args[i].startsWith("-")) {
+				key = args[i].substring(1, args[i].length());
+				optionOption = getOptionByLetter(key);
+
+				if (!optionOption.isPresent()) {
+					continue;
+				}
+
+				CommandlineParameter option = optionOption.get();
+				if (option.getFullName().isPresent()) {
+					key = option.getFullName().get();
+				}
+
+				if (option.isRequireArguments()) {
+					if (i + 1 < args.length && !args[i + 1].startsWith("-")) {
+						value = args[i + 1];
+						option.setValue(value);
+					} else if (option.getDefaultValue().isPresent()) {
+						value = option.getDefaultValue().get();
+						option.setValue(value);
+					}
+				} else {
+					Boolean b = true;
+					if (option.getDefaultValue().isPresent()) {
+						// let's flip the default
+						b = !Boolean.valueOf(option.getDefaultValue().get());
+					}
+					option.setValue(b.toString());
+				}
+				added |= addOptionsIfMissing(option.getValueDependentParameters());
+			} else {
+				log.log(Level.FINE, "Checked item is not valid: %1$s, possibly value of parameter", args[i]);
+			}
+			if (null != key && null != value) {
+				props.put(key, value);
+			}
+		}
+		return added;
 	}
 
 	/**
