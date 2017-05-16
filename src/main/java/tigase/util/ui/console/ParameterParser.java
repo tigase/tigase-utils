@@ -266,6 +266,21 @@ public class ParameterParser {
 			sb.append("\n\n");
 		}
 		sb.append("Options:");
+
+		List<CommandlineParameter> parameterDependentParameters = getOptions().stream().filter(option -> option.hasValueDependentParameters()).collect(
+				Collectors.toList());
+		if (!parameterDependentParameters.isEmpty()) {
+			sb.append("\n\tThis is not a full list of possible parameters. Please pass values for ");
+			if (tasks.isPresent()) {
+				sb.append("task and ");
+			}
+			sb.append("following parameters to get full list of parameters: ");
+			sb.append(parameterDependentParameters.stream()
+							  .map(option -> option.getSingleLetter(true)
+									  .orElseGet(() -> option.getFullName(true).get()))
+							  .collect(Collectors.joining(", ")));
+		}
+
 		for (CommandlineParameter option : options) {
 			sb.append("\n\n\t");
 			option.getSingleLetter(true).ifPresent((str) -> sb.append(str));

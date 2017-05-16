@@ -153,6 +153,10 @@ public class CommandlineParameter {
 		return Collections.emptyList();
 	}
 
+	public boolean hasValueDependentParameters() {
+		return valueDependentParametersProvider.isPresent();
+	}
+
 	@Override
 	public int hashCode() {
 		int result = singleLetter != null ? singleLetter.hashCode() : 0;
