@@ -507,6 +507,9 @@ public class ParameterParser {
 					if (args[i].contains("=")) {
 						value = args[i].substring(arg.indexOf("=") + 1, args[i].length());
 						option.setValue(value);
+					} else if (args.length - 1 > i && !args[i+1].startsWith("-")) {
+						value = args[i+1];
+						i++;
 					} else if (option.getDefaultValue().isPresent()) {
 						value = option.getDefaultValue().get();
 						option.setValue(value);
