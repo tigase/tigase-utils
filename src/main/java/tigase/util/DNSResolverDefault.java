@@ -21,21 +21,16 @@
  */
 package tigase.util;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DNSResolver class for handling DNS names
@@ -44,6 +39,7 @@ import javax.naming.directory.InitialDirContext;
 public class DNSResolverDefault implements DNSResolverIfc {
 
 	private static String defaultHost = null;
+	private static String primaryHost = null;
 	private static String secondaryHost = null;
 	private static final long DNS_CACHE_TIME = 1000 * 60;
 	private static final String LOCALHOST = "localhost";
@@ -68,15 +64,10 @@ public class DNSResolverDefault implements DNSResolverIfc {
 		// to have a full control over it.
 		java.security.Security.setProperty( "networkaddress.cache.ttl", "0" );
 		ip_cache.put( LOCALHOST, new DNSEntry( LOCALHOST, "127.0.0.1" ) );
-		String tigasePrimaryHost = System.getProperty(TIGASE_PRIMARY_ADDRESS );
-		boolean isTigasePrimaryHostValid = false;
+		setPrimaryHost(System.getProperty(TIGASE_PRIMARY_ADDRESS));
+		setSecondaryHost(System.getProperty(TIGASE_SECONDARY_ADDRESS));
 
 		try {
-			if ( tigasePrimaryHost != null ){
-				InetAddress.getByName( tigasePrimaryHost );
-				isTigasePrimaryHostValid = true;
-			}
-
 			String newHostName = InetAddress.getLocalHost().getCanonicalHostName()
 					.toLowerCase();
 
@@ -113,20 +104,9 @@ public class DNSResolverDefault implements DNSResolverIfc {
 				defaultHost = localnames[0];
 			}
 
-			//override
-			if ( isTigasePrimaryHostValid ){
-				defaultHost = tigasePrimaryHost;
-				log.log( Level.WARNING, "Explicit configuring default hostname: {0}", new Object[] { defaultHost } );
-			}
-
 		} catch ( UnknownHostException e ) {
-			if ( isTigasePrimaryHostValid ){
-				localnames = new String[] { tigasePrimaryHost };
-				defaultHost = tigasePrimaryHost;
-			} else {
-				localnames = new String[] { LOCALHOST };
-				defaultHost = LOCALHOST;
-			}
+			localnames = new String[]{LOCALHOST};
+			defaultHost = LOCALHOST;
 			log.log( Level.SEVERE, "Retrieval of default hostnames failed! Most likely network misconfiguration problem,"
 														 + "make sure the local hostname to whichever it is set does resolve to IP address,"
 														 + "fallback to: " + defaultHost, e );
@@ -249,31 +229,53 @@ public class DNSResolverDefault implements DNSResolverIfc {
 
 	@Override
 	public String getDefaultHost() {
-		return defaultHost;
+		if (primaryHost == null) {
+			return defaultHost;
+		} else {
+			return primaryHost;
+		}
+	}
+
+	public String getPrimaryHost() {
+		return primaryHost;
+	}
+
+	public void setPrimaryHost(String tigasePrimaryHost) {
+		if (isHostValid(tigasePrimaryHost)) {
+			primaryHost = tigasePrimaryHost;
+			log.log( Level.WARNING, "Explicit configuring default hostname: {0}", new Object[] { getDefaultHost() } );
+		} else {
+			primaryHost = defaultHost;
+		}
 	}
 
 	@Override
 	public String getSecondaryHost() {
+		if (secondaryHost == null) {
+			return getDefaultHost();
+		} else {
+			return secondaryHost;
+		}
+	}
 
-		String property = System.getProperty(TIGASE_SECONDARY_ADDRESS );
-		if ( property != null ){
-			try {
-				InetAddress.getByName( property );
-				secondaryHost = property;
-			} catch ( UnknownHostException ex ) {
-				log.log( Level.SEVERE, "Invalid secondary host property: " + property + ", using default: " + getDefaultHost() );
-				secondaryHost = null;
-			}
+	public void setSecondaryHost(String tigaseSecondaryHost) {
+		if (isHostValid(tigaseSecondaryHost)) {
+			secondaryHost = tigaseSecondaryHost;
 		} else {
 			secondaryHost = null;
 		}
+	}
 
-		if ( secondaryHost != null ){
-			return secondaryHost;
-
-		} else {
-			return getDefaultHost();
+	protected static boolean isHostValid(String host) {
+		try {
+			if (host != null) {
+				InetAddress.getByName(host);
+				return true;
+			}
+		} catch (UnknownHostException ex) {
+			log.log(Level.SEVERE, "Not possible to resolve " + host + ", using fallback address...");
 		}
+		return false;
 	}
 
 	/**
