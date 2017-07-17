@@ -238,7 +238,7 @@ public class DeprecationTest {
 
 		@Override
 		public void describeTo(Description description) {
-			description.appendValue(version);
+			description.appendText("version bigger than ").appendValue(version);
 		}
 	}
 
