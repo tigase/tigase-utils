@@ -24,6 +24,8 @@ package tigase.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import tigase.annotations.TigaseDeprecated;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -49,6 +51,7 @@ import java.util.logging.Logger;
  * @deprecated
  */
 @Deprecated
+@TigaseDeprecated(since = "3.3.11", removeIn = "3.7.0")
 public abstract class JDBCAbstract {
 
 	/**

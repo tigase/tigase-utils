@@ -22,16 +22,15 @@
 
 package tigase.cert;
 
+import junit.framework.TestCase;
+
+import javax.crypto.Cipher;
 import java.security.KeyPair;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-import javax.crypto.Cipher;
-import junit.framework.TestCase;
-import static tigase.cert.CertificateUtil.createKeyPair;
-import static tigase.cert.CertificateUtil.createSelfSignedCertificate;
-import static tigase.cert.CertificateUtil.verifyCertificateForDomain;
-import tigase.util.Algorithms;
+
+import static tigase.cert.CertificateUtil.*;
 
 /**
  *

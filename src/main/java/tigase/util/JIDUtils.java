@@ -21,6 +21,8 @@
  */
 package tigase.util;
 
+import tigase.annotations.TigaseDeprecated;
+
 import java.net.UnknownHostException;
 
 /**
@@ -35,6 +37,7 @@ import java.net.UnknownHostException;
  * @deprecated replaced by tigase.xmpp.JID
  */
 @Deprecated
+@TigaseDeprecated(since = "3.3.8", removeIn = "3.7.0")
 public abstract class JIDUtils {
 
   /**

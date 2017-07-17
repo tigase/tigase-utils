@@ -26,27 +26,19 @@ package tigase.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import tigase.annotations.TigaseDeprecated;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import sun.net.util.IPAddressUtil;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,6 +52,7 @@ import sun.net.util.IPAddressUtil;
  * @deprecated {@code tigase.util.DNSResolverFactory.getInstance()} should be used instead
  */
 @Deprecated
+@TigaseDeprecated(since = "3.5.0", removeIn = "3.7.0")
 public class DNSResolver {
 	private static String       defaultHostname = null;
 	private static final long   DNS_CACHE_TIME  = 1000 * 60;
