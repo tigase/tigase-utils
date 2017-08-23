@@ -20,6 +20,7 @@
 
 package tigase.util;
 
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -28,14 +29,22 @@ import java.util.regex.Pattern;
 public class Version
 		implements Comparable<Version> {
 
+	private static final Comparator<Version> versionComparator = Comparator.comparingInt(Version::getMajor)
+			.thenComparingInt(Version::getMinor)
+			.thenComparingInt(Version::getBugfix)
+			.thenComparing(Version::getVersionType)
+			.thenComparingInt(Version::getTypeNumber)
+			.thenComparingInt(Version::getBuild);
 	private static final Logger log = Logger.getLogger("tigase.util.updater.UpdatesChecker");
 	private static final Pattern PATTERN = Pattern.compile(
-			"(.*?)-?((\\d{1,20}\\.){2}\\d{1,20})(-(SNAPSHOT))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?");
-
+			"(.*?)-?((\\d{1,20}\\.){2}\\d{1,20})(-(SNAPSHOT|RC|BETA)(\\d*))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?",
+			Pattern.CASE_INSENSITIVE);
 	public static final Version ZERO = Version.of("0.0.0-b0000");
 
 	public enum TYPE {
 		SNAPSHOT("-SNAPSHOT"),
+		BETA("-BETA"),
+		RC("-RC"),
 		FINAL("");
 
 		private String id;
@@ -55,6 +64,7 @@ public class Version
 	private final String component;
 	private final int major;
 	private final int minor;
+	private final int typeNumber;
 	private final TYPE versionType;
 
 	/**
@@ -75,20 +85,27 @@ public class Version
 		int build = -1;
 		String commit = null;
 		TYPE versionType = TYPE.FINAL;
+		int typeNumber = -1;
 
 		final Matcher matcher = PATTERN.matcher(str);
 		if (matcher.find()) {
 			String mainVersionPart = null;
+			String buildStr = null;
+			String typeNumberStr = null;
 			switch (matcher.groupCount()) {
-				case 9:
-					commit = matcher.group(9);
-				case 7:
-					if (matcher.group(7) != null) {
-						build = Integer.valueOf(matcher.group(7));
+				case 10:
+					commit = matcher.group(10);
+				case 8:
+					if (matcher.group(8) != null) {
+						buildStr = matcher.group(8);
+					}
+				case 6:
+					if (matcher.group(6) != null && !matcher.group(6).trim().isEmpty()) {
+						typeNumberStr = matcher.group(6);
 					}
 				case 5:
-					if (matcher.group(5) != null && TYPE.valueOf(matcher.group(5)).equals(TYPE.SNAPSHOT)) {
-						versionType = TYPE.SNAPSHOT;
+					if (matcher.group(5) != null) {
+						versionType = TYPE.valueOf(matcher.group(5).toUpperCase());
 					}
 				case 2:
 					mainVersionPart = matcher.group(2);
@@ -109,6 +126,13 @@ public class Version
 						case 1:
 							major = Integer.parseInt(versionParts[0]);
 					}
+
+					if (buildStr != null && !buildStr.trim().isEmpty()) {
+						build = Integer.valueOf(buildStr);
+					}
+					if (typeNumberStr != null && !typeNumberStr.trim().isEmpty()) {
+						typeNumber = Integer.valueOf(typeNumberStr);
+					}
 				}
 			} catch (NumberFormatException e) {
 				log.warning("Can not detect the server version.... " + str);
@@ -119,12 +143,13 @@ public class Version
 		} else {
 			throw new IllegalArgumentException("Wrong Version format provided");
 		}
-		return new Version(component, versionType, major, minor, bugfix, build, commit);
+		return new Version(component, versionType, major, minor, bugfix, build, typeNumber, commit);
 	}
 
 	private Version(Builder builder) {
 		this.component = builder.component;
 		this.versionType = builder.versionType;
+		this.typeNumber = builder.typeNumber;
 		this.major = builder.major;
 		this.minor = builder.minor;
 		this.bugfix = builder.bugfix;
@@ -132,8 +157,10 @@ public class Version
 		this.commit = builder.commit;
 	}
 
-	private Version(String component, TYPE type, int major, int minor, int bugfix, int build, String commit) {
+	private Version(String component, TYPE type, int major, int minor, int bugfix, int build, int typeNumber,
+	                String commit) {
 		this.component = component;
+		this.typeNumber = typeNumber;
 		this.versionType = type;
 		this.major = major;
 		this.minor = minor;
@@ -143,26 +170,8 @@ public class Version
 	}
 
 	@Override
-	public int compareTo(Version o) {
-
-		if (this.major != o.major) {
-			return Integer.compare(this.major, o.major);
-		}
-
-		if (this.minor != o.minor) {
-			return Integer.compare(this.minor, o.minor);
-		}
-
-		if (this.bugfix != o.bugfix) {
-			return Integer.compare(this.bugfix, o.bugfix);
-		}
-
-		if (this.build != o.build) {
-			return Integer.compare(this.build, o.build);
-		}
-
-		return versionType.compareTo(o.versionType);
-
+	public int compareTo(Version that) {
+		return versionComparator.compare(this, that);
 	}
 
 	@Override
@@ -176,22 +185,49 @@ public class Version
 
 		Version version = (Version) o;
 
-		if (bugfix != version.bugfix) {
-			return false;
-		}
-		if (build != version.build) {
-			return false;
-		}
 		if (major != version.major) {
 			return false;
 		}
 		if (minor != version.minor) {
 			return false;
 		}
-		if (commit != null ? !commit.equals(version.commit) : version.commit != null) {
+		if (bugfix != version.bugfix) {
 			return false;
 		}
-		return versionType == version.versionType;
+		if (versionType != version.versionType) {
+			return false;
+		}
+		if (typeNumber != version.typeNumber) {
+			return false;
+		}
+		if (build != version.build) {
+			return false;
+		}
+		return (commit != null ? !commit.equals(version.commit) : version.commit != null);
+	}
+
+	public int getBugfix() {
+		return bugfix;
+	}
+
+	public int getBuild() {
+		return build;
+	}
+
+	public String getCommit() {
+		return commit;
+	}
+
+	public int getMajor() {
+		return major;
+	}
+
+	public int getMinor() {
+		return minor;
+	}
+
+	public int getTypeNumber() {
+		return typeNumber;
 	}
 
 	public TYPE getVersionType() {
@@ -216,32 +252,28 @@ public class Version
 	@Override
 	public String toString() {
 		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", major, minor, bugfix,
-		                     versionType != null ? versionType.getId() : "",
-		                     build > 0 ? ("-b" + build) : "",
-		                     commit != null ? ("/" + commit) : ""
-		);
+		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
+		                     build > 0 ? ("-b" + build) : "", commit != null ? ("/" + commit) : "");
 	}
 
 	public String toString(int padding) {
-		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s",
-		                     String.format("%0" + padding + "d", major),
-		                     String.format("%0" + padding + "d", minor),
-		                     String.format("%0" + padding + "d", bugfix),
-		                     versionType != null ? versionType.getId() : "",
+		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", String.format("%0" + padding + "d", major),
+		                     String.format("%0" + padding + "d", minor), String.format("%0" + padding + "d", bugfix),
+		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
 		                     build > 0 ? ("-b" + String.format("%0" + 3 * padding + "d", build)) : "",
-		                     commit != null ? ("/" + commit) : ""
-		);
+		                     commit != null ? ("/" + commit) : "");
 	}
 
 	static class Builder {
 
-		private TYPE versionType = TYPE.FINAL;
 		private int bugfix = 0;
 		private int build = -1;
 		private String commit = null;
 		private String component = null;
 		private int major = 0;
 		private int minor = 0;
+		private int typeNumber = -1;
+		private TYPE versionType = TYPE.FINAL;
 
 		public Builder(int major, int minor, int bugfix) {
 			this.major = major;
