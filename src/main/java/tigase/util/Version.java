@@ -203,7 +203,7 @@ public class Version
 		if (build != version.build) {
 			return false;
 		}
-		return (commit != null ? !commit.equals(version.commit) : version.commit != null);
+		return commit != null ? commit.equals(version.commit) : version.commit == null;
 	}
 
 	public int getBugfix() {
@@ -236,12 +236,13 @@ public class Version
 
 	@Override
 	public int hashCode() {
-		int result = bugfix;
+		int result = major;
+		result = 31 * result + minor;
+		result = 31 * result + bugfix;
+		result = 31 * result + versionType.hashCode();
+		result = 31 * result + typeNumber;
 		result = 31 * result + build;
 		result = 31 * result + (commit != null ? commit.hashCode() : 0);
-		result = 31 * result + major;
-		result = 31 * result + minor;
-		result = 31 * result + (versionType != null ? versionType.hashCode() : 0);
 		return result;
 	}
 
