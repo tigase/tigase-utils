@@ -509,6 +509,7 @@ public class ParameterParser {
 						option.setValue(value);
 					} else if (args.length - 1 > i) {
 						value = args[i+1];
+						option.setValue(value);
 						i++;
 					} else if (option.getDefaultValue().isPresent()) {
 						value = option.getDefaultValue().get();
