@@ -74,7 +74,8 @@ public class CertificateUtilTest extends TestCase {
 
 		//System.out.println("Creating self-signed certificate for issuer: " + domain);
 
-		X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
+		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 
 		cert.checkValidity();
 		assertTrue("Checked certificate validty for today - valid", true);
@@ -104,7 +105,8 @@ public class CertificateUtilTest extends TestCase {
 
 		//System.out.println("Creating self-signed certificate for issuer: " + domain);
 
-		X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
+		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
 		assertFalse("Verified certificate domain - fail.tigase.org", verifyCertificateForDomain(cert, "fail.tigase.org"));
 	}

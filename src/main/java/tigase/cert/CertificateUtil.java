@@ -23,6 +23,7 @@ package tigase.cert;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import tigase.annotations.TigaseDeprecated;
 import tigase.util.Algorithms;
 import tigase.util.Base64;
 
@@ -34,13 +35,13 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.security.auth.x500.X500Principal;
-import sun.security.x509.*;
 //~--- JDK imports ------------------------------------------------------------
 
 //~--- classes ----------------------------------------------------------------
@@ -83,18 +84,6 @@ public abstract class CertificateUtil {
 			+ "|([0-9a-fA-F:]{2,}(:([0-9]{1,3}\\.){3}[0-9]{1,3})?))$";
 	private static final String STORE_CERT_SHORT = "-sc";
 
-	private static void appendName(StringBuilder sb, String prefix, String value) {
-		log.log( Level.INFO, "appending value: {0} with prefix: {1} to sb: {2}",
-						 new Object[] { value, prefix, sb.toString() } );
-		if (value != null) {
-			if (sb.length() > 0) {
-				sb.append(", ");
-			}
-
-			sb.append(prefix).append('=').append(value);
-		}
-	}
-
 	private static int calculateLength(byte[] buffer, int start) throws ArrayIndexOutOfBoundsException {
 		log.log( Level.INFO, "calculating length, buffer: {0}, start: {1}",
 						 new Object[] { new String(buffer), start } );
@@ -136,76 +125,32 @@ public abstract class CertificateUtil {
 		return keyPair;
 	}
 
+	@Deprecated()
+	@TigaseDeprecated(since = "7.2.0", removeIn = "7.3.0", note = "Use method with keyPairSupplier")
 	public static X509Certificate createSelfSignedCertificate( String email, String domain, String organizationUnit,
 																														 String organization, String city, String state,
 																														 String country, KeyPair keyPair )
 			throws CertificateException, IOException, NoSuchAlgorithmException,
 						 InvalidKeyException, NoSuchProviderException, SignatureException {
-		log.log( Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2},"
-				+ "organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
-						 new Object[] { email, domain, organizationUnit, organization, city, state, country, keyPair } );
-		X509CertInfo certInfo = new X509CertInfo();
-		CertificateVersion certVersion = new CertificateVersion();
 
-		certInfo.set(X509CertInfo.VERSION, certVersion);
-
-		Date firstDate = new Date();
-		Date lastDate = new Date(firstDate.getTime() + 365 * 24 * 60 * 60 * 1000L);
-		CertificateValidity interval = new CertificateValidity(firstDate, lastDate);
-
-		certInfo.set(X509CertInfo.VALIDITY, interval);
-		certInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber((int) (firstDate.getTime() / 1000)));
-
-		StringBuilder subject = new StringBuilder(1024);
-
-		appendName(subject, "CN", domain);
-		appendName(subject, "CN", "*." + domain);
-		appendName(subject, "EMAILADDRESS", email);
-		appendName(subject, "OU", organizationUnit);
-		appendName(subject, "O", organization);
-		appendName(subject, "L", city);
-		appendName(subject, "ST", state);
-		appendName(subject, "C", country);
-
-		// since JDK 1.8 we need to pass X500Name as ISSUER and SUBJECT
-		// while before JDK 1.8 we needed to pass special classes
-		// For now let's catch exception and use passing special classes
-		// as a fallback mechanism
-		X500Name issuerName = new X500Name(subject.toString());
-		try {
-			certInfo.set(X509CertInfo.ISSUER, issuerName);
-			certInfo.set(X509CertInfo.SUBJECT, issuerName);
-		} catch (CertificateException ex) {
-			// trying older solution as a fallback
-			CertificateIssuerName certIssuer = new CertificateIssuerName(issuerName);
-			CertificateSubjectName certSubject = new CertificateSubjectName(issuerName);
-
-			certInfo.set(X509CertInfo.ISSUER, certIssuer);
-			certInfo.set(X509CertInfo.SUBJECT, certSubject);
-		}
-
-		// certInfo.set(X509CertInfo.ISSUER + "." +
-		// CertificateSubjectName.DN_NAME, issuerName);
-		AlgorithmId algorithm = new AlgorithmId(AlgorithmId.sha1WithRSAEncryption_oid);
-		CertificateAlgorithmId certAlgorithm = new CertificateAlgorithmId(algorithm);
-
-		certInfo.set(X509CertInfo.ALGORITHM_ID, certAlgorithm);
-
-		CertificateX509Key certPublicKey = new CertificateX509Key(keyPair.getPublic());
-
-		certInfo.set(X509CertInfo.KEY, certPublicKey);
-
-		// certInfo.set(X509CertInfo.ALGORITHM_ID + "." +
-		// CertificateAlgorithmId.ALGORITHM, algorithm);
-		X509CertImpl newCert = new X509CertImpl(certInfo);
-
-		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
-
-		log.log( Level.FINEST, "creating self signed cert, newCert: {0}", newCert );
-
-		return newCert;
+		return CertificateGeneratorFactory.getGenerator().generateSelfSignedCertificate(email, domain, organizationUnit, organization, city, state, country, keyPair);
 	}
 
+	public static CertificateEntry createSelfSignedCertificate(String email, String domain, String organizationUnit,
+															  String organization, String city, String state,
+															  String country, KeyPairSupplier keyPairSupplier)
+			throws CertificateException, IOException, NoSuchAlgorithmException,
+				   InvalidKeyException, NoSuchProviderException, SignatureException {
+
+		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
+		KeyPair keyPair = keyPairSupplier.get();
+		X509Certificate cert = generator.generateSelfSignedCertificate(email, domain, organizationUnit, organization, city, state, country, keyPair);
+		CertificateEntry entry = new CertificateEntry();
+
+		entry.setPrivateKey(keyPair.getPrivate());
+		entry.setCertChain(new Certificate[]{cert});
+		return entry;
+	}
 	private static void encriptTest() throws Exception {
 
 		// KeyPair test:
@@ -401,7 +346,7 @@ public abstract class CertificateUtil {
 			NoSuchAlgorithmException, InvalidKeySpecException {
 		return parseCertificate(new FileReader(file));
 	}
-	
+
 	/**
 	 * Loads a certificate from a DER byte buffer.
 	 *
@@ -488,12 +433,8 @@ public abstract class CertificateUtil {
 				String l = "Cambourne";
 				String st = "Cambridgeshire";
 				String c = "UK";
-				KeyPair keyPair = createKeyPair( 1024, "secret" );
-				X509Certificate cert = createSelfSignedCertificate( email, domain, ou, o, l, st, c, keyPair );
-				CertificateEntry entry = new CertificateEntry();
+				CertificateEntry entry = createSelfSignedCertificate( email, domain, ou, o, l, st, c, () -> createKeyPair( 1024, "secret" ) );
 
-				entry.setPrivateKey( keyPair.getPrivate() );
-				entry.setCertChain( new Certificate[] { cert } );
 				storeCertificate( file, entry );
 			}
 
@@ -629,8 +570,8 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Method description
-	 * 
-	 * 
+	 *
+	 *
 	 * @param includeServices
 	 */
 	private static void printProviders(boolean includeServices) {
@@ -667,7 +608,8 @@ public abstract class CertificateUtil {
 
 		System.out.println("Creating self-signed certificate for issuer: " + domain);
 
-		X509Certificate cert = createSelfSignedCertificate(email, domain, ou, o, l, st, c, keyPair);
+		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, ()-> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 
 		System.out.print("Checking certificate validity today...");
 		System.out.flush();
@@ -738,7 +680,7 @@ public abstract class CertificateUtil {
 	/**
 	 * Method used to verify if certificate if valid for particular domain
 	 * (if domain matches CN or ALT of certificate)
-	 * 
+	 *
 	 * @param cert
 	 * @param hostname
 	 * @return true if certificate is valid
@@ -749,9 +691,9 @@ public abstract class CertificateUtil {
 			return verifyCertificateForIp(hostname, cert);
 		} else {
 			return verifyCertificateForHostname(hostname, cert);
-		}		
+		}
 	}
-	
+
 	protected static String extractCN(X500Principal principal) {
 		String[] dd = principal.getName(X500Principal.RFC2253).split(",");
 		for (String string : dd) {
@@ -763,10 +705,10 @@ public abstract class CertificateUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Checks if hostname matches name or wildcard
-	 * 
+	 *
 	 * @param hostname
 	 * @param altName
 	 * @return true if there is a match
@@ -804,7 +746,7 @@ public abstract class CertificateUtil {
 			}
 		return true;
 		}
-	
+
 	protected static boolean verifyCertificateForHostname(String hostname, X509Certificate x509Certificate) throws CertificateParsingException {
 		log.log( Level.FINEST, "verifyCertificateForHostname, hostname: {0}, x509Certificate: {1}",
 						 new Object[] { hostname, x509Certificate } );
@@ -847,6 +789,12 @@ public abstract class CertificateUtil {
 			}
 		}
 		return false;
-	}	
+	}
+
+	public interface KeyPairSupplier {
+
+		KeyPair get() throws NoSuchAlgorithmException;
+
+	}
 }
 
