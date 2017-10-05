@@ -21,6 +21,7 @@ package tigase.collections;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 public class CircularFifoQueue<E>
@@ -32,7 +33,7 @@ public class CircularFifoQueue<E>
 
 	public CircularFifoQueue(final int maxEntries, Consumer<E> overflowConsumer) {
 		this.limit = maxEntries;
-		this.queue = new ConcurrentLinkedQueue<>();
+		this.queue = new LinkedBlockingQueue<>();
 		this.consumer = Optional.ofNullable(overflowConsumer);
 	}
 
