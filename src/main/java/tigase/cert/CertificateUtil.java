@@ -126,7 +126,7 @@ public abstract class CertificateUtil {
 	}
 
 	@Deprecated()
-	@TigaseDeprecated(since = "7.2.0", removeIn = "7.3.0", note = "Use method with keyPairSupplier")
+	@TigaseDeprecated(since = "8.0.0", removeIn = "7.3.0", note = "Use method with keyPairSupplier")
 	public static X509Certificate createSelfSignedCertificate( String email, String domain, String organizationUnit,
 																														 String organization, String city, String state,
 																														 String country, KeyPair keyPair )
