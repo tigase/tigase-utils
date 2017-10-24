@@ -206,6 +206,14 @@ public class Version
 		return commit != null ? commit.equals(version.commit) : version.commit == null;
 	}
 
+	public Version getBaseVersion() {
+		if (ZERO.equals(this)) {
+			return ZERO;
+		} else {
+			return new Version.Builder(this.major, this.minor, this.bugfix).build();
+		}
+	}
+
 	public int getBugfix() {
 		return bugfix;
 	}
