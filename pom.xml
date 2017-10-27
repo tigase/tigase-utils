@@ -8,7 +8,8 @@
 	<groupId>tigase</groupId>
 	<artifactId>tigase-utils</artifactId>
 	<name>Tigase Utils</name>
-	<version>3.6.0-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
+	<packaging>bundle</packaging>
 	<description>Tigase Utils</description>
 	<url>http://www.tigase.org/</url>
 	<issueManagement>
@@ -192,6 +193,25 @@
 					</environmentVariables>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions combine.inherited="append">
+						<Implementation-Title>${project.name}</Implementation-Title>
+						<Implementation-Version>${project.version}-b${gitVersion}/${buildNumber} (${maven.build.timestamp})</Implementation-Version>
+						<Implementation-Build>${gitVersion}/${buildNumber} (${maven.build.timestamp})</Implementation-Build>
+						<Tigase-Version>${project.version}-b${gitVersion}</Tigase-Version>
+						<Export-Package>gnu.inet.encoding.*;version=${project.version},tigase.annotations.*;version=${project.version},tigase.cert.*;version=${project.version},tigase.collections.*;version=${project.version},tigase.criteria.*;version=${project.version},tigase.form.*;version=${project.version},tigase.util.*;version=${project.version},tigase.xmpp.jid.*;version=${project.version},tigase.xmpp.rsm.*;version=${project.version}</Export-Package>
+						<Import-Package>!junit.*,!sun.*,!com.sun.*,*</Import-Package>
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Embed-Dependency>*;scope=compile|runtime;artifactId=!junit|org.osgi.core|slf4j-api</Embed-Dependency>
+						<Bundle-SymbolicName>${project.artifactId};singleton=true</Bundle-SymbolicName>
+					</instructions>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -204,8 +224,8 @@
 		<dependency>
 			<groupId>tigase</groupId>
 			<artifactId>tigase-xmltools</artifactId>
-			<version>3.5.0</version>
-			<scope>compile</scope>
+			<version>4.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<repositories>

@@ -1,5 +1,6 @@
-/*  Tigase Project
- *  Copyright (C) 2004-2012 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+/*
+ * Tigase Jabber/XMPP Utils
+ * Copyright (C) 2004-2017 "Artur Hefczyc" <artur.hefczyc@tigase.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,21 +19,53 @@
  * Last modified by $Author$
  * $Date$
  */
-package tigase.util;
+
+package tigase.util.datetime;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Calendar;
+
+//~--- classes ----------------------------------------------------------------
 
 /**
- * Describe class CacheObject here.
+ * This is too slow.
  *
  *
- * Created: Mon Mar  3 15:02:14 2008
+ * Created: Tue Oct 28 21:08:58 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class CacheObject<V> {
+public abstract class TimeUtils {
 
-	protected long time = 0;
-	protected V data = null;
+	/**
+	 * Method description
+	 *
+	 *
+	 * 
+	 */
+	public static int getHourNow() {
+		Calendar cal = Calendar.getInstance();
 
+		return cal.get(Calendar.HOUR_OF_DAY);
+	}
 
+	/**
+	 * Method description
+	 *
+	 *
+	 * 
+	 */
+	public static int getMinuteNow() {
+		Calendar cal = Calendar.getInstance();
+
+		return cal.get(Calendar.MINUTE);
+	}
 }
+
+
+//~ Formatted in Sun Code Convention
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

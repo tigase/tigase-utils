@@ -19,7 +19,7 @@
  * Last modified by $Author$
  * $Date$
  */
-package tigase.util;
+package tigase.util.cache;
 
 import java.util.*;
 import java.util.logging.Logger;

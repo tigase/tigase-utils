@@ -1,29 +1,18 @@
-/* 
- * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2015 "Tigase, Inc." <office@tigase.com>
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, version 3 of the License,
- * or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- * 
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. Look for COPYING file in the top folder.
- * If not, see http://www.gnu.org/licenses/.
+/*
+ * BareJID.java
+ *
+ * Tigase Push Notifications Component
+ * Copyright (C) 2017 "Tigase, Inc." <office@tigase.com>
+ *
  */
 
-package tigase.xmpp;
+package tigase.xmpp.jid;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import tigase.util.TigaseStringprepException;
-import tigase.util.XMPPStringPrepFactory;
-import tigase.util.XMPPStringPrepIfc;
+import tigase.util.stringprep.TigaseStringprepException;
+import tigase.util.stringprep.XMPPStringPrepFactory;
+import tigase.util.stringprep.XMPPStringPrepIfc;
 
 //~--- classes ----------------------------------------------------------------
 

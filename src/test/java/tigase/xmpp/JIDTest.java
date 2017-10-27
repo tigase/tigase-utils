@@ -18,9 +18,11 @@
  */
 package tigase.xmpp;
 
-import tigase.util.TigaseStringprepException;
+import tigase.util.stringprep.TigaseStringprepException;
 
 import junit.framework.TestCase;
+import tigase.xmpp.jid.BareJID;
+import tigase.xmpp.jid.JID;
 
 /**
  *

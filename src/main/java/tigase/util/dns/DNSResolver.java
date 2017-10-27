@@ -1,13 +1,12 @@
 /*
  * DNSResolver.java
- *
- * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2013 "Tigase, Inc." <office@tigase.com>
+ * 
+ * Tigase Jabber/XMPP Utils
+ * Copyright (C) 2004-2017 "Artur Hefczyc" <artur.hefczyc@tigase.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * the Free Software Foundation, either version 3 of the License.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,15 +17,20 @@
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
  *
+ * $Rev$
+ * Last modified by $Author$
+ * $Date$
  */
 
 
 
-package tigase.util;
+
+package tigase.util.dns;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import tigase.annotations.TigaseDeprecated;
+import tigase.util.cache.SimpleCache;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -52,7 +56,7 @@ import java.util.logging.Logger;
  * @deprecated {@code tigase.util.DNSResolverFactory.getInstance()} should be used instead
  */
 @Deprecated
-@TigaseDeprecated(since = "3.5.0", removeIn = "3.7.0")
+@TigaseDeprecated(since = "3.5.0", removeIn = "4.1.0")
 public class DNSResolver {
 	private static String       defaultHostname = null;
 	private static final long   DNS_CACHE_TIME  = 1000 * 60;

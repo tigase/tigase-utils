@@ -51,7 +51,7 @@ import java.util.logging.Logger;
  * @deprecated
  */
 @Deprecated
-@TigaseDeprecated(since = "3.3.11", removeIn = "3.7.0")
+@TigaseDeprecated(since = "3.3.11", removeIn = "4.1.0")
 public abstract class JDBCAbstract {
 
 	/**

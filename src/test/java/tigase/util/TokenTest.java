@@ -20,7 +20,8 @@ package tigase.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import tigase.xmpp.BareJID;
+import tigase.util.stringprep.TigaseStringprepException;
+import tigase.xmpp.jid.BareJID;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;

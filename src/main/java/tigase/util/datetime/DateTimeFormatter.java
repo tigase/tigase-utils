@@ -1,5 +1,5 @@
 /*
- * Tigase Jabber/XMPP Multi-User Chat Component
+ * Tigase Jabber/XMPP Utils
  * Copyright (C) 2008 "Bartosz M. Małkowski" <bartosz.malkowski@tigase.org>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
  * Last modified by $Author$
  * $Date$
  */
-package tigase.util;
+package tigase.util.datetime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

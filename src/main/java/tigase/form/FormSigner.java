@@ -3,7 +3,7 @@ package tigase.form;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import tigase.xmpp.JID;
+import tigase.xmpp.jid.JID;
 
 public class FormSigner {
 

@@ -1,6 +1,6 @@
 package tigase.form;
 
-import tigase.xmpp.JID;
+import tigase.xmpp.jid.JID;
 
 public class Main {
 

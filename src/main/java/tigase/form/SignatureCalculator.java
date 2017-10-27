@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import tigase.util.Base64;
-import tigase.xmpp.JID;
+import tigase.xmpp.jid.JID;
 
 public class SignatureCalculator {
 

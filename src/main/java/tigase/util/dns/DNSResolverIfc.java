@@ -1,23 +1,33 @@
 /*
- * Tigase Jabber/XMPP Server
- * Copyright (C) 2004-2015 "Tigase, Inc." <office@tigase.com>
- * 
+ * DNSResolverIfc.java
+ *
+ * Tigase Jabber/XMPP Utils
+ * Copyright (C) 2004-2017 "Artur Hefczyc" <artur.hefczyc@tigase.org>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, version 3 of the License,
- * or (at your option) any later version.
- * 
+ * the Free Software Foundation, either version 3 of the License.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
+ *
+ * $Rev$
+ * Last modified by $Author$
+ * $Date$
  */
-package tigase.util;
+package tigase.util.dns;
 
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +35,6 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 
 
 public interface DNSResolverIfc {

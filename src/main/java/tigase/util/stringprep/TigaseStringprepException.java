@@ -20,7 +20,8 @@
  * $Date$
  */
 
-package tigase.util;
+
+package tigase.util.stringprep;
 
 /**
  *

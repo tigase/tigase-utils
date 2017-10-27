@@ -5,6 +5,7 @@ import java.util.TimeZone;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import tigase.util.datetime.DateTimeFormatter;
 
 public class DateTimeFormatterTest extends TestCase {
 

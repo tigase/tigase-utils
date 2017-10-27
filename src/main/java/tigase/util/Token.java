@@ -18,7 +18,7 @@
  */
 package tigase.util;
 
-import tigase.xmpp.BareJID;
+import tigase.xmpp.jid.BareJID;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;

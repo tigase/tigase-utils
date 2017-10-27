@@ -18,36 +18,22 @@
  * Last modified by $Author$
  * $Date$
  */
-package tigase.util;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+package tigase.util.cache;
 
 /**
- * Describe class SizedCache here.
+ * Describe class CacheObject here.
  *
  *
- * Created: Mon Mar  3 15:16:52 2008
+ * Created: Mon Mar  3 15:02:14 2008
  *
- * @param <K>
- * @param <V> 
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class SizedCache<K, V> extends LinkedHashMap<K, V> {
+public class CacheObject<V> {
 
-	private static final long serialVersionUID = 1L;
+	protected long time = 0;
+	protected V data = null;
 
-	private int maxCacheSize = 1000;
-
-	public SizedCache(int maxSize) {
-		super(maxSize, 0.9f, true);
-		maxCacheSize = maxSize;
-	}
-
-	@Override
-	protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
-		return size() > maxCacheSize;
-	}
 
 }

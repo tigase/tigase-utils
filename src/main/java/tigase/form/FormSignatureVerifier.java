@@ -4,7 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import tigase.xml.Element;
-import tigase.xmpp.JID;
+import tigase.xmpp.jid.JID;
 
 public class FormSignatureVerifier {
 
