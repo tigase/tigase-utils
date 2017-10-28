@@ -1,5 +1,7 @@
 /*
- * Tigase Jabber/XMPP Server
+ * CertificateGenerator.java
+ *
+ * Tigase Jabber/XMPP Utils
  * Copyright (C) 2004-2017 "Tigase, Inc." <office@tigase.com>
  *
  * This program is free software: you can redistribute it and/or modify
