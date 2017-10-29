@@ -20,38 +20,38 @@
 
 package tigase.util;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * In a few cases classes have to be kept in <code>Set</code>. This
- * <code>Comparator</code> implementation has been created to return proper
- * value for <code>compare</code> method and to make it possible to store
- * classes in any <code>Set</code>.
- *
+ * In a few cases classes have to be kept in <code>Set</code>. This <code>Comparator</code> implementation has been
+ * created to return proper value for <code>compare</code> method and to make it possible to store classes in any
+ * <code>Set</code>.
  * <p>
- * Created: Sat Oct  9 22:27:54 2004
- * </p>
+ * <p> Created: Sat Oct  9 22:27:54 2004 </p>
+ *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 
-public class ClassComparator implements Comparator<Class>, Serializable {
+public class ClassComparator
+		implements Comparator<Class>, Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
- // Implementation of java.util.Comparator
+	// Implementation of java.util.Comparator
 
-  /**
-   * Method <code>compare</code> is used to perform 
-   *
-   * @param c1 an <code>Object</code> value
-   * @param c2 an <code>Object</code> value
-   * @return an <code>int</code> value
-   */
-  //  @Override
-  public int compare(Class c1, Class c2) {
-    return c1.getName().compareTo(c2.getName());
-  }
+	/**
+	 * Method <code>compare</code> is used to perform
+	 *
+	 * @param c1 an <code>Object</code> value
+	 * @param c2 an <code>Object</code> value
+	 *
+	 * @return an <code>int</code> value
+	 */
+	//  @Override
+	public int compare(Class c1, Class c2) {
+		return c1.getName().compareTo(c2.getName());
+	}
 
 }// ClassComparator

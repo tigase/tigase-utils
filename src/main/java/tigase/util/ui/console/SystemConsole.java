@@ -26,8 +26,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
- * Simple SystemConsole class handling user input/output
- * from command-line, including labels and secure password reading
+ * Simple SystemConsole class handling user input/output from command-line, including labels and secure password
+ * reading
  */
 public class SystemConsole
 		implements ConsoleIfc {

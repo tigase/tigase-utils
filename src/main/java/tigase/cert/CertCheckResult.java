@@ -1,4 +1,3 @@
-
 /*
  * CertCheckResult.java
  *
@@ -29,11 +28,15 @@ package tigase.cert;
  * @version $Rev$
  */
 public enum CertCheckResult {
-	trusted, self_signed, untrusted, revoked, expired, invalid, none;
+	trusted,
+	self_signed,
+	untrusted,
+	revoked,
+	expired,
+	invalid,
+	none;
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

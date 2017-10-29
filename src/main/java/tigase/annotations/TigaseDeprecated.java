@@ -25,15 +25,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
  * @author Wojtek
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,
-      ElementType.METHOD,
-      ElementType.CONSTRUCTOR,
-	  ElementType.FIELD,
-      ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 public @interface TigaseDeprecated {
 
 	String note() default "This class or method has been deprecated";

@@ -74,15 +74,17 @@ public class DeprecationTest {
 		TigaseDeprecated tigaseDeprecated = clazz.getAnnotation(TigaseDeprecated.class);
 		boolean markedAsDeprecated = clazz.isAnnotationPresent(Deprecated.class);
 		if (markedAsDeprecated) {
-			collector.checkThat("Class " + clazz + " missing @TigaseDeprecated annotation",
-								tigaseDeprecated, CoreMatchers.notNullValue());
+			collector.checkThat("Class " + clazz + " missing @TigaseDeprecated annotation", tigaseDeprecated,
+								CoreMatchers.notNullValue());
 		} else {
-			collector.checkThat("Class " + clazz + " missing @Deprecated annotation",
-								tigaseDeprecated, CoreMatchers.nullValue());
+			collector.checkThat("Class " + clazz + " missing @Deprecated annotation", tigaseDeprecated,
+								CoreMatchers.nullValue());
 		}
 		if (tigaseDeprecated != null) {
-			Version removeIn = Version.parse(tigaseDeprecated.removeIn()).orElseGet(() -> Version.parse(tigaseDeprecated.since()).get().nextMinor());
-			collector.checkThat("Class " + clazz + " should be removed in this version, deprecated since " + tigaseDeprecated.since(), removeIn, versionMatcher);
+			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
+					.orElseGet(() -> Version.parse(tigaseDeprecated.since()).get().nextMinor());
+			collector.checkThat("Class " + clazz + " should be removed in this version, deprecated since " +
+										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
 	}
 
@@ -93,16 +95,18 @@ public class DeprecationTest {
 			if (tigaseDeprecated == null) {
 				tigaseDeprecated = field.getDeclaringClass().getAnnotation(TigaseDeprecated.class);
 			}
-			collector.checkThat("Field " + field + " missing @TigaseDeprecated annotation",
-								tigaseDeprecated, CoreMatchers.notNullValue());
+			collector.checkThat("Field " + field + " missing @TigaseDeprecated annotation", tigaseDeprecated,
+								CoreMatchers.notNullValue());
 		} else {
-			collector.checkThat("Field " + field + " missing @Deprecated annotation",
-								tigaseDeprecated, CoreMatchers.nullValue());
+			collector.checkThat("Field " + field + " missing @Deprecated annotation", tigaseDeprecated,
+								CoreMatchers.nullValue());
 		}
 		if (tigaseDeprecated != null) {
 			String since = tigaseDeprecated.since();
-			Version removeIn = Version.parse(tigaseDeprecated.removeIn()).orElseGet(() -> Version.parse(since).get().nextMinor());
-			collector.checkThat("Field " + field + " should be removed in this version, deprecated since " + tigaseDeprecated.since(), removeIn, versionMatcher);
+			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
+					.orElseGet(() -> Version.parse(since).get().nextMinor());
+			collector.checkThat("Field " + field + " should be removed in this version, deprecated since " +
+										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
 	}
 
@@ -122,16 +126,18 @@ public class DeprecationTest {
 //					}
 //				}
 			}
-			collector.checkThat("Method " + method + " missing @TigaseDeprecated annotation",
-								tigaseDeprecated, CoreMatchers.notNullValue());
+			collector.checkThat("Method " + method + " missing @TigaseDeprecated annotation", tigaseDeprecated,
+								CoreMatchers.notNullValue());
 		} else {
-			collector.checkThat("Method " + method + " missing @Deprecated annotation",
-								tigaseDeprecated, CoreMatchers.nullValue());
+			collector.checkThat("Method " + method + " missing @Deprecated annotation", tigaseDeprecated,
+								CoreMatchers.nullValue());
 		}
 		if (tigaseDeprecated != null) {
 			String since = tigaseDeprecated.since();
-			Version removeIn = Version.parse(tigaseDeprecated.removeIn()).orElseGet(() -> Version.parse(since).get().nextMinor());
-			collector.checkThat("Method " + method + " should be removed in this version, deprecated since " + tigaseDeprecated.since(), removeIn, versionMatcher);
+			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
+					.orElseGet(() -> Version.parse(since).get().nextMinor());
+			collector.checkThat("Method " + method + " should be removed in this version, deprecated since " +
+										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
 
 	}
@@ -173,26 +179,12 @@ public class DeprecationTest {
 		return null;
 	}
 
-	public static class Version implements Comparable<Version> {
+	public static class Version
+			implements Comparable<Version> {
 
 		private final int major;
 		private final int minor;
 		private final int release;
-
-		private Version(int major, int minor, int release) {
-			this.major = major;
-			this.minor = minor;
-			this.release = release;
-		}
-
-		@Override
-		public String toString() {
-			return "" + major + "." + minor + "." + release;
-		}
-
-		public Version nextMinor() {
-			return new Version(major, minor + 1, 0);
-		}
 
 		public static Optional<Version> parse(String version) {
 			if (version == null || version.isEmpty()) {
@@ -210,6 +202,21 @@ public class DeprecationTest {
 			return Optional.of(new Version(major, minor, release));
 		}
 
+		private Version(int major, int minor, int release) {
+			this.major = major;
+			this.minor = minor;
+			this.release = release;
+		}
+
+		@Override
+		public String toString() {
+			return "" + major + "." + minor + "." + release;
+		}
+
+		public Version nextMinor() {
+			return new Version(major, minor + 1, 0);
+		}
+
 		@Override
 		public int compareTo(Version o) {
 			return Long.compare(toLong(), o.toLong());
@@ -220,7 +227,8 @@ public class DeprecationTest {
 		}
 	}
 
-	public static class VersionBiggerMatcher extends BaseMatcher<Version> {
+	public static class VersionBiggerMatcher
+			extends BaseMatcher<Version> {
 
 		private final Version version;
 
@@ -242,13 +250,13 @@ public class DeprecationTest {
 		}
 	}
 
-	public static class VersionMatcher extends BaseMatcher<String> {
+	public static class VersionMatcher
+			extends BaseMatcher<String> {
 
-		private final String version;
 		private final int major;
 		private final int minor;
 		private final int release;
-
+		private final String version;
 
 		public VersionMatcher(String version) {
 			int idx = version.indexOf("-");
@@ -292,5 +300,5 @@ public class DeprecationTest {
 			description.appendValue(version);
 		}
 	}
-	
+
 }

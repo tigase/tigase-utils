@@ -25,16 +25,18 @@ import java.util.Map;
 
 /**
  * Describe class SizedCache here.
- *
- *
+ * <p>
+ * <p>
  * Created: Mon Mar  3 15:16:52 2008
  *
  * @param <K>
- * @param <V> 
+ * @param <V>
+ *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class SizedCache<K, V> extends LinkedHashMap<K, V> {
+public class SizedCache<K, V>
+		extends LinkedHashMap<K, V> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +48,7 @@ public class SizedCache<K, V> extends LinkedHashMap<K, V> {
 	}
 
 	@Override
-	protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 		return size() > maxCacheSize;
 	}
 

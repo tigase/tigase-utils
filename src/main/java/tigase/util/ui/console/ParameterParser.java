@@ -27,25 +27,24 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * General purpose command-line parser accepting (if defined) both
- * single-letter (and space separated value) and full names (and equal-sign separated value).
- * It also supports default values and generation of help based on configured options.
- *
+ * General purpose command-line parser accepting (if defined) both single-letter (and space separated value) and full
+ * names (and equal-sign separated value). It also supports default values and generation of help based on configured
+ * options.
  */
 public class ParameterParser {
 
 	private static final Logger log = Logger.getLogger(ParameterParser.class.getName());
-	private final boolean interactiveMode;
-	private final List<CommandlineParameter> options;
-	private final Map<String, CommandlineParameter> optionsByLetter;
-	private final Map<String, CommandlineParameter> optionsByName;
 	private final CommandlineParameter helpOption = new CommandlineParameter.Builder(null, "help").description(
 			"Print the help").requireArguments(false).build();
+	private final boolean interactiveMode;
 	private final CommandlineParameter interactiveOption = new CommandlineParameter.Builder("I",
-	                                                                                        "interactive").description(
+																							"interactive").description(
 			"Enable interactive mode, which will result in prompting for missing parameters")
 			.requireArguments(false)
 			.build();
+	private final List<CommandlineParameter> options;
+	private final Map<String, CommandlineParameter> optionsByLetter;
+	private final Map<String, CommandlineParameter> optionsByName;
 	private Optional<Task> task = Optional.empty();
 	private Optional<List<Task>> tasks = Optional.empty();
 
@@ -54,22 +53,22 @@ public class ParameterParser {
 		ParameterParser parser = new ParameterParser(true);
 
 		parser.addOption(new CommandlineParameter.Builder("T", "db-type").description("Database server type")
-				                 .options("derby", "mysql", "postgresql", "sqlserver")
-				                 .defaultValue("mysql")
-				                 .required(true)
-				                 .build());
+								 .options("derby", "mysql", "postgresql", "sqlserver")
+								 .defaultValue("mysql")
+								 .required(true)
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("V", "schema-version").description(
 				"Intended version of the schema to be loaded")
-				                 .options("4", "5", "5-1", "7-1")
-				                 .required(true)
-				                 .defaultValue("7-1")
-				                 .build());
+								 .options("4", "5", "5-1", "7-1")
+								 .required(true)
+								 .defaultValue("7-1")
+								 .build());
 
 		parser.addOption(new CommandlineParameter.Builder("D", "db-name").description(
 				"Name of the database that will be created and to which schema will be loaded")
-				                 .defaultValue("tigasedb")
-				                 .required(true)
-				                 .build());
+								 .defaultValue("tigasedb")
+								 .required(true)
+								 .build());
 		parser.addOption(
 				new CommandlineParameter.Builder("H", "db-host").description("Address of the database instance")
 						.defaultValue("localhost")
@@ -77,42 +76,42 @@ public class ParameterParser {
 						.build());
 		parser.addOption(new CommandlineParameter.Builder("U", "db-user-name").description(
 				"Name of the user that will be created specifically to access Tigase XMPP Server")
-				                 .defaultValue("tigase_user")
-				                 .required(true)
-				                 .build());
+								 .defaultValue("tigase_user")
+								 .required(true)
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("P", "db-user-password").description(
 				"Password of the user that will be created specifically to access Tigase XMPP Server")
-				                 .defaultValue("tigase_pass")
-				                 .required(true)
-				                 .secret()
-				                 .build());
+								 .defaultValue("tigase_pass")
+								 .required(true)
+								 .secret()
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("R", "db-root-name").description(
 				"Database root account username used to create tigase user and database")
-				                 .defaultValue("root")
-				                 .required(true)
-				                 .build());
+								 .defaultValue("root")
+								 .required(true)
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("A", "db-root-password").description(
 				"Database root account password used to create tigase user and database")
-				                 .defaultValue("root")
-				                 .secret()
-				                 .required(true)
-				                 .build());
+								 .defaultValue("root")
+								 .secret()
+								 .required(true)
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("F", "file").description(
 				"Comma separated list of SQL files that will be processed").build());
 		parser.addOption(new CommandlineParameter.Builder("L", "log-level").description(
 				"Java Logger level during loading process").defaultValue("CONFIG").build());
 		parser.addOption(new CommandlineParameter.Builder("S", "use-ssl").description(
 				"Enable SSL support for database connection (if database supports it)")
-				                 .requireArguments(false)
-				                 .defaultValue("false")
-				                 .build());
+								 .requireArguments(false)
+								 .defaultValue("false")
+								 .build());
 		parser.addOption(new CommandlineParameter.Builder("J", "admin-jid-name").description(
 				"Comma separated list of administrator JID(s)").build());
 		parser.addOption(new CommandlineParameter.Builder("N", "admin-jid-password").description(
 				"Password that will be used for the entered JID(s) - one for all configured administrators")
-				                 .defaultValue("pass")
-				                 .secret()
-				                 .build());
+								 .defaultValue("pass")
+								 .secret()
+								 .build());
 
 //		System.out.println(parser.getOptionByLetter("t"));
 //		System.out.println(parser.getOptionByLetter("a"));
@@ -153,7 +152,6 @@ public class ParameterParser {
 
 //		parser.getOptions((commandlineParameter) -> !commandlineParameter.isSecret()).forEach(System.out::println);
 //		parser.getOptions((commandlineParameter) -> !commandlineParameter.getValue().isPresent()).forEach(System.out::println);
-
 
 	}
 
@@ -196,12 +194,6 @@ public class ParameterParser {
 		}
 	}
 
-	private void addInteractiveModeCommand() {
-		if (this.interactiveMode) {
-			addOption(interactiveOption);
-		}
-	}
-
 	/**
 	 * Adds {@link CommandlineParameter} to list of available parameters
 	 *
@@ -220,10 +212,9 @@ public class ParameterParser {
 				this.optionsByName.put(option.getFullName().get(), option);
 			}
 		} else {
-			throw new IllegalArgumentException(
-					"Option already exists!"
-							+ " Existing: " + this.options.get(this.options.indexOf(option)).toStringSimple()
-							+ " added: " + (option != null ? option.toStringSimple() : "n/a")
+			throw new IllegalArgumentException("Option already exists!" + " Existing: " +
+													   this.options.get(this.options.indexOf(option)).toStringSimple() +
+													   " added: " + (option != null ? option.toStringSimple() : "n/a")
 
 			);
 		}
@@ -239,16 +230,6 @@ public class ParameterParser {
 		if (null != options && !options.isEmpty()) {
 			options.forEach(this::addOption);
 		}
-	}
-
-	private boolean addOptionsIfMissing(List<CommandlineParameter> options) {
-		if (null != options && !options.isEmpty()) {
-			return options.stream().filter(option -> !this.options.contains(option)).map(option -> {
-				this.addOption(option);
-				return option;
-			}).count() > 0;
-		}
-		return false;
 	}
 
 	/**
@@ -268,8 +249,9 @@ public class ParameterParser {
 	 */
 	public String getHelp(String executionCommand) {
 		if (null == executionCommand) {
-			executionCommand = "$ java -cp \"path_to_binary.jar\" some.package.Class " + (tasks.isPresent() ? "[task] " : "") + "[options]" + "\n\t\t" +
-					"if the option defines default then <value> is optional";
+			executionCommand =
+					"$ java -cp \"path_to_binary.jar\" some.package.Class " + (tasks.isPresent() ? "[task] " : "") +
+							"[options]" + "\n\t\t" + "if the option defines default then <value> is optional";
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -287,8 +269,9 @@ public class ParameterParser {
 		}
 		sb.append("Options:");
 
-		List<CommandlineParameter> parameterDependentParameters = getOptions().stream().filter(option -> option.hasValueDependentParameters()).collect(
-				Collectors.toList());
+		List<CommandlineParameter> parameterDependentParameters = getOptions().stream()
+				.filter(option -> option.hasValueDependentParameters())
+				.collect(Collectors.toList());
 		if (!parameterDependentParameters.isEmpty()) {
 			sb.append("\n\tThis is not a full list of possible parameters. Please pass values for ");
 			if (tasks.isPresent()) {
@@ -339,8 +322,8 @@ public class ParameterParser {
 	 */
 	public Optional<CommandlineParameter> getOptionByLetter(String letter) {
 		return (null == this.optionsByLetter.get(letter)
-		        ? Optional.empty()
-		        : Optional.of(this.optionsByLetter.get(letter)));
+				? Optional.empty()
+				: Optional.of(this.optionsByLetter.get(letter)));
 	}
 
 	/**
@@ -352,8 +335,8 @@ public class ParameterParser {
 	 */
 	public Optional<CommandlineParameter> getOptionByName(String commandName) {
 		return (null == this.optionsByName.get(commandName)
-		        ? Optional.empty()
-		        : Optional.of(this.optionsByName.get(commandName)));
+				? Optional.empty()
+				: Optional.of(this.optionsByName.get(commandName)));
 	}
 
 	/**
@@ -384,8 +367,7 @@ public class ParameterParser {
 	 * @return List of {@link CommandlineParameter} names filtered to matching options.
 	 */
 	public List<String> getOptionsNames(Predicate<? super CommandlineParameter> predicate) {
-		return getOptions(predicate)
-				.stream()
+		return getOptions(predicate).stream()
 				.map(CommandlineParameter::getFullName)
 				.map(Optional::get)
 				.collect(Collectors.toList());
@@ -436,7 +418,7 @@ public class ParameterParser {
 		}
 
 		while (parseArgsToProperties(props, i, args)) {
-			
+
 		}
 
 		// let's check if this is interactive mode and if it wasn't disabled in passed argument
@@ -446,8 +428,7 @@ public class ParameterParser {
 
 		final boolean help = getOptionByName("help").isPresent();
 		final Optional<String> help1 = getOptionByName("help").get().getValue();
-		if (help &&
-				Boolean.valueOf(help1.orElse("false"))) {
+		if (help && Boolean.valueOf(help1.orElse("false"))) {
 			return null;
 		}
 
@@ -456,7 +437,7 @@ public class ParameterParser {
 
 			log.log(Level.FINEST, "Using interactive mode for {0}", getOptionsNames(missingValuesPredicate));
 			System.out.println("Using interactive mode for: " + getOptionsNames(missingValuesPredicate) +
-					                   ", skipped options will use default if available");
+									   ", skipped options will use default if available");
 
 			final ConsoleIfc console = new SystemConsole();
 
@@ -480,7 +461,7 @@ public class ParameterParser {
 
 		final Predicate<CommandlineParameter> missingAndRequired = (p) -> !p.getValue().isPresent() && p.isRequired();
 		log.log(Level.FINEST, "Still missing values for: {0}, of which required are: {1}",
-		        new Object[]{getOptionsNames(missingValuesPredicate), getOptionsNames(missingAndRequired)});
+				new Object[]{getOptionsNames(missingValuesPredicate), getOptionsNames(missingAndRequired)});
 
 		if (getOptions(missingAndRequired).size() > 0) {
 			throw new IllegalArgumentException(
@@ -496,6 +477,59 @@ public class ParameterParser {
 		}
 
 		return props;
+	}
+
+	/**
+	 * Removes given option from list of supported options.
+	 *
+	 * @param option {@code commandlineParameter} option to be removed
+	 */
+	public void removeOption(CommandlineParameter option) {
+		if (null != option) {
+			options.remove(option);
+			option.getSingleLetter().ifPresent(optionsByLetter::remove);
+			option.getFullName().ifPresent(optionsByName::remove);
+		}
+	}
+
+	/**
+	 * Removes given option from list of supported options by it's single letter
+	 *
+	 * @param singleLetter identification of the option
+	 */
+	public void removeOptionByLetter(String singleLetter) {
+		final Optional<CommandlineParameter> option = getOptionByLetter(singleLetter);
+		option.ifPresent(this::removeOption);
+	}
+
+	/**
+	 * Removes given option from list of supported options by it's full name
+	 *
+	 * @param name full name identification of the option
+	 */
+	public void removeOptionByName(String name) {
+		final Optional<CommandlineParameter> option = getOptionByName(name);
+		option.ifPresent(this::removeOption);
+	}
+
+	public void setTasks(Task[] supportedTasks) {
+		this.tasks = Optional.ofNullable(supportedTasks == null ? null : Arrays.asList(supportedTasks));
+	}
+
+	private void addInteractiveModeCommand() {
+		if (this.interactiveMode) {
+			addOption(interactiveOption);
+		}
+	}
+
+	private boolean addOptionsIfMissing(List<CommandlineParameter> options) {
+		if (null != options && !options.isEmpty()) {
+			return options.stream().filter(option -> !this.options.contains(option)).map(option -> {
+				this.addOption(option);
+				return option;
+			}).count() > 0;
+		}
+		return false;
 	}
 
 	private boolean parseArgsToProperties(Properties props, int i, String[] args) {
@@ -528,7 +562,7 @@ public class ParameterParser {
 						value = args[i].substring(arg.indexOf("=") + 1, args[i].length());
 						option.setValue(value);
 					} else if (args.length - 1 > i) {
-						value = args[i+1];
+						value = args[i + 1];
 						option.setValue(value);
 						i++;
 					} else if (option.getDefaultValue().isPresent()) {
@@ -582,42 +616,5 @@ public class ParameterParser {
 			}
 		}
 		return added;
-	}
-
-	/**
-	 * Removes given option from list of supported options.
-	 *
-	 * @param option {@code commandlineParameter} option to be removed
-	 */
-	public void removeOption(CommandlineParameter option) {
-		if (null != option) {
-			options.remove(option);
-			option.getSingleLetter().ifPresent(optionsByLetter::remove);
-			option.getFullName().ifPresent(optionsByName::remove);
-		}
-	}
-
-	/**
-	 * Removes given option from list of supported options by it's single letter
-	 *
-	 * @param singleLetter identification of the option
-	 */
-	public void removeOptionByLetter(String singleLetter) {
-		final Optional<CommandlineParameter> option = getOptionByLetter(singleLetter);
-		option.ifPresent(this::removeOption);
-	}
-
-	/**
-	 * Removes given option from list of supported options by it's full name
-	 *
-	 * @param name full name identification of the option
-	 */
-	public void removeOptionByName(String name) {
-		final Optional<CommandlineParameter> option = getOptionByName(name);
-		option.ifPresent(this::removeOption);
-	}
-
-	public void setTasks(Task[] supportedTasks) {
-		this.tasks = Optional.ofNullable(supportedTasks == null ? null : Arrays.asList(supportedTasks));
 	}
 }

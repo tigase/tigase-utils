@@ -24,26 +24,23 @@ package gnu.inet.encoding;
  * Exception handling for IDNA class.
  */
 public class IDNAException
-  extends Exception
-{
-  private static final long serialVersionUID = 1L;
-  public static String CONTAINS_NON_LDH = "Contains non-LDH characters.";
-  public static String CONTAINS_HYPHEN = "Leading or trailing hyphen not allowed.";
-  public static String CONTAINS_ACE_PREFIX = "ACE prefix (xn--) not allowed.";
-  public static String TOO_LONG = "String too long.";
+		extends Exception {
 
-  public IDNAException(String m)
-  {
-    super(m);
-  }
+	private static final long serialVersionUID = 1L;
+	public static String CONTAINS_ACE_PREFIX = "ACE prefix (xn--) not allowed.";
+	public static String CONTAINS_HYPHEN = "Leading or trailing hyphen not allowed.";
+	public static String CONTAINS_NON_LDH = "Contains non-LDH characters.";
+	public static String TOO_LONG = "String too long.";
 
-  public IDNAException(StringprepException e)
-  {
-    super(e);
-  }
+	public IDNAException(String m) {
+		super(m);
+	}
 
-  public IDNAException(PunycodeException e)
-  {
-    super(e);
-  }
+	public IDNAException(StringprepException e) {
+		super(e);
+	}
+
+	public IDNAException(PunycodeException e) {
+		super(e);
+	}
 }

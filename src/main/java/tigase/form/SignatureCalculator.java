@@ -20,50 +20,25 @@
 
 package tigase.form;
 
+import tigase.util.Base64;
+import tigase.xmpp.jid.JID;
+
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import tigase.util.Base64;
-import tigase.xmpp.jid.JID;
+import java.util.*;
 
 public class SignatureCalculator {
 
-	private final static String ALGORITHM = "SHA1";
-
-	private final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
 	public static final String SUPPORTED_TYPE = "urn:xmpp:xdata:signature:oauth1";
-
-	protected static String escape(String s) {
-		if (s == null)
-			return "";
-		try {
-			return URLEncoder.encode(s, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected static byte[] hmac(final SecretKey key, byte[] data) throws NoSuchAlgorithmException, InvalidKeyException {
-		Mac mac = Mac.getInstance(key.getAlgorithm());
-		mac.init(key);
-		return mac.doFinal(data);
-	}
-
+	private final static String ALGORITHM = "SHA1";
+	private final static String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private final Comparator<Field> fieldComparator = new Comparator<Field>() {
 
 		@Override
@@ -71,46 +46,54 @@ public class SignatureCalculator {
 			return o1.getVar().compareToIgnoreCase(o2.getVar());
 		}
 	};
-
 	/**
-	 * A key identifying the account doing the signing of the form. The client
-	 * has to set this to identify who performs the signature.
+	 * A key identifying the account doing the signing of the form. The client has to set this to identify who performs
+	 * the signature.
 	 */
 	private String oauthConsumerKey;
-
 	/**
-	 * The signature, signing the form. The client has to set this with the
-	 * signature of the form, as calculated and described below.
+	 * The signature, signing the form. The client has to set this with the signature of the form, as calculated and
+	 * described below.
 	 */
 	private String oauthConsumerSecret;
-
 	/**
-	 * Specifies the signature method, or hash function, to use when signing the
-	 * form. This can be changed by the client. Possible values are: HMAC-SHA1,
-	 * RSA-SHA1 and PLAINTEXT.
+	 * Specifies the signature method, or hash function, to use when signing the form. This can be changed by the
+	 * client. Possible values are: HMAC-SHA1, RSA-SHA1 and PLAINTEXT.
 	 */
 	private String oauthSignatureMethod = "HMAC-SHA1";
-
 	/**
-	 * This is a token provided by the server to the client. This parameter
-	 * might not be available if the server has provided the client with this
-	 * token earlier during the session.
+	 * This is a token provided by the server to the client. This parameter might not be available if the server has
+	 * provided the client with this token earlier during the session.
 	 */
 	private String oauthToken;
-
 	/**
-	 * This is a temporary secret shared between the server and client, and is
-	 * related to the token. This parameter might not be available if the server
-	 * has provided the client with this token earlier during the session.
+	 * This is a temporary secret shared between the server and client, and is related to the token. This parameter
+	 * might not be available if the server has provided the client with this token earlier during the session.
 	 */
 	private String oauthTokenSecret;
-
 	/**
 	 * Must be 1.0. Is not changed by the client performing the signing.
 	 */
 	private String oauthVersion = "1.0";
-
 	private Random random = new SecureRandom();
+
+	protected static String escape(String s) {
+		if (s == null) {
+			return "";
+		}
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected static byte[] hmac(final SecretKey key, byte[] data)
+			throws NoSuchAlgorithmException, InvalidKeyException {
+		Mac mac = Mac.getInstance(key.getAlgorithm());
+		mac.init(key);
+		return mac.doFinal(data);
+	}
 
 	public SignatureCalculator() {
 	}
@@ -122,7 +105,8 @@ public class SignatureCalculator {
 		this.oauthConsumerSecret = oauthConsumerSecret;
 	}
 
-	public SignatureCalculator(String oauthToken, String oauthTokenSecret, String oauthConsumerKey, String oauthConsumerSecret) {
+	public SignatureCalculator(String oauthToken, String oauthTokenSecret, String oauthConsumerKey,
+							   String oauthConsumerSecret) {
 		this.oauthToken = oauthToken;
 		this.oauthTokenSecret = oauthTokenSecret;
 		this.oauthConsumerKey = oauthConsumerKey;
@@ -144,11 +128,10 @@ public class SignatureCalculator {
 
 	/**
 	 * Calculate signature of given form. Form will not be changed.
-	 * 
-	 * @param to
-	 *            the full destination address, including resource, if any.
-	 * @param form
-	 *            form to sign.
+	 *
+	 * @param to the full destination address, including resource, if any.
+	 * @param form form to sign.
+	 *
 	 * @return Signature of form.
 	 */
 	public String calculateSignature(JID to, Form form) throws InvalidKeyException, NoSuchAlgorithmException {
@@ -169,6 +152,13 @@ public class SignatureCalculator {
 	}
 
 	/**
+	 * @param oauthConsumerKey the oauthConsumerKey to set
+	 */
+	public void setOauthConsumerKey(String oauthConsumerKey) {
+		this.oauthConsumerKey = oauthConsumerKey;
+	}
+
+	/**
 	 * @return the oauthConsumerSecret
 	 */
 	public String getOauthConsumerSecret() {
@@ -176,11 +166,24 @@ public class SignatureCalculator {
 	}
 
 	/**
-	 * 
+	 * @param oauthConsumerSecret the oauthConsumerSecret to set
+	 */
+	public void setOauthConsumerSecret(String oauthConsumerSecret) {
+		this.oauthConsumerSecret = oauthConsumerSecret;
+	}
+
+	/**
 	 * @return the oauthToken
 	 */
 	public String getOauthToken() {
 		return oauthToken;
+	}
+
+	/**
+	 * @param oauthToken the oauthToken to set
+	 */
+	public void setOauthToken(String oauthToken) {
+		this.oauthToken = oauthToken;
 	}
 
 	/**
@@ -190,44 +193,60 @@ public class SignatureCalculator {
 		return oauthTokenSecret;
 	}
 
-	protected byte[] h(byte[] data) throws NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
-		return digest.digest(data);
+	/**
+	 * @param oauthTokenSecret the oauthTokenSecret to set
+	 */
+	public void setOauthTokenSecret(String oauthTokenSecret) {
+		this.oauthTokenSecret = oauthTokenSecret;
 	}
 
 	public boolean isMethodSupported(String fOauthSignatureMethod) {
 		return fOauthSignatureMethod.equals(oauthSignatureMethod);
 	}
 
-	protected SecretKey key(final byte[] key) {
-		return new SecretKeySpec(key, "Hmac" + ALGORITHM);
+	/**
+	 * Sign given form with current time. Signature will be added to form.
+	 *
+	 * @param to the full destination address, including resource, if any.
+	 * @param form form to sign.
+	 */
+	public void sign(JID to, Form form) throws InvalidKeyException, NoSuchAlgorithmException {
+		String nonce = randomString();
+		long timestamp = System.currentTimeMillis() / 1000l;
+		sign(to, nonce, timestamp, form);
 	}
 
 	/**
-	 * Each (name, value) pair in the list of sorted parameters are first
-	 * transformed into pairs of Escape(name)=Escape(value) segments, and then
-	 * concatenated into one string, where each segment is delimited using an
-	 * ampersand ('&') character.
+	 * Sign given Form. Signature will be added to form.
+	 *
+	 * @param to the full destination address, including resource, if any.
+	 * @param nonce A nonce value that the client has to set. Can be a random alphanumerical string.
+	 * @param timestamp Number of seconds since 1st of January 1970, 00:00:00 GMT. The client has to set this at the
+	 * time of signature.
+	 * @param form form to sign.
 	 */
-	private String pStr(List<Field> fields) {
-		ArrayList<Field> tmp = new ArrayList<>(fields);
-		Collections.sort(tmp, fieldComparator);
+	public void sign(JID to, String nonce, long timestamp, Form form)
+			throws InvalidKeyException, NoSuchAlgorithmException {
+		form.addField(Field.fieldHidden("FORM_TYPE", SUPPORTED_TYPE));
+		form.addField(Field.fieldHidden("oauth_version", oauthVersion));
+		form.addField(Field.fieldHidden("oauth_signature_method", oauthSignatureMethod));
+		form.addField(Field.fieldHidden("oauth_token", oauthToken));
+		form.addField(Field.fieldHidden("oauth_token_secret", oauthTokenSecret));
+		form.addField(Field.fieldHidden("oauth_nonce", nonce));
+		form.addField(Field.fieldHidden("oauth_timestamp", String.valueOf(timestamp)));
+		form.addField(Field.fieldHidden("oauth_consumer_key", oauthConsumerKey));
 
-		StringBuilder sb = new StringBuilder();
+		String sig = calculateSignature(to, form);
+		form.addField(Field.fieldHidden("oauth_signature", sig));
+	}
 
-		Iterator<Field> it = tmp.iterator();
-		while (it.hasNext()) {
-			final Field f = it.next();
-			if ("oauth_signature".equals(f.getVar()) || "oauth_token_secret".equals(f.getVar()))
-				continue;
+	protected byte[] h(byte[] data) throws NoSuchAlgorithmException {
+		MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
+		return digest.digest(data);
+	}
 
-			sb.append(escape(f.getVar())).append("=").append(escape(f.getValue()));
-			if (it.hasNext())
-				sb.append('&');
-
-		}
-
-		return sb.toString();
+	protected SecretKey key(final byte[] key) {
+		return new SecretKeySpec(key, "Hmac" + ALGORITHM);
 	}
 
 	protected String randomString() {
@@ -242,77 +261,31 @@ public class SignatureCalculator {
 	}
 
 	/**
-	 * @param oauthConsumerKey
-	 *            the oauthConsumerKey to set
+	 * Each (name, value) pair in the list of sorted parameters are first transformed into pairs of
+	 * Escape(name)=Escape(value) segments, and then concatenated into one string, where each segment is delimited using
+	 * an ampersand ('&') character.
 	 */
-	public void setOauthConsumerKey(String oauthConsumerKey) {
-		this.oauthConsumerKey = oauthConsumerKey;
-	}
+	private String pStr(List<Field> fields) {
+		ArrayList<Field> tmp = new ArrayList<>(fields);
+		Collections.sort(tmp, fieldComparator);
 
-	/**
-	 * @param oauthConsumerSecret
-	 *            the oauthConsumerSecret to set
-	 */
-	public void setOauthConsumerSecret(String oauthConsumerSecret) {
-		this.oauthConsumerSecret = oauthConsumerSecret;
-	}
+		StringBuilder sb = new StringBuilder();
 
-	/**
-	 * @param oauthToken
-	 *            the oauthToken to set
-	 */
-	public void setOauthToken(String oauthToken) {
-		this.oauthToken = oauthToken;
-	}
+		Iterator<Field> it = tmp.iterator();
+		while (it.hasNext()) {
+			final Field f = it.next();
+			if ("oauth_signature".equals(f.getVar()) || "oauth_token_secret".equals(f.getVar())) {
+				continue;
+			}
 
-	/**
-	 * @param oauthTokenSecret
-	 *            the oauthTokenSecret to set
-	 */
-	public void setOauthTokenSecret(String oauthTokenSecret) {
-		this.oauthTokenSecret = oauthTokenSecret;
-	}
+			sb.append(escape(f.getVar())).append("=").append(escape(f.getValue()));
+			if (it.hasNext()) {
+				sb.append('&');
+			}
 
-	/**
-	 * Sign given form with current time. Signature will be added to form.
-	 * 
-	 * @param to
-	 *            the full destination address, including resource, if any.
-	 * @param form
-	 *            form to sign.
-	 */
-	public void sign(JID to, Form form) throws InvalidKeyException, NoSuchAlgorithmException {
-		String nonce = randomString();
-		long timestamp = System.currentTimeMillis() / 1000l;
-		sign(to, nonce, timestamp, form);
-	}
+		}
 
-	/**
-	 * Sign given Form. Signature will be added to form.
-	 * 
-	 * @param to
-	 *            the full destination address, including resource, if any.
-	 * @param nonce
-	 *            A nonce value that the client has to set. Can be a random
-	 *            alphanumerical string.
-	 * @param timestamp
-	 *            Number of seconds since 1st of January 1970, 00:00:00 GMT. The
-	 *            client has to set this at the time of signature.
-	 * @param form
-	 *            form to sign.
-	 */
-	public void sign(JID to, String nonce, long timestamp, Form form) throws InvalidKeyException, NoSuchAlgorithmException {
-		form.addField(Field.fieldHidden("FORM_TYPE", SUPPORTED_TYPE));
-		form.addField(Field.fieldHidden("oauth_version", oauthVersion));
-		form.addField(Field.fieldHidden("oauth_signature_method", oauthSignatureMethod));
-		form.addField(Field.fieldHidden("oauth_token", oauthToken));
-		form.addField(Field.fieldHidden("oauth_token_secret", oauthTokenSecret));
-		form.addField(Field.fieldHidden("oauth_nonce", nonce));
-		form.addField(Field.fieldHidden("oauth_timestamp", String.valueOf(timestamp)));
-		form.addField(Field.fieldHidden("oauth_consumer_key", oauthConsumerKey));
-
-		String sig = calculateSignature(to, form);
-		form.addField(Field.fieldHidden("oauth_signature", sig));
+		return sb.toString();
 	}
 
 }

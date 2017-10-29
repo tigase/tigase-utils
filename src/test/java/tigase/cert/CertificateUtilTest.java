@@ -31,10 +31,10 @@ import java.util.Date;
 import static tigase.cert.CertificateUtil.*;
 
 /**
- *
  * @author andrzej
  */
-public class CertificateUtilTest extends TestCase {
+public class CertificateUtilTest
+		extends TestCase {
 
 	public void testEncription() throws Exception {
 
@@ -54,10 +54,9 @@ public class CertificateUtilTest extends TestCase {
 
 		byte[] plainText = cipher.doFinal(cipherText);
 
-		assertEquals("Failed encryption-decryption test", new String(inputText), 
-				new String(plainText));
-	}	
-	
+		assertEquals("Failed encryption-decryption test", new String(inputText), new String(plainText));
+	}
+
 	public void testSelfSignedCert() throws Exception {
 		KeyPair keyPair = createKeyPair(1024, "secret");
 
@@ -106,6 +105,7 @@ public class CertificateUtilTest extends TestCase {
 		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
 		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
-		assertFalse("Verified certificate domain - fail.tigase.org", verifyCertificateForDomain(cert, "fail.tigase.org"));
+		assertFalse("Verified certificate domain - fail.tigase.org",
+					verifyCertificateForDomain(cert, "fail.tigase.org"));
 	}
 }

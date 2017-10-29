@@ -18,63 +18,37 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
-
 package tigase.criteria;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import tigase.xml.Element;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+//~--- JDK imports ------------------------------------------------------------
+
 /**
- *
- * <p>
- * Created: 2007-06-19 20:34:57
- * </p>
+ * <p> Created: 2007-06-19 20:34:57 </p>
  *
  * @author bmalkow
  * @version $Rev$
  */
 public class ElementCriteria
-				implements Criteria {
+		implements Criteria {
+
 	private Map<String, String> attrs = new TreeMap<String, String>();
-	private String cdata              = null;
+	private String cdata = null;
 	private String name;
 	private Criteria nextCriteria;
 
 	//~--- constructors ---------------------------------------------------------
 
 	/**
-	 * Constructs ...
-	 *
-	 *
-	 * @param name
-	 * @param cdata
-	 * @param attname
-	 * @param attValue
-	 */
-	public ElementCriteria(String name, String cdata, String[] attname, String[] attValue) {
-		this.cdata = cdata;
-		this.name  = name;
-		if ((attname != null) && (attValue != null)) {
-			for (int i = 0; i < attname.length; i++) {
-				attrs.put(attname[i], attValue[i]);
-			}
-		}
-	}
-
-	//~--- methods --------------------------------------------------------------
-
-	/**
 	 * Method description
-	 *
 	 *
 	 * @return
 	 */
@@ -82,9 +56,10 @@ public class ElementCriteria
 		return new ElementCriteria(null, null, null, null);
 	}
 
+	//~--- methods --------------------------------------------------------------
+
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param name
 	 *
@@ -97,20 +72,17 @@ public class ElementCriteria
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param name
 	 * @param xmlns
 	 *
 	 * @return
 	 */
 	public static final ElementCriteria name(String name, String xmlns) {
-		return new ElementCriteria(name, null, new String[] { "xmlns" },
-															 new String[] { xmlns });
+		return new ElementCriteria(name, null, new String[]{"xmlns"}, new String[]{xmlns});
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param name
 	 * @param cdata
@@ -119,14 +91,12 @@ public class ElementCriteria
 	 *
 	 * @return
 	 */
-	public static final ElementCriteria name(String name, String cdata, String[] attNames,
-					String[] attValues) {
+	public static final ElementCriteria name(String name, String cdata, String[] attNames, String[] attValues) {
 		return new ElementCriteria(name, cdata, attNames, attValues);
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param name
 	 * @param attNames
@@ -134,14 +104,12 @@ public class ElementCriteria
 	 *
 	 * @return
 	 */
-	public static final ElementCriteria name(String name, String[] attNames,
-					String[] attValues) {
+	public static final ElementCriteria name(String name, String[] attNames, String[] attValues) {
 		return new ElementCriteria(name, null, attNames, attValues);
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param name
 	 * @param type
@@ -149,26 +117,40 @@ public class ElementCriteria
 	 * @return
 	 */
 	public static final ElementCriteria nameType(String name, String type) {
-		return new ElementCriteria(name, null, new String[] { "type" },
-															 new String[] { type });
+		return new ElementCriteria(name, null, new String[]{"type"}, new String[]{type});
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param xmlns
 	 *
 	 * @return
 	 */
 	public static final ElementCriteria xmlns(String xmlns) {
-		return new ElementCriteria(null, null, new String[] { "xmlns" },
-															 new String[] { xmlns });
+		return new ElementCriteria(null, null, new String[]{"xmlns"}, new String[]{xmlns});
+	}
+
+	/**
+	 * Constructs ...
+	 *
+	 * @param name
+	 * @param cdata
+	 * @param attname
+	 * @param attValue
+	 */
+	public ElementCriteria(String name, String cdata, String[] attname, String[] attValue) {
+		this.cdata = cdata;
+		this.name = name;
+		if ((attname != null) && (attValue != null)) {
+			for (int i = 0; i < attname.length; i++) {
+				attrs.put(attname[i], attValue[i]);
+			}
+		}
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param criteria
 	 *
@@ -195,7 +177,6 @@ public class ElementCriteria
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param element
 	 *
 	 * @return
@@ -204,8 +185,7 @@ public class ElementCriteria
 		if ((name != null) && (name != element.getName())) {
 			return false;
 		}
-		if ((cdata != null) &&
-				((element.getCData() == null) ||!cdata.equals(element.getCData()))) {
+		if ((cdata != null) && ((element.getCData() == null) || !cdata.equals(element.getCData()))) {
 			return false;
 		}
 
@@ -214,7 +194,7 @@ public class ElementCriteria
 		for (Entry<String, String> entry : this.attrs.entrySet()) {
 			String x = element.getAttributeStaticStr(entry.getKey());
 
-			if ((x == null) ||!x.equals(entry.getValue())) {
+			if ((x == null) || !x.equals(entry.getValue())) {
 				result = false;
 
 				break;
@@ -222,7 +202,7 @@ public class ElementCriteria
 		}
 		if (this.nextCriteria != null) {
 			List<Element> children = element.getChildren();
-			boolean subres         = false;
+			boolean subres = false;
 
 			if (children != null) {
 				for (Element sub : children) {
@@ -239,6 +219,5 @@ public class ElementCriteria
 		return result;
 	}
 }
-
 
 //~ Formatted in Tigase Code Convention on 13/02/20

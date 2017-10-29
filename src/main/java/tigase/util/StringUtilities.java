@@ -20,31 +20,32 @@
 package tigase.util;
 
 /**
- * Class with string utilities, mostly helping with canonical representation of
- * String
+ * Class with string utilities, mostly helping with canonical representation of String
  *
  * @author Wojciech Kapcia <wojciech.kapcia@tigase.org>
  */
 public class StringUtilities {
 
 	/**
-	 * Split string into an Array of Strings using provided splitter, output array
-	 * is interned
+	 * Concatenate all elements of input array inserting separator between each
 	 *
-	 * @param in       String to be splited
-	 * @param splitter delimiter of items
+	 * @param arr an array to be concatenated
+	 * @param separator to be inserted between each element of array
 	 *
-	 * @return Arrays of interned Strings
+	 * @return string representation of the array
 	 */
-	public static String[] stringToArrayOfString( String in, String splitter ) {
-		String[] result = null;
-		if ( in != null ){
-			result = in.split( splitter );
-			for ( int i = 0 ; i < result.length ; ++i ) {
-				result[i] = result[i].intern();
-			}
+	public static String intArrayToString(int[] arr, String separator) {
+		if (arr == null) {
+			return null;
 		}
-		return result;
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < arr.length; i++) {
+			if (i > 0) {
+				buf.append(separator);
+			}
+			buf.append(arr[i]);
+		}
+		return buf.toString();
 	}
 
 	/**
@@ -54,11 +55,11 @@ public class StringUtilities {
 	 *
 	 * @return array of interned string
 	 */
-	public static String[] internStringArray( String[] in ) {
+	public static String[] internStringArray(String[] in) {
 		String[] result = null;
-		if ( in != null ){
-			result = new String[ in.length ];
-			for ( int i = 0 ; i < result.length ; ++i ) {
+		if (in != null) {
+			result = new String[in.length];
+			for (int i = 0; i < result.length; ++i) {
 				result[i] = in[i].intern();
 			}
 		}
@@ -88,25 +89,22 @@ public class StringUtilities {
 	}
 
 	/**
-	 * Concatenate all elements of input array inserting separator between each
+	 * Split string into an Array of Strings using provided splitter, output array is interned
 	 *
-	 * @param arr an array to be concatenated
-	 * @param separator to be inserted between each element of array
+	 * @param in String to be splited
+	 * @param splitter delimiter of items
 	 *
-	 * @return string representation of the array
+	 * @return Arrays of interned Strings
 	 */
-	public static String intArrayToString(int[] arr, String separator) {
-		if (arr == null) {
-			return null;
-		}
-		StringBuilder buf = new StringBuilder();
-		for (int i = 0; i < arr.length; i++) {
-			if (i > 0) {
-				buf.append(separator);
+	public static String[] stringToArrayOfString(String in, String splitter) {
+		String[] result = null;
+		if (in != null) {
+			result = in.split(splitter);
+			for (int i = 0; i < result.length; ++i) {
+				result[i] = result[i].intern();
 			}
-			buf.append(arr[i]);
 		}
-		return buf.toString();
+		return result;
 	}
 
 }

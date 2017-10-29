@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author bmalkow
- * 
  */
 public class DateTimeFormatter {
 

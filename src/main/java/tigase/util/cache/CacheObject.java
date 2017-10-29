@@ -22,8 +22,8 @@ package tigase.util.cache;
 
 /**
  * Describe class CacheObject here.
- *
- *
+ * <p>
+ * <p>
  * Created: Mon Mar  3 15:02:14 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -31,8 +31,7 @@ package tigase.util.cache;
  */
 public class CacheObject<V> {
 
-	protected long time = 0;
 	protected V data = null;
-
+	protected long time = 0;
 
 }

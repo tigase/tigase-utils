@@ -1,4 +1,3 @@
-
 /*
  * XMPPStringPrepFactory.java
  *
@@ -26,9 +25,9 @@ package tigase.util.stringprep;
 import tigase.xmpp.jid.BareJID;
 import tigase.xmpp.jid.JID;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.concurrent.TimeUnit;
+
+//~--- JDK imports ------------------------------------------------------------
 
 //~--- classes ----------------------------------------------------------------
 
@@ -44,37 +43,37 @@ public abstract class XMPPStringPrepFactory {
 	public static final String STRINGPREP_PROCESSOR_PROP_KEY = "stringprep-processor";
 
 	/** Field description */
-	public static final String[] STRINGPREP_PROCESSORS = { "libidn", "simple", "empty" };
+	public static final String[] STRINGPREP_PROCESSORS = {"libidn", "simple", "empty"};
 
 	/** Field description */
 	public static String STRINGPREP_PROCESSOR = "simple";
 
 	//~--- get methods ----------------------------------------------------------
 
+	private static boolean doWithJID(JID jid) {
+		return jid.toString() != null;
+	}
+
 	/**
-	 * Factory method for creating and returning stringprep implementation used
-	 * by the Tigase server. This factory allows for pluggable stringprep library
-	 * usage and replacing the library used by default.
-	 * The default stringprep processor uses LibIDN library. Very CPU demanding
-	 * processing. Use with care in open, multi-lingual systems.
+	 * Factory method for creating and returning stringprep implementation used by the Tigase server. This factory
+	 * allows for pluggable stringprep library usage and replacing the library used by default. The default stringprep
+	 * processor uses LibIDN library. Very CPU demanding processing. Use with care in open, multi-lingual systems.
+	 *
 	 * @return instance of XMPP Stringprep processor.
 	 */
 	public static XMPPStringPrepIfc getDefaultXMPPStringPrep() {
-		STRINGPREP_PROCESSOR = System.getProperty(STRINGPREP_PROCESSOR_PROP_KEY,
-				STRINGPREP_PROCESSOR);
+		STRINGPREP_PROCESSOR = System.getProperty(STRINGPREP_PROCESSOR_PROP_KEY, STRINGPREP_PROCESSOR);
 
 		return getXMPPStringPrep(STRINGPREP_PROCESSOR);
 	}
 
 	/**
-	 * Factory method for creating and returning stringprep implementation used
-	 * by the Tigase server. This factory allows for pluggable stringprep library
-	 * usage and replacing the library used by default.
-	 * The empty stringprep processor does not perform any processing at all. It simply
-	 * returns the string provided to the method. Recommended only in strictly controlled
-	 * systems where there is no possibility of incorrectly formated JID getting to
-	 * the system and the performance is the ke factor.
-	 * uses simple Java <code>String</code> processing.
+	 * Factory method for creating and returning stringprep implementation used by the Tigase server. This factory
+	 * allows for pluggable stringprep library usage and replacing the library used by default. The empty stringprep
+	 * processor does not perform any processing at all. It simply returns the string provided to the method.
+	 * Recommended only in strictly controlled systems where there is no possibility of incorrectly formated JID getting
+	 * to the system and the performance is the ke factor. uses simple Java <code>String</code> processing.
+	 *
 	 * @return instance of XMPP Stringprep processor.
 	 */
 	public static XMPPStringPrepIfc getEmptyXMPPStringPrep() {
@@ -82,11 +81,10 @@ public abstract class XMPPStringPrepFactory {
 	}
 
 	/**
-	 * Factory method for creating and returning stringprep implementation used
-	 * by the Tigase server. This factory allows for pluggable stringprep library
-	 * usage and replacing the library used by default.
-	 * The stringprep processor uses LibIDN library. Very CPU demanding
-	 * processing. Use  in open, multi-lingual systems.
+	 * Factory method for creating and returning stringprep implementation used by the Tigase server. This factory
+	 * allows for pluggable stringprep library usage and replacing the library used by default. The stringprep processor
+	 * uses LibIDN library. Very CPU demanding processing. Use  in open, multi-lingual systems.
+	 *
 	 * @return instance of XMPP Stringprep processor.
 	 */
 	public static XMPPStringPrepIfc getLibIDNXMPPStringPrep() {
@@ -94,21 +92,22 @@ public abstract class XMPPStringPrepFactory {
 	}
 
 	/**
-	 * Factory method for creating and returning stringprep implementation used
-	 * by the Tigase server. This factory allows for pluggable stringprep library
-	 * usage and replacing the library used by default.
-	 * The simple stringprep processor uses simple Java <code>String</code> processing.
-	 * Recommended in relatively closed, single language systems where there is very
-	 * low probability for in correct JIDs. Causes very low impact on performance.
+	 * Factory method for creating and returning stringprep implementation used by the Tigase server. This factory
+	 * allows for pluggable stringprep library usage and replacing the library used by default. The simple stringprep
+	 * processor uses simple Java <code>String</code> processing. Recommended in relatively closed, single language
+	 * systems where there is very low probability for in correct JIDs. Causes very low impact on performance.
+	 *
 	 * @return instance of XMPP Stringprep processor.
 	 */
 	public static XMPPStringPrepIfc getSimpleXMPPStringPrep() {
 		return new XMPPStringPrepSimple();
 	}
 
+	//~--- methods --------------------------------------------------------------
+
 	/**
-	 *
 	 * @param stringprepProcessor
+	 *
 	 * @return
 	 */
 	public static XMPPStringPrepIfc getXMPPStringPrep(String stringprepProcessor) {
@@ -127,18 +126,15 @@ public abstract class XMPPStringPrepFactory {
 		try {
 			return (XMPPStringPrepIfc) Class.forName(stringprepProcessor).newInstance();
 		} catch (Exception ex) {
-			throw new IllegalArgumentException("Incorrect stringprep class name: "
-					+ stringprepProcessor, ex);
+			throw new IllegalArgumentException("Incorrect stringprep class name: " + stringprepProcessor, ex);
 		}
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param args
+	 *
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -151,10 +147,6 @@ public abstract class XMPPStringPrepFactory {
 
 			System.out.printf("Stringprep processor: %1$s, result: %2$,d\n", proc, result);
 		}
-	}
-
-	private static boolean doWithJID(JID jid) {
-		return jid.toString() != null;
 	}
 
 	private static long runTest(long time, String stringprep) throws TigaseStringprepException {
@@ -179,8 +171,6 @@ public abstract class XMPPStringPrepFactory {
 	}
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

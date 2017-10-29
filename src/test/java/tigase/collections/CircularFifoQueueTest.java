@@ -58,7 +58,6 @@ public class CircularFifoQueueTest {
 		Assert.assertEquals(1, overflownElements.get());
 		Assert.assertEquals(2, (int) q.peek());
 
-
 		overflownElements.set(0);
 
 		boolean modified = q.setLimit(1);
@@ -71,7 +70,7 @@ public class CircularFifoQueueTest {
 		modified = q.setLimit(3);
 		Assert.assertFalse(modified);
 
-		q.addAll(Arrays.asList(5,6,7,8,9,10));
+		q.addAll(Arrays.asList(5, 6, 7, 8, 9, 10));
 		Assert.assertEquals(4, overflownElements.get());
 		Assert.assertEquals(8, (int) q.peek());
 	}

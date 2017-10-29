@@ -25,32 +25,30 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- *
  * @author andrzej
  */
 public class TimestampHelper {
-	
+
 	private final SimpleDateFormat TIMESTAMP_FORMATTER1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXX");
 	private final SimpleDateFormat TIMESTAMP_FORMATTER2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private final SimpleDateFormat TIMESTAMP_FORMATTER3 = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSSXX");
-	private final SimpleDateFormat TIMESTAMP_FORMATTER4 = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	private final SimpleDateFormat TIMESTAMP_FORMATTER3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXX");
+	private final SimpleDateFormat TIMESTAMP_FORMATTER4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 
 	public TimestampHelper() {
 		TIMESTAMP_FORMATTER1.setTimeZone(TimeZone.getTimeZone("UTC"));
 		TIMESTAMP_FORMATTER2.setTimeZone(TimeZone.getTimeZone("UTC"));
 		TIMESTAMP_FORMATTER3.setTimeZone(TimeZone.getTimeZone("UTC"));
 		TIMESTAMP_FORMATTER4.setTimeZone(TimeZone.getTimeZone("UTC"));
-	}	
-	
+	}
+
 	public Date parseTimestamp(String tmp) throws ParseException {
-		if (tmp == null || tmp.isEmpty())
+		if (tmp == null || tmp.isEmpty()) {
 			return null;
-		
+		}
+
 		Date date = null;
 
-		boolean useXXX = (tmp.charAt(tmp.length()-6) == '+');
+		boolean useXXX = (tmp.charAt(tmp.length() - 6) == '+');
 		if (tmp.contains(".")) {
 			if (useXXX) {
 				synchronized (TIMESTAMP_FORMATTER4) {
@@ -68,14 +66,14 @@ public class TimestampHelper {
 				}
 			} else {
 				synchronized (TIMESTAMP_FORMATTER1) {
-					date =TIMESTAMP_FORMATTER1.parse(tmp);
+					date = TIMESTAMP_FORMATTER1.parse(tmp);
 				}
 			}
 		}
 
 		return date;
-	}	
-	
+	}
+
 	public String format(Date ts) {
 		synchronized (TIMESTAMP_FORMATTER1) {
 			return TIMESTAMP_FORMATTER1.format(ts);

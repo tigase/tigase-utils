@@ -18,29 +18,28 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
 package tigase.util.stringprep;
 
 /**
- *
  * @author kobit
  */
-public class TigaseStringprepException extends Exception {
+public class TigaseStringprepException
+		extends Exception {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
-     * Creates a new instance of <code>TigaseStringprepException</code> without detail message.
-     */
+	 * Creates a new instance of <code>TigaseStringprepException</code> without detail message.
+	 */
 	public TigaseStringprepException() {
 		super();
 	}
 
-
 	/**
-     * Constructs an instance of <code>TigaseStringprepException</code> with the specified detail message.
-     * @param msg the detail message.
-     */
+	 * Constructs an instance of <code>TigaseStringprepException</code> with the specified detail message.
+	 *
+	 * @param msg the detail message.
+	 */
 	public TigaseStringprepException(String msg) {
 		super(msg);
 	}
@@ -48,6 +47,5 @@ public class TigaseStringprepException extends Exception {
 	public TigaseStringprepException(String msg, Throwable th) {
 		super(msg, th);
 	}
-
 
 }

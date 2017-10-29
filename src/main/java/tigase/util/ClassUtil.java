@@ -27,32 +27,27 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-
 /**
- * <code>ClassUtil</code> file contains code used for loading all
- * implementations of specified <em>interface</em> or <em>abstract class</em>
- * found in classpath. As a result of calling some functions you can have
- * <code>Set</code> containing all required classes.
- *
+ * <code>ClassUtil</code> file contains code used for loading all implementations of specified <em>interface</em> or
+ * <em>abstract class</em> found in classpath. As a result of calling some functions you can have <code>Set</code>
+ * containing all required classes.
  * <p>
- * Created: Wed Oct 6 08:25:52 2004
- * </p>
+ * <p> Created: Wed Oct 6 08:25:52 2004 </p>
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
 public class ClassUtil {
-	private static final String[] SKIP_WHITELIST = { "tigase."};
-	private static final String[] SKIP_CONTAINS = { ".ui.", ".swing", ".awt", ".sql.",
-			".xml.", ".terracotta." };
 
-	private static final String[] SKIP_STARTS = { "com.mysql", "tigase.pubsub.Utils",
-			"org.apache.derby", "org.apache.xml", "org.postgresql", "com.sun", "groovy",
-			"org.codehaus.groovy", "org.netbeans", "org.python" };
+	private static final String[] SKIP_WHITELIST = {"tigase."};
+	private static final String[] SKIP_CONTAINS = {".ui.", ".swing", ".awt", ".sql.", ".xml.", ".terracotta."};
+
+	private static final String[] SKIP_STARTS = {"com.mysql", "tigase.pubsub.Utils", "org.apache.derby",
+												 "org.apache.xml", "org.postgresql", "com.sun", "groovy",
+												 "org.codehaus.groovy", "org.netbeans", "org.python"};
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param fileName
 	 *
@@ -68,8 +63,7 @@ public class ClassUtil {
 			// Above code does not works on MS Windows if we load
 			// files from jar file. Jar manipulation code always returns
 			// file names with unix style separators
-			String tmp_class_name =
-					fileName.substring(0, fileName.length() - 6).replace('\\', '.');
+			String tmp_class_name = fileName.substring(0, fileName.length() - 6).replace('\\', '.');
 
 			class_name = tmp_class_name.replace('/', '.');
 		} // end of if (entry_name.endsWith(".class"))
@@ -79,7 +73,6 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param dir
 	 *
@@ -104,7 +97,6 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param jarFile
 	 *
@@ -134,14 +126,12 @@ public class ClassUtil {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @return
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static Set<Class<?>> getClassesFromClassPath() throws IOException,
-			ClassNotFoundException {
+	public static Set<Class<?>> getClassesFromClassPath() throws IOException, ClassNotFoundException {
 		Set<Class<?>> classes_set = new TreeSet<Class<?>>(new ClassComparator());
 		String classpath = System.getProperty("java.class.path");
 
@@ -179,15 +169,13 @@ public class ClassUtil {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param names
 	 *
 	 * @return
 	 *
 	 * @throws ClassNotFoundException
 	 */
-	public static Set<Class<?>> getClassesFromNames(Set<String> names)
-			throws ClassNotFoundException {
+	public static Set<Class<?>> getClassesFromNames(Set<String> names) throws ClassNotFoundException {
 		Set<Class<?>> classes = new TreeSet<Class<?>>(new ClassComparator());
 
 		for (String name : names) {
@@ -247,16 +235,14 @@ public class ClassUtil {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param classes
 	 * @param cls
 	 * @param <T>
 	 *
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked" })
-	public static <T extends Class> Set<T>
-			getClassesImplementing(Collection<Class<?>> classes, T cls) {
+	@SuppressWarnings({"unchecked"})
+	public static <T extends Class> Set<T> getClassesImplementing(Collection<Class<?>> classes, T cls) {
 		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
 
 		for (Class c : classes) {
@@ -277,7 +263,6 @@ public class ClassUtil {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param cls
 	 * @param <T>
 	 *
@@ -286,14 +271,12 @@ public class ClassUtil {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static <T extends Class> Set<T> getClassesImplementing(T cls)
-			throws IOException, ClassNotFoundException {
+	public static <T extends Class> Set<T> getClassesImplementing(T cls) throws IOException, ClassNotFoundException {
 		return getClassesImplementing(getClassesFromClassPath(), cls);
 	}
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param path
 	 *
@@ -318,7 +301,6 @@ public class ClassUtil {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param obj
 	 * @param <T>
 	 *
@@ -330,8 +312,8 @@ public class ClassUtil {
 	 * @throws InstantiationException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> getImplementations(Class<T> obj) throws IOException,
-			ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static <T> Set<T> getImplementations(Class<T> obj)
+			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		Set<T> result = new TreeSet<T>(new ObjectComparator());
 
 		for (Class cls : getClassesImplementing(obj)) {
@@ -343,7 +325,6 @@ public class ClassUtil {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param base_dir
 	 * @param path

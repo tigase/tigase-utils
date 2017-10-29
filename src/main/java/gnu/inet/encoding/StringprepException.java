@@ -24,16 +24,15 @@ package gnu.inet.encoding;
  * Exception handling for StringPrep class.
  */
 public class StringprepException
-  extends Exception
-{
-  private static final long serialVersionUID = 1L;
-  public static String CONTAINS_UNASSIGNED = "Contains unassigned code points.";
-  public static String CONTAINS_PROHIBITED = "Contains prohibited code points.";
-  public static String BIDI_BOTHRAL = "Contains both R and AL code points.";
-  public static String BIDI_LTRAL = "Leading and trailing code points not both R or AL.";
+		extends Exception {
 
-  public StringprepException(String m)
-  {
-    super(m);
-  }
+	private static final long serialVersionUID = 1L;
+	public static String BIDI_BOTHRAL = "Contains both R and AL code points.";
+	public static String BIDI_LTRAL = "Leading and trailing code points not both R or AL.";
+	public static String CONTAINS_PROHIBITED = "Contains prohibited code points.";
+	public static String CONTAINS_UNASSIGNED = "Contains unassigned code points.";
+
+	public StringprepException(String m) {
+		super(m);
+	}
 }

@@ -18,9 +18,6 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
-
-
 package tigase.util.dns;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -34,44 +31,42 @@ import java.util.Arrays;
  * @since Dec 19, 2009 10:29:23 PM
  */
 public class DNSEntry {
+
 	private String dnsResultHost = null;
-	private String hostname      = null;
-	private String[] ips         = null;
-	private int port             = 5269;
-	private int priority         = 0;
-	private long ttl             = 3600 * 1000;
-	private int weight           = 0;
+	private String hostname = null;
+	private String[] ips = null;
+	private int port = 5269;
+	private int priority = 0;
+	private long ttl = 3600 * 1000;
+	private int weight = 0;
 
 	//~--- constructors ---------------------------------------------------------
 
 	/**
 	 * Constructs DNS entry with hostname and IP to which it resolves.
 	 *
-	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @param ip <code>IP address</code> of the machine providing the service.
 	 */
 	public DNSEntry(String hostname, String ip) {
 		this.hostname = hostname;
-		this.ips      = new String[1];
-		this.ips[0]   = ip;
+		this.ips = new String[1];
+		this.ips[0] = ip;
 	}
 
 	/**
 	 * Constructs DNS entry with hostname and multiple IP to which it resolves.
-	 *
 	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @param ips Array of all <code>IP addresses</code> on which target host provide service.
 	 */
 	public DNSEntry(String hostname, String[] ips) {
 		this.hostname = hostname;
-		this.ips      = ips;
+		this.ips = ips;
 	}
 
 	/**
 	 * Constructs DNS entry with hostname, IP to which it resolves and a default port number used for connections.
-	 *
 	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @param ip <code>IP address</code> of the machine providing the service.
@@ -93,13 +88,12 @@ public class DNSEntry {
 	 * @param priority the priority of the target host, lower value means more preferred.
 	 * @param weight relative weight for records with the same priority.
 	 */
-	public DNSEntry(String hostname, String dnsResultHost, String ip, int port, long ttl,
-									int priority, int weight) {
+	public DNSEntry(String hostname, String dnsResultHost, String ip, int port, long ttl, int priority, int weight) {
 		this(hostname, ip, port);
 		this.dnsResultHost = dnsResultHost;
-		this.ttl           = ttl;
-		this.priority      = priority;
-		this.weight        = weight;
+		this.ttl = ttl;
+		this.priority = priority;
+		this.weight = weight;
 	}
 
 	/**
@@ -112,23 +106,20 @@ public class DNSEntry {
 	 * @param ttl standard DNS time to live field.
 	 * @param priority the priority of the target host, lower value means more preferred.
 	 * @param weight relative weight for records with the same priority.
-	 *
 	 */
-	public DNSEntry(String hostname, String dnsResultHost, String[] ips, int port,
-									long ttl, int priority, int weight) {
+	public DNSEntry(String hostname, String dnsResultHost, String[] ips, int port, long ttl, int priority, int weight) {
 		this(hostname, ips);
 		this.dnsResultHost = dnsResultHost;
-		this.port          = port;
-		this.ttl           = ttl;
-		this.priority      = priority;
-		this.weight        = weight;
+		this.port = port;
+		this.ttl = ttl;
+		this.priority = priority;
+		this.weight = weight;
 	}
 
 	//~--- get methods ----------------------------------------------------------
 
 	/**
 	 * Returns the domain name for which this record is valid
-	 *
 	 *
 	 * @return the domain name for which this record is valid
 	 */
@@ -148,7 +139,6 @@ public class DNSEntry {
 	/**
 	 * Returns <code>IP address</code> of the machine providing the service.
 	 *
-	 *
 	 * @return <code>IP address</code> of the machine providing the service.
 	 */
 	public String getIp() {
@@ -156,8 +146,8 @@ public class DNSEntry {
 	}
 
 	/**
-	 * Returns array containing all <code>IP addresses</code> on which service is available (in case hostname resolves to multiple IPs)
-	 *
+	 * Returns array containing all <code>IP addresses</code> on which service is available (in case hostname resolves
+	 * to multiple IPs)
 	 *
 	 * @return array containing all <code>IP addresses</code> on which service is available
 	 */
@@ -168,7 +158,6 @@ public class DNSEntry {
 	/**
 	 * Returns the TCP or UDP port on which the service is to be found
 	 *
-	 *
 	 * @return the TCP or UDP port on which the service is to be found
 	 */
 	public int getPort() {
@@ -177,7 +166,6 @@ public class DNSEntry {
 
 	/**
 	 * Returns the priority of the target host, lower value means more preferred.
-	 *
 	 *
 	 * @return the priority of the target host, lower value means more preferred.
 	 */
@@ -188,7 +176,6 @@ public class DNSEntry {
 	/**
 	 * Returns standard DNS time to live field.
 	 *
-	 *
 	 * @return standard DNS time to live field.
 	 */
 	public long getTtl() {
@@ -197,7 +184,6 @@ public class DNSEntry {
 
 	/**
 	 * Returns relative weight for records with the same priority.
-	 *
 	 *
 	 * @return relative weight for records with the same priority.
 	 */
@@ -210,19 +196,15 @@ public class DNSEntry {
 	/**
 	 * Returns string interpretation of the DNS entry
 	 *
-	 *
 	 * @return string interpretation of the DNS entry
 	 */
 	@Override
 	public String toString() {
-		return "hostname: " + dnsResultHost + ", port: " + port + ", ip(s): " +
-					 Arrays.toString(ips) + ", priority: " + priority + ", weight: " + weight +
-					 ", ttl: " + (ttl / 1000);
+		return "hostname: " + dnsResultHost + ", port: " + port + ", ip(s): " + Arrays.toString(ips) + ", priority: " +
+				priority + ", weight: " + weight + ", ttl: " + (ttl / 1000);
 	}
 }
 
-
 //~ Formatted in Tigase Code Convention on 13/02/21
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

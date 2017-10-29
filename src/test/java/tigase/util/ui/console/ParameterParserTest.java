@@ -35,7 +35,7 @@ public class ParameterParserTest {
 		final CommandlineParameter dbTypeParameter = new CommandlineParameter.Builder("T", "db-type").description(
 				"Database server type").options("derby", "mysql", "postgresql", "sqlserver").required(true).build();
 		final CommandlineParameter schemaVersionParameter = new CommandlineParameter.Builder("V",
-		                                                                                     "schema-version").description(
+																							 "schema-version").description(
 				"Intended version of the schema to be loaded").options("4", "5", "5-1", "7-1").build();
 
 		parser.addOption(dbTypeParameter);
@@ -56,7 +56,7 @@ public class ParameterParserTest {
 		final CommandlineParameter dbTypeParameter = new CommandlineParameter.Builder("T", "db-type").description(
 				"Database server type").options("derby", "mysql", "postgresql", "sqlserver").required(true).build();
 		final CommandlineParameter schemaVersionParameter = new CommandlineParameter.Builder("V",
-		                                                                                     "schema-version").description(
+																							 "schema-version").description(
 				"Intended version of the schema to be loaded").options("4", "5", "5-1", "7-1").build();
 
 		parser.addOption(dbTypeParameter);
@@ -73,7 +73,7 @@ public class ParameterParserTest {
 		ParameterParser parser = new ParameterParser();
 
 		final CommandlineParameter help = new CommandlineParameter.Builder("H", "help").build();
-		final CommandlineParameter hostname = new CommandlineParameter.Builder("H","hostname").build();
+		final CommandlineParameter hostname = new CommandlineParameter.Builder("H", "hostname").build();
 
 		parser.addOption(help);
 		parser.addOption(hostname);
@@ -91,7 +91,7 @@ public class ParameterParserTest {
 				.required(true)
 				.build();
 		final CommandlineParameter schemaVersionParameter = new CommandlineParameter.Builder("V",
-		                                                                                     "schema-version").description(
+																							 "schema-version").description(
 				"Intended version of the schema to be loaded").options("4", "5", "5-1", "7-1").build();
 
 		parser.addOption(dbTypeParameter);
@@ -119,7 +119,7 @@ public class ParameterParserTest {
 				.required(true)
 				.build();
 		final CommandlineParameter schemaVersionParameter = new CommandlineParameter.Builder("V",
-		                                                                                     "schema-version").description(
+																							 "schema-version").description(
 				"Intended version of the schema to be loaded").options("4", "5", "5-1", "7-1").build();
 
 		parser.addOption(dbTypeParameter);
@@ -146,7 +146,5 @@ public class ParameterParserTest {
 //		parser.getOptions((commandlineParameter) -> !commandlineParameter.getValue().isPresent()).forEach(System.out::println);
 
 	}
-
-
 
 }

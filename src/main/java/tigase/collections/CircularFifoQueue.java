@@ -21,7 +21,6 @@
 package tigase.collections;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
@@ -78,6 +77,16 @@ public class CircularFifoQueue<E>
 		return queue.poll();
 	}
 
+	public boolean setLimit(int limit) {
+		this.limit = limit;
+		return pruneQueue();
+	}
+
+	@Override
+	public int size() {
+		return queue.size();
+	}
+
 	private boolean pruneQueue() {
 		if (size() <= limit) {
 			return false;
@@ -88,16 +97,6 @@ public class CircularFifoQueue<E>
 			}
 			return true;
 		}
-	}
-
-	public boolean setLimit(int limit) {
-		this.limit = limit;
-		return pruneQueue();
-	}
-
-	@Override
-	public int size() {
-		return queue.size();
 	}
 }
 

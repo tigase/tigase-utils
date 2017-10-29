@@ -24,19 +24,18 @@ package gnu.inet.encoding;
  * Exception handling for Punycode class.
  */
 public class PunycodeException
-  extends Exception
-{
-  private static final long serialVersionUID = 1L;
-  public static String OVERFLOW = "Overflow.";
-  public static String BAD_INPUT = "Bad input.";
+		extends Exception {
 
-  /**
-   * Creates a new PunycodeException.
-   *
-   * @param m message.
-   */
-  public PunycodeException(String m)
-  {
-    super(m);
-  }
+	private static final long serialVersionUID = 1L;
+	public static String BAD_INPUT = "Bad input.";
+	public static String OVERFLOW = "Overflow.";
+
+	/**
+	 * Creates a new PunycodeException.
+	 *
+	 * @param m message.
+	 */
+	public PunycodeException(String m) {
+		super(m);
+	}
 }

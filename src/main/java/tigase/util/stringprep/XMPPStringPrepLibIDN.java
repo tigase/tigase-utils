@@ -18,7 +18,6 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
 package tigase.util.stringprep;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -34,11 +33,11 @@ import gnu.inet.encoding.StringprepException;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-class XMPPStringPrepLibIDN implements XMPPStringPrepIfc {
+class XMPPStringPrepLibIDN
+		implements XMPPStringPrepIfc {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param domain
 	 *
@@ -58,7 +57,6 @@ class XMPPStringPrepLibIDN implements XMPPStringPrepIfc {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param localpart
 	 *
 	 * @return
@@ -77,7 +75,6 @@ class XMPPStringPrepLibIDN implements XMPPStringPrepIfc {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param resource
 	 *
 	 * @return
@@ -94,8 +91,6 @@ class XMPPStringPrepLibIDN implements XMPPStringPrepIfc {
 	}
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

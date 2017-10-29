@@ -36,15 +36,27 @@ public class OldSelfSignedCertificateGenerator
 
 	private static final Logger log = Logger.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
 
+	private static void appendName(StringBuilder sb, String prefix, String value) {
+		log.log(Level.INFO, "appending value: {0} with prefix: {1} to sb: {2}",
+				new Object[]{value, prefix, sb.toString()});
+		if (value != null) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+
+			sb.append(prefix).append('=').append(value);
+		}
+	}
+
 	@Override
 	public X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,
 														 String organization, String city, String state, String country,
 														 KeyPair keyPair)
 			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
 				   NoSuchProviderException, SignatureException {
-		log.log(Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2},"
-						+ "organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
-				new Object[] { email, domain, organizationUnit, organization, city, state, country, keyPair } );
+		log.log(Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2}," +
+						"organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
+				new Object[]{email, domain, organizationUnit, organization, city, state, country, keyPair});
 		X509CertInfo certInfo = new X509CertInfo();
 		CertificateVersion certVersion = new CertificateVersion();
 
@@ -102,20 +114,8 @@ public class OldSelfSignedCertificateGenerator
 
 		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
 
-		log.log( Level.FINEST, "creating self signed cert, newCert: {0}", newCert );
+		log.log(Level.FINEST, "creating self signed cert, newCert: {0}", newCert);
 
 		return newCert;
-	}
-
-	private static void appendName(StringBuilder sb, String prefix, String value) {
-		log.log( Level.INFO, "appending value: {0} with prefix: {1} to sb: {2}",
-				 new Object[] { value, prefix, sb.toString() } );
-		if (value != null) {
-			if (sb.length() > 0) {
-				sb.append(", ");
-			}
-
-			sb.append(prefix).append('=').append(value);
-		}
 	}
 }

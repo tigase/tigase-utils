@@ -31,10 +31,10 @@ import java.util.function.Supplier;
  */
 public class Task {
 
+	private final Optional<Supplier<List<CommandlineParameter>>> additionalParameterSupplier;
+	private final Optional<String> description;
 	private final String name;
 	private Executor<Properties> function;
-	private final Optional<String> description;
-	private final Optional<Supplier<List<CommandlineParameter>>> additionalParameterSupplier;
 
 	private Task(Builder builder) {
 		this.name = builder.name;
@@ -62,15 +62,21 @@ public class Task {
 		function.execute(props);
 	}
 
+	public interface Executor<T> {
+
+		void execute(T parameter) throws Exception;
+
+	}
+
 	public static class Builder {
 
-		private String name;
+		private Supplier<List<CommandlineParameter>> additionalParameterSupplier;
 		private String description;
 		private Executor<Properties> function;
-		private Supplier<List<CommandlineParameter>> additionalParameterSupplier;
+		private String name;
 
 		public Builder() {
-			
+
 		}
 
 		public Builder name(String name) {
@@ -102,12 +108,6 @@ public class Task {
 			}
 			return new Task(this);
 		}
-
-	}
-
-	public interface Executor<T> {
-
-		void execute(T parameter) throws Exception;
 
 	}
 

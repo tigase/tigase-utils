@@ -22,11 +22,8 @@ package tigase.criteria;
 import tigase.xml.Element;
 
 /**
- * 
- * <p>
- * Created: 2007-06-20 08:03:14
- * </p>
- * 
+ * <p> Created: 2007-06-20 08:03:14 </p>
+ *
  * @author bmalkow
  * @version $Rev$
  */

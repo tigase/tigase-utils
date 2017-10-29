@@ -20,14 +20,15 @@
 
 package tigase.util;
 
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import tigase.util.datetime.DateTimeFormatter;
 
-public class DateTimeFormatterTest extends TestCase {
+import java.util.Calendar;
+import java.util.TimeZone;
+
+public class DateTimeFormatterTest
+		extends TestCase {
 
 	DateTimeFormatter dt = new DateTimeFormatter();
 
@@ -80,8 +81,7 @@ public class DateTimeFormatterTest extends TestCase {
 	}
 
 	/**
-	 * Test method for
-	 * {@link tigase.muc.DateTimeFormatter#parseDateTime(java.lang.String)}.
+	 * Test method for {@link tigase.muc.DateTimeFormatter#parseDateTime(java.lang.String)}.
 	 */
 
 	public void testParse() {

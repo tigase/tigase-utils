@@ -26,91 +26,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
- * <p>
- * Created: 2007-05-27 10:56:06
- * </p>
+ * <p> Created: 2007-05-27 10:56:06 </p>
  *
  * @author bmalkow
  */
-public class Field implements Comparable<Field>{
-	private String description;
-	private String label;
-	private String[] optionLabels;
-	private String[] optionValues;
-	private boolean required;
-	private FieldType type;
-	private String[] values;
-	private String var;
-
-	public Field(Element fieldElement) {
-		this.var = fieldElement.getAttributeStaticStr("var");
-
-		String $type = fieldElement.getAttributeStaticStr("type");
-
-		this.type  = ($type == null)
-								 ? FieldType.text_single
-								 : FieldType.getFieldTypeByName($type);
-		this.label = fieldElement.getAttributeStaticStr("label");
-
-		Element d = fieldElement.getChild("desc");
-
-		if (d != null) {
-			this.description = d.getCData();
-		}
-		this.required = fieldElement.getChild("required") != null;
-
-		List<String> valueList        = new LinkedList<String>();
-		List<String> optionsLabelList = new LinkedList<String>();
-		List<String> optionsValueList = new LinkedList<String>();
-
-		if (fieldElement.getChildren() != null) {
-			for (Element element : fieldElement.getChildren()) {
-				if ("value".equals(element.getName())) {
-					String v = element.getCData();
-
-					if (v != null) {
-						valueList.add(v);
-					}
-				} else if ("value".equals(element.getName())) {
-					optionsLabelList.add(element.getAttributeStaticStr("label"));
-
-					Element v = element.getChild("value");
-
-					optionsValueList.add(v.getCData());
-				}
-			}
-		}
-		this.values       = valueList.toArray(new String[] {});
-		this.optionLabels = optionsLabelList.toArray(new String[] {});
-		this.optionValues = optionsValueList.toArray(new String[] {});
-	}
-
-	private Field(FieldType type) {
-		this.type = type;
-	}
-
-	private Field(FieldType type, String var) {
-		this.type = type;
-		this.var  = var;
-	}
-
-	@Override
-	public int compareTo( Field o ) {
-		return this.var.compareTo( o.getVar());
-	}
+public class Field
+		implements Comparable<Field> {
 
 	public static enum FieldType {
-		bool("boolean"), fixed("fixed"), hidden("hidden"), jid_single("jid-single"), jid_multi("jid-multi"),
-		list_multi("list-multi"), list_single("list-single"), text_multi("text-multi"),
-		text_private("text-private"), text_single("text-single");
+		bool("boolean"),
+		fixed("fixed"),
+		hidden("hidden"),
+		jid_single("jid-single"),
+		jid_multi("jid-multi"),
+		list_multi("list-multi"),
+		list_single("list-single"),
+		text_multi("text-multi"),
+		text_private("text-private"),
+		text_single("text-single");
 
 		private String desc;
-
-
-		private FieldType(String desc) {
-			this.desc = desc;
-		}
 
 		public static FieldType getFieldTypeByName(String name) {
 			if ("boolean".equals(name)) {
@@ -120,21 +55,33 @@ public class Field implements Comparable<Field>{
 			}
 		}
 
+		private FieldType(String desc) {
+			this.desc = desc;
+		}
+
 		@Override
 		public String toString() {
 			return desc;
 		}
 	}
+	private String description;
+	private String label;
+	private String[] optionLabels;
+	private String[] optionValues;
+	private boolean required;
+	private FieldType type;
+	private String[] values;
+	private String var;
 
 	public static Field fieldBoolean(String var, Boolean value, String label) {
 		Field field = new Field(FieldType.bool);
 
 		field.label = label;
-		field.var   = var;
+		field.var = var;
 		if ((value != null) && value) {
-			field.values = new String[] { "1" };
-		} else if ((value != null) &&!value) {
-			field.values = new String[] { "0" };
+			field.values = new String[]{"1"};
+		} else if ((value != null) && !value) {
+			field.values = new String[]{"0"};
 		}
 
 		return field;
@@ -143,7 +90,7 @@ public class Field implements Comparable<Field>{
 	public static Field fieldFixed(String value) {
 		Field field = new Field(FieldType.fixed);
 
-		field.values = new String[] { value };
+		field.values = new String[]{value};
 
 		return field;
 	}
@@ -151,7 +98,7 @@ public class Field implements Comparable<Field>{
 	public static Field fieldHidden(String var, String value) {
 		Field field = new Field(FieldType.hidden, var);
 
-		field.values = new String[] { value };
+		field.values = new String[]{value};
 
 		return field;
 	}
@@ -159,47 +106,47 @@ public class Field implements Comparable<Field>{
 	public static Field fieldJidMulti(String var, String[] values, String label) {
 		Field field = new Field(FieldType.jid_multi, var);
 
-		field.label  = label;
+		field.label = label;
 		field.values = values;
 
 		return field;
 	}
-	
+
 	public static Field fieldJidSingle(String var, String value, String label) {
 		Field field = new Field(FieldType.jid_single, var);
 
-		field.label  = label;
-		field.values = new String[] { value };
+		field.label = label;
+		field.values = new String[]{value};
 
 		return field;
 	}
 
-	public static Field fieldListMulti(String var, String[] values, String label,
-																		 String[] optionsLabel, String[] optionsValue) {
+	public static Field fieldListMulti(String var, String[] values, String label, String[] optionsLabel,
+									   String[] optionsValue) {
 		if ((optionsLabel != null) && (optionsLabel.length != optionsValue.length)) {
 			throw new RuntimeException("Invalid optionsLabel and optinsValue length");
 		}
 
 		Field field = new Field(FieldType.list_multi, var);
 
-		field.label        = label;
-		field.values       = values;
+		field.label = label;
+		field.values = values;
 		field.optionLabels = optionsLabel;
 		field.optionValues = optionsValue;
 
 		return field;
 	}
 
-	public static Field fieldListSingle(String var, String value, String label,
-					String[] optionsLabel, String[] optionsValue) {
+	public static Field fieldListSingle(String var, String value, String label, String[] optionsLabel,
+										String[] optionsValue) {
 		if ((optionsLabel != null) && (optionsLabel.length != optionsValue.length)) {
 			throw new RuntimeException("Invalid optionsLabel and optinsValue length");
 		}
 
 		Field field = new Field(FieldType.list_single, var);
 
-		field.label        = label;
-		field.values       = new String[] { value };
+		field.label = label;
+		field.values = new String[]{value};
 		field.optionLabels = optionsLabel;
 		field.optionValues = optionsValue;
 
@@ -209,8 +156,8 @@ public class Field implements Comparable<Field>{
 	public static Field fieldTextMulti(String var, String value, String label) {
 		Field field = new Field(FieldType.text_multi, var);
 
-		field.label  = label;
-		field.values = new String[] { value };
+		field.label = label;
+		field.values = new String[]{value};
 
 		return field;
 	}
@@ -218,7 +165,7 @@ public class Field implements Comparable<Field>{
 	public static Field fieldTextMulti(String var, String[] values, String label) {
 		Field field = new Field(FieldType.text_multi, var);
 
-		field.label  = label;
+		field.label = label;
 		field.values = values;
 
 		return field;
@@ -227,8 +174,8 @@ public class Field implements Comparable<Field>{
 	public static Field fieldTextPrivate(String var, String value, String label) {
 		Field field = new Field(FieldType.text_private, var);
 
-		field.label  = label;
-		field.values = new String[] { value };
+		field.label = label;
+		field.values = new String[]{value};
 
 		return field;
 	}
@@ -236,8 +183,8 @@ public class Field implements Comparable<Field>{
 	public static Field fieldTextSingle(String var, String value, String label) {
 		Field field = new Field(FieldType.text_single, var);
 
-		field.label  = label;
-		field.values = new String[] { value };
+		field.label = label;
+		field.values = new String[]{value};
 
 		return field;
 	}
@@ -262,9 +209,8 @@ public class Field implements Comparable<Field>{
 
 		// <field var='pubsub#presence_based_delivery'
 		// type='boolean'><value>false</value></field>
-		Element field = new Element("field", new String[] { "var", "type" },
-																new String[] { "pubsub#presence_based_delivery",
-						"boolean" });
+		Element field = new Element("field", new String[]{"var", "type"},
+									new String[]{"pubsub#presence_based_delivery", "boolean"});
 
 		field.addChild(new Element("value", "true"));
 
@@ -274,9 +220,64 @@ public class Field implements Comparable<Field>{
 		System.out.println(getAsBoolean(f));
 	}
 
+	public Field(Element fieldElement) {
+		this.var = fieldElement.getAttributeStaticStr("var");
+
+		String $type = fieldElement.getAttributeStaticStr("type");
+
+		this.type = ($type == null) ? FieldType.text_single : FieldType.getFieldTypeByName($type);
+		this.label = fieldElement.getAttributeStaticStr("label");
+
+		Element d = fieldElement.getChild("desc");
+
+		if (d != null) {
+			this.description = d.getCData();
+		}
+		this.required = fieldElement.getChild("required") != null;
+
+		List<String> valueList = new LinkedList<String>();
+		List<String> optionsLabelList = new LinkedList<String>();
+		List<String> optionsValueList = new LinkedList<String>();
+
+		if (fieldElement.getChildren() != null) {
+			for (Element element : fieldElement.getChildren()) {
+				if ("value".equals(element.getName())) {
+					String v = element.getCData();
+
+					if (v != null) {
+						valueList.add(v);
+					}
+				} else if ("value".equals(element.getName())) {
+					optionsLabelList.add(element.getAttributeStaticStr("label"));
+
+					Element v = element.getChild("value");
+
+					optionsValueList.add(v.getCData());
+				}
+			}
+		}
+		this.values = valueList.toArray(new String[]{});
+		this.optionLabels = optionsLabelList.toArray(new String[]{});
+		this.optionValues = optionsValueList.toArray(new String[]{});
+	}
+
+	private Field(FieldType type) {
+		this.type = type;
+	}
+
+	private Field(FieldType type, String var) {
+		this.type = type;
+		this.var = var;
+	}
+
+	@Override
+	public int compareTo(Field o) {
+		return this.var.compareTo(o.getVar());
+	}
+
 	public Field cloneShalow() {
-		Field field = new Field( type, var );
-		field.setLabel( label );
+		Field field = new Field(type, var);
+		field.setLabel(label);
 		return field;
 	}
 
@@ -284,8 +285,12 @@ public class Field implements Comparable<Field>{
 		return description;
 	}
 
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Element getElement() {
-		return getElement( true, true);
+		return getElement(true, true);
 	}
 
 	public Element getElement(boolean type, boolean label) {
@@ -321,7 +326,7 @@ public class Field implements Comparable<Field>{
 
 				Element vo = new Element("value");
 
-				if ((this.optionValues[i] != null) &&!"".equals(this.optionValues[i])) {
+				if ((this.optionValues[i] != null) && !"".equals(this.optionValues[i])) {
 					vo.setCData(this.optionValues[i]);
 				}
 				option.addChild(vo);
@@ -336,16 +341,32 @@ public class Field implements Comparable<Field>{
 		return label;
 	}
 
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	public String[] getOptionLabels() {
 		return optionLabels;
+	}
+
+	public void setOptionLabels(String[] optionLabels) {
+		this.optionLabels = optionLabels;
 	}
 
 	public String[] getOptionValues() {
 		return optionValues;
 	}
 
+	public void setOptionValues(String[] optionValues) {
+		this.optionValues = optionValues;
+	}
+
 	public FieldType getType() {
 		return type;
+	}
+
+	public void setType(FieldType type) {
+		this.type = type;
 	}
 
 	public String getValue() {
@@ -360,44 +381,24 @@ public class Field implements Comparable<Field>{
 		return values;
 	}
 
+	public void setValues(String[] values) {
+		this.values = values;
+	}
+
 	public String getVar() {
 		return var;
+	}
+
+	public void setVar(String var) {
+		this.var = var;
 	}
 
 	public boolean isRequired() {
 		return required;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
-	public void setOptionLabels(String[] optionLabels) {
-		this.optionLabels = optionLabels;
-	}
-
-	public void setOptionValues(String[] optionValues) {
-		this.optionValues = optionValues;
-	}
-
 	public void setRequired(boolean required) {
 		this.required = required;
-	}
-
-	public void setType(FieldType type) {
-		this.type = type;
-	}
-
-	public void setValues(String[] values) {
-		this.values = values;
-	}
-
-	public void setVar(String var) {
-		this.var = var;
 	}
 
 	@Override

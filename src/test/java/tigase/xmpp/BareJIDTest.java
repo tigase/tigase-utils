@@ -19,12 +19,12 @@
  */
 package tigase.xmpp;
 
-import tigase.util.stringprep.TigaseStringprepException;
-
 import junit.framework.TestCase;
+import tigase.util.stringprep.TigaseStringprepException;
 import tigase.xmpp.jid.BareJID;
 
-public class BareJIDTest extends TestCase {
+public class BareJIDTest
+		extends TestCase {
 
 	public void testBareJIDInstance() throws TigaseStringprepException {
 		assertEquals(BareJID.bareJIDInstance("a@b"), BareJID.bareJIDInstance("a@b"));

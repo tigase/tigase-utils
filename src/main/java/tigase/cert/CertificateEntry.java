@@ -1,4 +1,3 @@
-
 /*
  * CertificateEntry.java
  *
@@ -34,6 +33,7 @@ import java.security.cert.Certificate;
  * @version $Rev$
  */
 public class CertificateEntry {
+
 	private Certificate[] chain = null;
 	private PrivateKey privateKey = null;
 
@@ -41,12 +41,12 @@ public class CertificateEntry {
 		return chain;
 	}
 
-	public PrivateKey getPrivateKey() {
-		return privateKey;
-	}
-
 	public void setCertChain(Certificate[] chain) {
 		this.chain = chain;
+	}
+
+	public PrivateKey getPrivateKey() {
+		return privateKey;
 	}
 
 	public void setPrivateKey(PrivateKey privateKey) {
@@ -61,6 +61,7 @@ public class CertificateEntry {
 			sb.append(cert.toString());
 		}
 
-		return "Private key: " + (privateKey != null ? privateKey.toString() : "private key missing!!! \n\n\n") + '\n' + sb;
+		return "Private key: " + (privateKey != null ? privateKey.toString() : "private key missing!!! \n\n\n") + '\n' +
+				sb;
 	}
 }

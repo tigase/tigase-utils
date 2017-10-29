@@ -20,7 +20,8 @@
 
 package tigase.form;
 
-public class FormSignerException extends Exception {
+public class FormSignerException
+		extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

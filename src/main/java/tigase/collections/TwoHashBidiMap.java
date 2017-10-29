@@ -26,7 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TwoHashBidiMap<K, V> implements BidiMap<K, V> {
+public class TwoHashBidiMap<K, V>
+		implements BidiMap<K, V> {
 
 	private final Map<K, V> keyValueMap = new ConcurrentHashMap<K, V>();
 
@@ -55,8 +56,9 @@ public class TwoHashBidiMap<K, V> implements BidiMap<K, V> {
 
 	@Override
 	public V get(Object key) {
-		if (key == null)
+		if (key == null) {
 			return null;
+		}
 		return keyValueMap.get(key);
 	}
 
@@ -94,16 +96,18 @@ public class TwoHashBidiMap<K, V> implements BidiMap<K, V> {
 	@Override
 	public V remove(Object key) {
 		V v = this.keyValueMap.remove(key);
-		if (v != null)
+		if (v != null) {
 			this.valueKeyMap.remove(v);
+		}
 		return v;
 	}
 
 	@Override
 	public K removeValue(Object value) {
 		K k = this.valueKeyMap.remove(value);
-		if (k != null)
+		if (k != null) {
 			this.keyValueMap.remove(k);
+		}
 		return k;
 	}
 

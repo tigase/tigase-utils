@@ -24,24 +24,16 @@ package tigase.util;
 
 import tigase.annotations.TigaseDeprecated;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
+import java.sql.*;
 import java.util.Map;
 import java.util.logging.Logger;
 
 //~--- classes ----------------------------------------------------------------
 
 /**
- * The class has been deprecated in favor of <code>DataRepository</code> class.
- * Please update your code accordingly.
- *
- *
+ * The class has been deprecated in favor of <code>DataRepository</code> class. Please update your code accordingly.
+ * <p>
+ * <p>
  * Created: Mon Mar  3 10:43:44 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -52,30 +44,26 @@ import java.util.logging.Logger;
 @TigaseDeprecated(since = "3.3.11", removeIn = "4.1.0")
 public abstract class JDBCAbstract {
 
+	/** Field description */
+	public static final String SP_STARTS_WITH = "{ call";
+	/** Field description */
+	public static final String DERBY_CONNVALID_QUERY = "values 1";
+	/** Field description */
+	public static final String JDBC_CONNVALID_QUERY = "select 1";
 	/**
 	 * Private logger for class instance.
 	 */
 	private static final Logger log = Logger.getLogger(JDBCAbstract.class.getName());
 
-	/** Field description */
-	public static final String SP_STARTS_WITH = "{ call";
-
-	/** Field description */
-	public static final String DERBY_CONNVALID_QUERY = "values 1";
-
-	/** Field description */
-	public static final String JDBC_CONNVALID_QUERY = "select 1";
-
 	//~--- fields ---------------------------------------------------------------
-
 	/**
 	 * Database active connection.
 	 */
 	private Connection conn = null;
 
 	/**
-	 * Prepared statement for testing whether database connection is still
-	 * working. If not connection to database is recreated.
+	 * Prepared statement for testing whether database connection is still working. If not connection to database is
+	 * recreated.
 	 */
 	private PreparedStatement conn_valid_st = null;
 
@@ -88,29 +76,26 @@ public abstract class JDBCAbstract {
 	 * Database connection string.
 	 */
 	private String db_conn = null;
-
+	private boolean derby_mode = false;
 	/**
 	 * Connection validation helper.
 	 */
 	private long lastConnectionValidated = 0;
-	private boolean derby_mode = false;
 
 	//~--- methods --------------------------------------------------------------
 
 	/**
-	 * <code>initRepository</code> method is doing lazy initialization with database.
-	 * Connection to database will be established during the first authentication
-	 * request.
+	 * <code>initRepository</code> method is doing lazy initialization with database. Connection to database will be
+	 * established during the first authentication request.
 	 *
-	 * @param conn_str a <code>String</code> value of database connection string.
-	 * The string must also contain database user name and password if required
-	 * for connection.
+	 * @param conn_str a <code>String</code> value of database connection string. The string must also contain database
+	 * user name and password if required for connection.
 	 * @param params
-	 * @exception SQLException if an error occurs during access database. It won't
-	 * happen however as in this method we do simple variable assigment.
+	 *
+	 * @throws SQLException if an error occurs during access database. It won't happen however as in this method we do
+	 * simple variable assigment.
 	 */
-	public abstract void initRepository(String conn_str, Map<String, String> params)
-			throws SQLException;
+	public abstract void initRepository(String conn_str, Map<String, String> params) throws SQLException;
 
 	//~--- get methods ----------------------------------------------------------
 
@@ -128,6 +113,14 @@ public abstract class JDBCAbstract {
 	/**
 	 * Method description
 	 *
+	 * @param uri
+	 */
+	public void setResourceUri(String uri) {
+		db_conn = uri;
+	}
+
+	/**
+	 * Method description
 	 *
 	 * @param query
 	 *
@@ -141,7 +134,6 @@ public abstract class JDBCAbstract {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param query
 	 *
@@ -157,9 +149,10 @@ public abstract class JDBCAbstract {
 		}
 	}
 
+	//~--- set methods ----------------------------------------------------------
+
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param query
 	 *
@@ -171,29 +164,16 @@ public abstract class JDBCAbstract {
 		return conn.prepareStatement(query);
 	}
 
-	//~--- set methods ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 *
-	 * @param uri
-	 */
-	public void setResourceUri(String uri) {
-		db_conn = uri;
-	}
-
 	//~--- methods --------------------------------------------------------------
 
 	/**
-	 * <code>checkConnection</code> method checks database connection before any
-	 * query. For some database servers (or JDBC drivers) it happens the connection
-	 * is dropped if not in use for a long time or after certain timeout passes.
-	 * This method allows us to detect the problem and reinitialize database
-	 * connection.
+	 * <code>checkConnection</code> method checks database connection before any query. For some database servers (or
+	 * JDBC drivers) it happens the connection is dropped if not in use for a long time or after certain timeout passes.
+	 * This method allows us to detect the problem and reinitialize database connection.
 	 *
 	 * @return a <code>boolean</code> value if the database connection is working.
-	 * @exception SQLException if an error occurs on database query.
+	 *
+	 * @throws SQLException if an error occurs on database query.
 	 */
 	protected boolean checkConnection() throws SQLException {
 		try {
@@ -213,10 +193,10 @@ public abstract class JDBCAbstract {
 	}
 
 	/**
-	 * <code>initPreparedStatements</code> method initializes internal
-	 * database connection variables such as prepared statements.
+	 * <code>initPreparedStatements</code> method initializes internal database connection variables such as prepared
+	 * statements.
 	 *
-	 * @exception SQLException if an error occurs on database query.
+	 * @throws SQLException if an error occurs on database query.
 	 */
 	protected void initPreparedStatements() throws SQLException {
 		String query = (derby_mode ? DERBY_CONNVALID_QUERY : JDBC_CONNVALID_QUERY);
@@ -228,21 +208,22 @@ public abstract class JDBCAbstract {
 		if (rs != null) {
 			try {
 				rs.close();
-			} catch (SQLException sqlEx) {}
+			} catch (SQLException sqlEx) {
+			}
 		}
 
 		if (stmt != null) {
 			try {
 				stmt.close();
-			} catch (SQLException sqlEx) {}
+			} catch (SQLException sqlEx) {
+			}
 		}
 	}
 
 	/**
-	 * <code>initRepo</code> method initializes database connection
-	 * and data repository.
+	 * <code>initRepo</code> method initializes database connection and data repository.
 	 *
-	 * @exception SQLException if an error occurs on database query.
+	 * @throws SQLException if an error occurs on database query.
 	 */
 	private void initRepo() throws SQLException {
 		synchronized (db_conn) {
@@ -254,8 +235,6 @@ public abstract class JDBCAbstract {
 	}
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

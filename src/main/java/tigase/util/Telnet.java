@@ -27,8 +27,8 @@ import java.net.Socket;
 
 /**
  * Describe class Telnet here.
- *
- *
+ * <p>
+ * <p>
  * Created: Sat Jan 28 21:18:46 2006
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -36,105 +36,21 @@ import java.net.Socket;
  */
 public class Telnet {
 
-	private static int port = 5222;
-	private static String hostname = "localhost";
-	private static boolean debug = false;
-	private static boolean stopped = false;
-	private static String file = null;
 	private static boolean continuous = false;
+	private static boolean debug = false;
 	private static long delay = 100;
-
-	/**
-	 * Creates a new <code>Telnet</code> instance.
-	 *
-	 */
-	public Telnet() {	}
+	private static String file = null;
+	private static String hostname = "localhost";
+	private static int port = 5222;
+	private static boolean stopped = false;
 
 	public static String help() {
-    return "\n"
-      + "Parameters:\n"
-      + " -h                this help message\n"
-      + " -n hostname       host name\n"
-      + " -p port           port number\n"
-      + " -f file           file with content to send to remote host\n"
-			+ " -c                continuous sending file content\n"
-			+ " -t millis         delay between sending file content\n"
-      + " -v                prints server version info\n"
-      + " -d [true|false]   turn on|off debug mode\n"
-      ;
-  }
-
-  public static String version() {
-    return "\n"
-      + "-- \n"
-      + "Tigase XMPP Telnet, version: "
-      + Telnet.class.getPackage().getImplementationVersion() + "\n"
-      + "Author:	Artur Hefczyc <artur.hefczyc@tigase.org>\n"
-      + "-- \n"
-      ;
-  }
-
-  public static void parseParams(final String[] args) throws Exception {
-    if (args != null && args.length > 0) {
-      for (int i = 0; i < args.length; i++) {
-        if (args[i].equals("-h")) {
-          System.out.print(help());
-          System.exit(0);
-        } // end of if (args[i].equals("-h"))
-        if (args[i].equals("-v")) {
-          System.out.print(version());
-          System.exit(0);
-        } // end of if (args[i].equals("-h"))
-        if (args[i].equals("-f")) {
-          if (i+1 == args.length) {
-            System.out.print(help());
-            System.exit(1);
-          } // end of if (i+1 == args.length)
-          else {
-            file = args[++i];
-          } // end of else
-        } // end of if (args[i].equals("-h"))
-        if (args[i].equals("-n")) {
-          if (i+1 == args.length) {
-            System.out.print(help());
-            System.exit(1);
-          } // end of if (i+1 == args.length)
-          else {
-            hostname = args[++i];
-          } // end of else
-        } // end of if (args[i].equals("-h"))
-        if (args[i].equals("-p")) {
-          if (i+1 == args.length) {
-            System.out.print(help());
-            System.exit(1);
-          } // end of if (i+1 == args.length)
-          else {
-            port = Integer.decode(args[++i]);
-          } // end of else
-        } // end of if (args[i].equals("-h"))
-        if (args[i].equals("-d")) {
-          if (i+1 == args.length || args[i+1].startsWith("-")) {
-            debug = true;
-          } // end of if (i+1 == args.length)
-          else {
-            ++i;
-            debug = args[i].charAt(0) != '-' &&
-              (args[i].equals("true") || args[i].equals("yes"));
-          } // end of else
-        } // end of if (args[i].equals("-d"))
-        if (args[i].equals("-c")) {
-          if (i+1 == args.length || args[i+1].startsWith("-")) {
-            continuous = true;
-          } // end of if (i+1 == args.length)
-          else {
-            ++i;
-            continuous = args[i].charAt(0) != '-' &&
-              (args[i].equals("true") || args[i].equals("yes"));
-          } // end of else
-        } // end of if (args[i].equals("-d"))
-      } // end of for (int i = 0; i < args.length; i++)
-    }
-  }
+		return "\n" + "Parameters:\n" + " -h                this help message\n" + " -n hostname       host name\n" +
+				" -p port           port number\n" + " -f file           file with content to send to remote host\n" +
+				" -c                continuous sending file content\n" +
+				" -t millis         delay between sending file content\n" +
+				" -v                prints server version info\n" + " -d [true|false]   turn on|off debug mode\n";
+	}
 
 	/**
 	 * Describe <code>main</code> method here.
@@ -146,7 +62,7 @@ public class Telnet {
 		String data = null;
 		if (file != null) {
 			FileReader fr = new FileReader(file);
-			char[] buff = new char[16*1024];
+			char[] buff = new char[16 * 1024];
 			int res = -1;
 			StringBuilder sb = new StringBuilder();
 			while ((res = fr.read(buff)) != -1) {
@@ -159,21 +75,91 @@ public class Telnet {
 		new Telnet(sock, data);
 	}
 
+	public static void parseParams(final String[] args) throws Exception {
+		if (args != null && args.length > 0) {
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].equals("-h")) {
+					System.out.print(help());
+					System.exit(0);
+				} // end of if (args[i].equals("-h"))
+				if (args[i].equals("-v")) {
+					System.out.print(version());
+					System.exit(0);
+				} // end of if (args[i].equals("-h"))
+				if (args[i].equals("-f")) {
+					if (i + 1 == args.length) {
+						System.out.print(help());
+						System.exit(1);
+					} // end of if (i+1 == args.length)
+					else {
+						file = args[++i];
+					} // end of else
+				} // end of if (args[i].equals("-h"))
+				if (args[i].equals("-n")) {
+					if (i + 1 == args.length) {
+						System.out.print(help());
+						System.exit(1);
+					} // end of if (i+1 == args.length)
+					else {
+						hostname = args[++i];
+					} // end of else
+				} // end of if (args[i].equals("-h"))
+				if (args[i].equals("-p")) {
+					if (i + 1 == args.length) {
+						System.out.print(help());
+						System.exit(1);
+					} // end of if (i+1 == args.length)
+					else {
+						port = Integer.decode(args[++i]);
+					} // end of else
+				} // end of if (args[i].equals("-h"))
+				if (args[i].equals("-d")) {
+					if (i + 1 == args.length || args[i + 1].startsWith("-")) {
+						debug = true;
+					} // end of if (i+1 == args.length)
+					else {
+						++i;
+						debug = args[i].charAt(0) != '-' && (args[i].equals("true") || args[i].equals("yes"));
+					} // end of else
+				} // end of if (args[i].equals("-d"))
+				if (args[i].equals("-c")) {
+					if (i + 1 == args.length || args[i + 1].startsWith("-")) {
+						continuous = true;
+					} // end of if (i+1 == args.length)
+					else {
+						++i;
+						continuous = args[i].charAt(0) != '-' && (args[i].equals("true") || args[i].equals("yes"));
+					} // end of else
+				} // end of if (args[i].equals("-d"))
+			} // end of for (int i = 0; i < args.length; i++)
+		}
+	}
+
+	public static String version() {
+		return "\n" + "-- \n" + "Tigase XMPP Telnet, version: " + Telnet.class.getPackage().getImplementationVersion() +
+				"\n" + "Author:	Artur Hefczyc <artur.hefczyc@tigase.org>\n" + "-- \n";
+	}
+
+	/**
+	 * Creates a new <code>Telnet</code> instance.
+	 */
+	public Telnet() {
+	}
+
 	public Telnet(Socket sock, String data) throws IOException {
-		StreamListener sl1 =
-			new StreamListener(sock.getInputStream(), System.out,
-				"Hello, this Tigase Telnet program, type your input...\n");
-		StreamListener sl2 =
-			new StreamListener(System.in, sock.getOutputStream(), data);
+		StreamListener sl1 = new StreamListener(sock.getInputStream(), System.out,
+												"Hello, this Tigase Telnet program, type your input...\n");
+		StreamListener sl2 = new StreamListener(System.in, sock.getOutputStream(), data);
 		new Thread(sl1).start();
 		new Thread(sl2).start();
 	}
 
-	private static class StreamListener implements Runnable {
+	private static class StreamListener
+			implements Runnable {
 
+		private String data = null;
 		private InputStream is = null;
 		private OutputStream os = null;
-		private String data = null;
 
 		private StreamListener(InputStream is, OutputStream os, String data) {
 			this.is = is;
@@ -208,6 +194,5 @@ public class Telnet {
 		}
 
 	}
-
 
 } // Telnet

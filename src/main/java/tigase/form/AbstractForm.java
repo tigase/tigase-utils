@@ -25,57 +25,54 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- *
- * <p>
- * Created: 2007-05-27 11:41:02
- * </p>
+ * <p> Created: 2007-05-27 11:41:02 </p>
  *
  * @author bmalkow
  */
 public class AbstractForm {
 
-	protected final Logger log = Logger.getLogger( this.getClass().getName() );
+	protected final Logger log = Logger.getLogger(this.getClass().getName());
 	protected String instruction;
 	protected String title;
 	protected String type;
 
-	public AbstractForm( Element form ) {
-		this.type = form.getAttributeStaticStr( "type" );
-		log.finest( "Retriving Data Form type " + this.type );
+	public AbstractForm(Element form) {
+		this.type = form.getAttributeStaticStr("type");
+		log.finest("Retriving Data Form type " + this.type);
 
 		List<Element> children = form.getChildren();
 
-		if ( children != null ){
-			for ( Element sub : children ) {
-				if ( "title".equals( sub.getName() ) ){
+		if (children != null) {
+			for (Element sub : children) {
+				if ("title".equals(sub.getName())) {
 					this.title = sub.getCData();
-					log.finest( "read Data Form title [" + this.title + "]" );
-				} else if ( "instructions".equals( sub.getName() ) ){
+					log.finest("read Data Form title [" + this.title + "]");
+				} else if ("instructions".equals(sub.getName())) {
 					this.instruction = sub.getCData();
-					log.finest( "read Data Form instruction [" + this.instruction + "]" );
+					log.finest("read Data Form instruction [" + this.instruction + "]");
 				}
 			}
 		}
 	}
 
-	public AbstractForm( String type, String title, String instruction ) {
+	public AbstractForm(String type, String title, String instruction) {
 		this.type = type;
 		this.title = title;
 		this.instruction = instruction;
 	}
 
 	public Element getElement() {
-		Element form = new Element( "x" );
+		Element form = new Element("x");
 
-		form.setAttribute( "xmlns", "jabber:x:data" );
-		if ( type != null ) {
-			form.setAttribute( "type", type );
+		form.setAttribute("xmlns", "jabber:x:data");
+		if (type != null) {
+			form.setAttribute("type", type);
 		}
-		if ( this.title != null ){
-			form.addChild( new Element( "title", this.title ) );
+		if (this.title != null) {
+			form.addChild(new Element("title", this.title));
 		}
-		if ( this.instruction != null ){
-			form.addChild( new Element( "instructions", this.instruction ) );
+		if (this.instruction != null) {
+			form.addChild(new Element("instructions", this.instruction));
 		}
 
 		return form;
@@ -85,12 +82,24 @@ public class AbstractForm {
 		return instruction;
 	}
 
+	public void setInstruction(String instruction) {
+		this.instruction = instruction;
+	}
+
 	public String getTitle() {
 		return title;
 	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public String getType() {
 		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getTypeOrElse(String defValue) {
@@ -102,17 +111,5 @@ public class AbstractForm {
 
 	public boolean isType(String type) {
 		return this.type != null && this.type.equals(type);
-	}
-
-	public void setInstruction( String instruction ) {
-		this.instruction = instruction;
-	}
-
-	public void setTitle( String title ) {
-		this.title = title;
-	}
-
-	public void setType( String type ) {
-		this.type = type;
 	}
 }

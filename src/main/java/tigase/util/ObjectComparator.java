@@ -19,31 +19,33 @@
  */
 package tigase.util;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Describe class ObjectComparator here.
- *
- *
+ * <p>
+ * <p>
  * Created: Tue May 17 23:53:20 2005
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class ObjectComparator implements Comparator<Object>, Serializable {
+public class ObjectComparator
+		implements Comparator<Object>, Serializable {
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  /**
-   * Describe <code>compare</code> method here.
-   *
-   * @param object an <code>Object</code> value
-   * @param object1 an <code>Object</code> value
-   * @return an <code>int</code> value
-   */
-  public int compare(final Object o1, final Object o2) {
-    return o1.getClass().getName().compareTo(o2.getClass().getName());
-  }
+	/**
+	 * Describe <code>compare</code> method here.
+	 *
+	 * @param object an <code>Object</code> value
+	 * @param object1 an <code>Object</code> value
+	 *
+	 * @return an <code>int</code> value
+	 */
+	public int compare(final Object o1, final Object o2) {
+		return o1.getClass().getName().compareTo(o2.getClass().getName());
+	}
 
 } // ObjectComparator

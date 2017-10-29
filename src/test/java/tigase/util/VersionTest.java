@@ -34,20 +34,13 @@ public class VersionTest {
 		build = new Version.Builder(5, 0, 0).setVersionType(Version.TYPE.SNAPSHOT).build();
 		Assert.assertTrue(Version.of("5.0.0-SNAPSHOT").equals(build));
 
-		build = new Version.Builder(5, 0, 0)
-				.setVersionType(Version.TYPE.SNAPSHOT)
-				.setBuild(1234)
-				.build();
+		build = new Version.Builder(5, 0, 0).setVersionType(Version.TYPE.SNAPSHOT).setBuild(1234).build();
 		Assert.assertTrue(Version.of("5.0.0-SNAPSHOT-b1234").equals(build));
 
-		build = new Version.Builder(5, 0, 0)
-				.setVersionType(Version.TYPE.SNAPSHOT)
-				.setBuild(1234)
-				.build();
+		build = new Version.Builder(5, 0, 0).setVersionType(Version.TYPE.SNAPSHOT).setBuild(1234).build();
 		Assert.assertTrue(Version.of("5.0.0-SNAPSHOT-b1234").equals(build));
 
-		build = new Version.Builder(5, 0, 0)
-				.setVersionType(Version.TYPE.SNAPSHOT)
+		build = new Version.Builder(5, 0, 0).setVersionType(Version.TYPE.SNAPSHOT)
 				.setBuild(1234)
 				.setCommit("1234abcd")
 				.build();
@@ -111,8 +104,7 @@ public class VersionTest {
 
 		Assert.assertFalse(Version.of("7.2.0-RC2-b4904").equals(Version.of("7.2.0-RC3-b4904")));
 
-		Assert.assertTrue(
-				Version.of("7.2.0-RC4-b4904").compareTo(Version.of("7.2.0-RC3-b4904")) > 0);
+		Assert.assertTrue(Version.of("7.2.0-RC4-b4904").compareTo(Version.of("7.2.0-RC3-b4904")) > 0);
 
 		Assert.assertTrue(Version.of("7.2.0-RC4-b4904").compareTo(Version.of("7.2.0-BETA15-b4904")) > 0);
 		Assert.assertFalse(Version.of("7.2.0-RC4-b4904").compareTo(Version.of("7.2.0-BETA15-b4904")) < 0);

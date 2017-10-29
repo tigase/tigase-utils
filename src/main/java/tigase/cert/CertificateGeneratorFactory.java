@@ -31,8 +31,9 @@ public class CertificateGeneratorFactory {
 	private static CertificateGenerator generator;
 
 	static {
-		try{
-			generator = (CertificateGenerator) Class.forName("tigase.cert.OldSelfSignedCertificateGenerator").newInstance();
+		try {
+			generator = (CertificateGenerator) Class.forName("tigase.cert.OldSelfSignedCertificateGenerator")
+					.newInstance();
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 			log.log(Level.WARNING, "could not initialize self-signed SSL certificate generator", ex);

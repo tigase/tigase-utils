@@ -18,7 +18,6 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
 package tigase.util.cache;
 
 import java.util.LinkedHashMap;

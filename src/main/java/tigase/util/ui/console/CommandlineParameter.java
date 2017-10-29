@@ -34,8 +34,8 @@ public class CommandlineParameter {
 	private final List<String> selectionOptions;
 	private final String singleLetter;
 	private final Optional<Function<String, List<CommandlineParameter>>> valueDependentParametersProvider;
-	private String value;
 	private Class type;
+	private String value;
 
 	private CommandlineParameter(Builder builder) {
 		this.singleLetter = builder.singleLetter;
@@ -112,8 +112,8 @@ public class CommandlineParameter {
 	 */
 	public Optional<List<String>> getSelectionOptions() {
 		return (null != selectionOptions && !selectionOptions.isEmpty()
-		        ? Optional.of(selectionOptions)
-		        : Optional.empty());
+				? Optional.of(selectionOptions)
+				: Optional.empty());
 	}
 
 	/**
@@ -133,9 +133,7 @@ public class CommandlineParameter {
 	 * @return Optional for the single letter (which may include dash depending on parameter)
 	 */
 	public Optional<String> getSingleLetter(boolean includeDash) {
-		return (null == singleLetter
-		        ? Optional.empty()
-		        : Optional.of((includeDash ? "-" : "") + singleLetter));
+		return (null == singleLetter ? Optional.empty() : Optional.of((includeDash ? "-" : "") + singleLetter));
 
 	}
 
@@ -210,7 +208,7 @@ public class CommandlineParameter {
 	public boolean isSecret() {
 		return secret;
 	}
-	
+
 	/**
 	 * Sets the value from the configured default if present
 	 */
@@ -342,7 +340,8 @@ public class CommandlineParameter {
 		}
 
 		/**
-		 * Sets whether particular parameter option is required - if yes then it's mandatory to set it's value or provide default.
+		 * Sets whether particular parameter option is required - if yes then it's mandatory to set it's value or
+		 * provide default.
 		 *
 		 * @param required whether the option is required
 		 *
@@ -354,7 +353,8 @@ public class CommandlineParameter {
 		}
 
 		/**
-		 * Sets the parameter option as secret which influences how it will be obtained in interactive mode (won't be printed, useful for passwords)
+		 * Sets the parameter option as secret which influences how it will be obtained in interactive mode (won't be
+		 * printed, useful for passwords)
 		 *
 		 * @return current Builder object
 		 */

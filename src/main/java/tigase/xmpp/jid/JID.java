@@ -21,16 +21,16 @@
 package tigase.xmpp.jid;
 
 //~--- non-JDK imports --------------------------------------------------------
+
 import tigase.util.stringprep.TigaseStringprepException;
 
 import java.util.Objects;
 
 /**
- * The class defines an instance of a single XMPP JID identifier. When the
- * object is created all parameters are checked and processed through the
- * stringprep. An exception is thrown in case of a stringprep processing error.
- *
- *
+ * The class defines an instance of a single XMPP JID identifier. When the object is created all parameters are checked
+ * and processed through the stringprep. An exception is thrown in case of a stringprep processing error.
+ * <p>
+ * <p>
  * Created: Dec 28, 2009 10:48:04 PM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -38,347 +38,281 @@ import java.util.Objects;
  */
 public final class JID
 		implements Comparable<JID> {
+
 	private final BareJID bareJid;
+	private final int hashcode;
 	private final String resource;
 	private final String to_string;
-	private final int hashcode;
-
 
 	//~--- constructors ---------------------------------------------------------
+
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as user bare JID and <code>String</code> instance as a resource
-	 * part.
+	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
+	 * <code>String</code> instance as a resource part.
 	 * <p/>
-	 * As the <code>BareJID</code> instances are immutable the constructor doesn't
-	 * create a copy of the given <code>BareJID</code>, instead it saves the
-	 * reference to a given object.<br/>
+	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/> The resourve parameter is parsed,
+	 * checked and run through the stringprep processing. In case of stringprep error, an exception is thrown.
 	 *
-	 * @param bareJid  is a <code>BareJID</code> instance used to create the
-	 *                 <code>JID</code> instance.
-	 * @param resource is a <code>String</code> instance representing JID's
-	 *                 resource part.
+	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
+	 * @param p_resource is a <code>String</code> instance representing JID's resource part.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 * @return <code>JID</code> class instance.
+	 *
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
 	 */
-	private JID( BareJID bareJid, String resource ) {
-		this.bareJid = bareJid;
-		this.resource = resource;
-		this.to_string = BareJID.toString( bareJid, resource );
-		this.hashcode = Objects.hash( bareJid, resource );
+	public static JID jidInstance(BareJID bareJid, String p_resource) throws TigaseStringprepException {
+		String f_resource = (p_resource == null) ? null : BareJID.stringPrep.resourceprep(p_resource);
+
+		return new JID(bareJid, f_resource);
 	}
 
 	//~--- methods --------------------------------------------------------------
-	/**
-	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as user bare JID and <code>String</code> instance as a resource
-	 * part.
-	 * <p/>
-	 * As the <code>BareJID</code> instances are immutable the constructor doesn't
-	 * create a copy of the given <code>BareJID</code>, instead it saves the
-	 * reference to a given object.<br/>
-	 * The resourve parameter is parsed, checked and run through the stringprep
-	 * processing. In case of stringprep error, an exception is thrown.
-	 *
-	 * @param bareJid    is a <code>BareJID</code> instance used to create the
-	 *                   <code>JID</code> instance.
-	 * @param p_resource is a <code>String</code> instance representing JID's
-	 *                   resource part.
-	 *
-	 * @return <code>JID</code> class instance.
-	 *
-	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
-	 */
-	public static JID jidInstance( BareJID bareJid, String p_resource )
-			throws TigaseStringprepException {
-		String f_resource = ( p_resource == null )
-												? null
-												: BareJID.stringPrep.resourceprep( p_resource );
-
-		return new JID( bareJid, f_resource );
-	}
 
 	/**
-	 * Creates a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as a parameter. The resource part is set to null.<br/>
-	 * As the <code>BareJID</code> instances are immutable the constructor doesn't
-	 * create a copy of the given <code>BareJID</code>, instead it saves the
-	 * reference to a given object.
+	 * Creates a new <code>JID</code> instance using given <code>BareJID</code> instance as a parameter. The resource
+	 * part is set to null.<br/> As the <code>BareJID</code> instances are immutable the constructor doesn't create a
+	 * copy of the given <code>BareJID</code>, instead it saves the reference to a given object.
 	 *
-	 * @param bareJid is a <code>BareJID</code> instance used to create the
-	 *                <code>JID</code> instance.
+	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 *
 	 * @return <code>JID</code> class instance.
 	 */
-	public static JID jidInstance( BareJID bareJid ) {
-		return new JID( bareJid, null );
+	public static JID jidInstance(BareJID bareJid) {
+		return new JID(bareJid, null);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using a JID parameter given as a
-	 * <code>String</code> instance. The parameter is parsed, checked and run
-	 * through stringprep processing. An exception is thrown if there is an error
+	 * Constructs a new <code>JID</code> instance using a JID parameter given as a <code>String</code> instance. The
+	 * parameter is parsed, checked and run through stringprep processing. An exception is thrown if there is an error
 	 * while the JID is checked.
 	 *
 	 * @param jid a JID parameter given as a <code>String</code> instance.
 	 *
-	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
 	 */
-	public static JID jidInstance( String jid ) throws TigaseStringprepException {
-		String[] parsedJid = BareJID.parseJID( jid );
+	public static JID jidInstance(String jid) throws TigaseStringprepException {
+		String[] parsedJid = BareJID.parseJID(jid);
 
-		return jidInstance( parsedJid[0], parsedJid[1], parsedJid[2] );
+		return jidInstance(parsedJid[0], parsedJid[1], parsedJid[2]);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>String</code>
-	 * parameters.
+	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters.
 	 * <p/>
-	 * All the <code>String</code> parameters are parsed, checked and run through
-	 * the stringprep processing. In case of stringprep error, an exception is
-	 * thrown.
+	 * All the <code>String</code> parameters are parsed, checked and run through the stringprep processing. In case of
+	 * stringprep error, an exception is thrown.
 	 *
-	 * @param localpart is a <code>String</code> instance representing JID's
-	 *                  localpart (nickname) part.
-	 * @param domain    is a <code>String</code> instance representing JID's
-	 *                  domain part.
+	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
+	 * @param domain is a <code>String</code> instance representing JID's domain part.
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
 	 */
-	public static JID jidInstance( String localpart, String domain )
-			throws TigaseStringprepException {
-		return jidInstance( BareJID.bareJIDInstance( localpart, domain ) );
+	public static JID jidInstance(String localpart, String domain) throws TigaseStringprepException {
+		return jidInstance(BareJID.bareJIDInstance(localpart, domain));
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>String</code>
-	 * parameters.
+	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters.
 	 * <p/>
-	 * All the <code>String</code> parameters are parsed, checked and run through
-	 * the stringprep processing. In case of stringprep error, an exception is
-	 * thrown.
+	 * All the <code>String</code> parameters are parsed, checked and run through the stringprep processing. In case of
+	 * stringprep error, an exception is thrown.
 	 *
-	 * @param localpart is a <code>String</code> instance representing JID's
-	 *                  localpart (nickname) part.
-	 * @param domain    is a <code>String</code> instance representing JID's
-	 *                  domain part.
-	 * @param resource  is a <code>String</code> instance representing JID's
-	 *                  resource part.
+	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
+	 * @param domain is a <code>String</code> instance representing JID's domain part.
+	 * @param resource is a <code>String</code> instance representing JID's resource part.
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
 	 */
-	public static JID jidInstance( String localpart, String domain, String resource )
-			throws TigaseStringprepException {
-		return jidInstance( BareJID.bareJIDInstance( localpart, domain ), resource );
+	public static JID jidInstance(String localpart, String domain, String resource) throws TigaseStringprepException {
+		return jidInstance(BareJID.bareJIDInstance(localpart, domain), resource);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as user bare JID and <code>String</code> instance as a resource
-	 * part.
-	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters.</strong>
+	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
+	 * <code>String</code> instance as a resource part. <strong>Note, this method does not perform stringprep processing
+	 * on input parameters.</strong>
 	 * <p/>
-	 * As the <code>BareJID</code> instances are immutable the constructor doesn't
-	 * create a copy of the given <code>BareJID</code>, instead it saves the
-	 * reference to a given object.<br/>
+	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
 	 *
-	 * @param bareJid is a <code>BareJID</code> instance used to create the
-	 *                <code>JID</code> instance.
+	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 *
 	 * @return <code>JID</code> class instance.
 	 */
-	public static JID jidInstanceNS( BareJID bareJid ) {
-		return new JID( bareJid, null );
+	public static JID jidInstanceNS(BareJID bareJid) {
+		return new JID(bareJid, null);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code>
-	 * instance as user bare JID and <code>String</code> instance as a resource
-	 * part.
-	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters.</strong>
+	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
+	 * <code>String</code> instance as a resource part. <strong>Note, this method does not perform stringprep processing
+	 * on input parameters.</strong>
 	 * <p/>
-	 * As the <code>BareJID</code> instances are immutable the constructor doesn't
-	 * create a copy of the given <code>BareJID</code>, instead it saves the
-	 * reference to a given object.<br/>
+	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
 	 *
-	 * @param bareJid    is a <code>BareJID</code> instance used to create the
-	 *                   <code>JID</code> instance.
-	 * @param p_resource is a <code>String</code> instance representing JID's
-	 *                   resource part.
+	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
+	 * @param p_resource is a <code>String</code> instance representing JID's resource part.
 	 *
 	 * @return <code>JID</code> class instance.
 	 */
-	public static JID jidInstanceNS( BareJID bareJid, String p_resource ) {
-		return new JID( bareJid, p_resource );
+	public static JID jidInstanceNS(BareJID bareJid, String p_resource) {
+		return new JID(bareJid, p_resource);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using a JID parameter given as a
-	 * <code>String</code> instance.
-	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters and it returns <code>null</code> if null is passed as
-	 * parameter.</strong>
-	 * The method does not throw <code>NullPointerException</code> if the
-	 * <code>String</code> passed is null.
+	 * Constructs a new <code>JID</code> instance using a JID parameter given as a <code>String</code> instance.
+	 * <strong>Note, this method does not perform stringprep processing on input parameters and it returns
+	 * <code>null</code> if null is passed as parameter.</strong> The method does not throw
+	 * <code>NullPointerException</code> if the <code>String</code> passed is null.
 	 *
 	 * @param jid a JID parameter given as a <code>String</code> instance.
 	 *
 	 * @return <code>JID</code> class instance or null.
 	 */
-	public static JID jidInstanceNS( String jid ) {
-		if ( jid == null ){
+	public static JID jidInstanceNS(String jid) {
+		if (jid == null) {
 			return null;
 		}
 
-		String[] parsedJid = BareJID.parseJID( jid );
+		String[] parsedJid = BareJID.parseJID(jid);
 
-		return jidInstanceNS( parsedJid[0], parsedJid[1], parsedJid[2] );
+		return jidInstanceNS(parsedJid[0], parsedJid[1], parsedJid[2]);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>String</code>
-	 * parameters.
-	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters.</strong>
+	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters. <strong>Note, this method
+	 * does not perform stringprep processing on input parameters.</strong>
 	 * <p/>
 	 *
-	 * @param localpart is a <code>String</code> instance representing JID's
-	 *                  localpart (nickname) part.
-	 * @param domain    is a <code>String</code> instance representing JID's
-	 *                  domain part.
-	 * @param resource  is a <code>String</code> instance representing JID's
-	 *                  resource part.
+	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
+	 * @param domain is a <code>String</code> instance representing JID's domain part.
+	 * @param resource is a <code>String</code> instance representing JID's resource part.
 	 *
 	 * @return <code>JID</code> class instance.
 	 */
-	public static JID jidInstanceNS( String localpart, String domain, String resource ) {
-		return jidInstanceNS( BareJID.bareJIDInstanceNS( localpart, domain ), resource );
+	public static JID jidInstanceNS(String localpart, String domain, String resource) {
+		return jidInstanceNS(BareJID.bareJIDInstanceNS(localpart, domain), resource);
 	}
 
 	/**
-	 * Constructs a new <code>JID</code> instance using given <code>String</code>
-	 * parameters.
-	 * <strong>Note, this method does not perform stringprep processing on input
-	 * parameters.</strong>
+	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters. <strong>Note, this method
+	 * does not perform stringprep processing on input parameters.</strong>
 	 * <p/>
 	 *
-	 * @param localpart is a <code>String</code> instance representing JID's
-	 *                  localpart (nickname) part.
-	 * @param domain    is a <code>String</code> instance representing JID's
-	 *                  domain part.
+	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
+	 * @param domain is a <code>String</code> instance representing JID's domain part.
 	 *
 	 * @return <code>JID</code> class instance.
 	 */
-	public static JID jidInstanceNS( String localpart, String domain ) {
-		return jidInstanceNS( BareJID.bareJIDInstanceNS( localpart, domain ) );
+	public static JID jidInstanceNS(String localpart, String domain) {
+		return jidInstanceNS(BareJID.bareJIDInstanceNS(localpart, domain));
 	}
 
 	/**
-	 * Method compares the <code>JID</code> instance with a given object. The
-	 * implementation fulfills the specification contract and returns a value as
-	 * you would expect from the call:
+	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
+	 * <code>String</code> instance as a resource part.
+	 * <p/>
+	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
+	 *
+	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
+	 * @param resource is a <code>String</code> instance representing JID's resource part.
+	 *
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
+	 */
+	private JID(BareJID bareJid, String resource) {
+		this.bareJid = bareJid;
+		this.resource = resource;
+		this.to_string = BareJID.toString(bareJid, resource);
+		this.hashcode = Objects.hash(bareJid, resource);
+	}
+
+	/**
+	 * Method compares the <code>JID</code> instance with a given object. The implementation fulfills the specification
+	 * contract and returns a value as you would expect from the call:
 	 * <pre>
 	 * jid_1.toString().compareTo(jid_2.toString())
 	 * </pre>
-	 *
 	 *
 	 * @param o is a <code>JID</code> instance to compare to.
 	 *
 	 * @return an integer value which is a result of comparing the two objects.
 	 */
 	@Override
-	public int compareTo( JID o ) {
-		return to_string.compareTo( o.to_string );
+	public int compareTo(JID o) {
+		return to_string.compareTo(o.to_string);
 	}
 
 	/**
-	 * The method returns a copy of the <code>JID</code> instance with a different
-	 * resource part given as a parameter.
+	 * The method returns a copy of the <code>JID</code> instance with a different resource part given as a parameter.
 	 *
-	 * @param resource is a <code>String</code> instance representing JID's new
-	 *                 resource part.
+	 * @param resource is a <code>String</code> instance representing JID's new resource part.
 	 *
-	 * @return a new instance of the <code>JID</code> class with a new resource
-	 *         part.
+	 * @return a new instance of the <code>JID</code> class with a new resource part.
 	 *
 	 * @throws TigaseStringprepException if resource stringprep processing fails.
 	 */
-	public JID copyWithResource( String resource ) throws TigaseStringprepException {
-		return jidInstance( bareJid, resource );
+	public JID copyWithResource(String resource) throws TigaseStringprepException {
+		return jidInstance(bareJid, resource);
 	}
 
 	/**
-	 * The method returns a copy of the <code>JID</code> instance with a different
-	 * resource part given as a parameter.
+	 * The method returns a copy of the <code>JID</code> instance with a different resource part given as a parameter.
 	 *
-	 * @param resource is a <code>String</code> instance representing JID's new
-	 *                 resource part.
+	 * @param resource is a <code>String</code> instance representing JID's new resource part.
 	 *
-	 * @return a new instance of the <code>JID</code> class with a new resource
-	 *         part.
-	 *
+	 * @return a new instance of the <code>JID</code> class with a new resource part.
 	 */
-	public JID copyWithResourceNS( String resource ) {
-		return jidInstanceNS( bareJid, resource );
+	public JID copyWithResourceNS(String resource) {
+		return jidInstanceNS(bareJid, resource);
 	}
 
 	/**
-	 * The method returns a copy of the <code>JID</code> instance with removed
-	 * resource part. The result is similar to the <code>BareJID</code> instance,
-	 * however there are APIs which require <code>JID</code> object to use.
+	 * The method returns a copy of the <code>JID</code> instance with removed resource part. The result is similar to
+	 * the <code>BareJID</code> instance, however there are APIs which require <code>JID</code> object to use.
 	 *
-	 * @return a new instance of the <code>JID</code> class with removed resource
-	 *         part.
+	 * @return a new instance of the <code>JID</code> class with removed resource part.
 	 */
 	public JID copyWithoutResource() {
-		return new JID( bareJid, null );
+		return new JID(bareJid, null);
 	}
 
 	/**
-	 * Method compares whether this <code>JID</code> instance represents the same
-	 * user JID as the one given in parameter. It returns <code>true</code> of
-	 * all: the localpart (nickname), domain part, and the resource part are the
-	 * same for both objects.
-	 *
+	 * Method compares whether this <code>JID</code> instance represents the same user JID as the one given in
+	 * parameter. It returns <code>true</code> of all: the localpart (nickname), domain part, and the resource part are
+	 * the same for both objects.
 	 *
 	 * @param b is a <code>JID</code> object to which the instance is compared.
 	 *
-	 * @return a <code>boolean</code> value of <code>true</code> if both instances
-	 *         represent the same JID and <code>false</code> otherwise.
+	 * @return a <code>boolean</code> value of <code>true</code> if both instances represent the same JID and
+	 * <code>false</code> otherwise.
 	 */
 	@Override
-	public boolean equals( Object b ) {
+	public boolean equals(Object b) {
 		boolean result = false;
 
-		if ( b instanceof JID ){
+		if (b instanceof JID) {
 			JID jid = (JID) b;
 
 			result = bareJid.equals(jid.bareJid) &&
-							 ((resource == jid.resource) ||
-								((resource != null) && resource.equals(jid.resource)));
+					((resource == jid.resource) || ((resource != null) && resource.equals(jid.resource)));
 		}
 
 		return result;
 	}
 
 	//~--- get methods ----------------------------------------------------------
+
 	/**
 	 * Method returns <code>BareJID</code> instance for this JID.
-	 *
 	 *
 	 * @return a <code>BareJID</code> instance.
 	 */
@@ -389,7 +323,6 @@ public final class JID
 	/**
 	 * Method returns a domain part of the <code>JID</code> instance.
 	 *
-	 *
 	 * @return a domain part of the <code>JID</code> instance.
 	 */
 	public String getDomain() {
@@ -398,7 +331,6 @@ public final class JID
 
 	/**
 	 * Method a localpart (nickname) of the <code>JID</code> instance.
-	 *
 	 *
 	 * @return a localpart (nickname) of the <code>JID</code> instance.
 	 */
@@ -409,7 +341,6 @@ public final class JID
 	/**
 	 * Method a resource part of the <code>JID</code> instance.
 	 *
-	 *
 	 * @return a resource part of the <code>JID</code> instance.
 	 */
 	public String getResource() {
@@ -417,6 +348,7 @@ public final class JID
 	}
 
 	//~--- methods --------------------------------------------------------------
+
 	/**
 	 * Method returns a hash code calculated for the <code>JID</code> instance.
 	 *
@@ -428,11 +360,9 @@ public final class JID
 	}
 
 	/**
-	 * Method returns a <code>String</code> representation of the <code>JID</code>
-	 * instance.
+	 * Method returns a <code>String</code> representation of the <code>JID</code> instance.
 	 *
-	 * @return a <code>String</code> representation of the <code>JID</code>
-	 *         instance.
+	 * @return a <code>String</code> representation of the <code>JID</code> instance.
 	 */
 	@Override
 	public String toString() {

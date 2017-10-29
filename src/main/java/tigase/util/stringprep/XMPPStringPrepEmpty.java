@@ -18,28 +18,26 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
 package tigase.util.stringprep;
 
 //~--- classes ----------------------------------------------------------------
 
 /**
- * Class implementing stringprep processor interface. This is a dummy implementation performing
- * no processing at all. All methods simply return value passed as the method call parameter.
- * Use of this implementation is recommended inly in strictly controlled systems where there is
- * no possibility of getting incorrectly formated JIDs to the system. Of course this
- * implementation causes no impact on the system performance.
- *
+ * Class implementing stringprep processor interface. This is a dummy implementation performing no processing at all.
+ * All methods simply return value passed as the method call parameter. Use of this implementation is recommended inly
+ * in strictly controlled systems where there is no possibility of getting incorrectly formated JIDs to the system. Of
+ * course this implementation causes no impact on the system performance.
+ * <p>
  * Created: Feb 4, 2010 9:52:41 AM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class XMPPStringPrepEmpty implements XMPPStringPrepIfc {
+public class XMPPStringPrepEmpty
+		implements XMPPStringPrepIfc {
 
 	/**
 	 * Method description
-	 *
 	 *
 	 * @param domain
 	 *
@@ -53,7 +51,6 @@ public class XMPPStringPrepEmpty implements XMPPStringPrepIfc {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param localpart
 	 *
 	 * @return
@@ -66,7 +63,6 @@ public class XMPPStringPrepEmpty implements XMPPStringPrepIfc {
 	/**
 	 * Method description
 	 *
-	 *
 	 * @param resource
 	 *
 	 * @return
@@ -77,8 +73,6 @@ public class XMPPStringPrepEmpty implements XMPPStringPrepIfc {
 	}
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

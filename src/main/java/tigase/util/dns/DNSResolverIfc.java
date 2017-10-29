@@ -32,36 +32,35 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public interface DNSResolverIfc {
 
 	static final String TIGASE_PRIMARY_ADDRESS = "tigase-primary-address";
+
 	static final String TIGASE_SECONDARY_ADDRESS = "tigase-secondary-address";
 
-	static final Logger log = Logger.getLogger( DNSResolverIfc.class.getName() );
+	static final Logger log = Logger.getLogger(DNSResolverIfc.class.getName());
+
 	static Random rand = new Random();
 
 	/**
-	 * Method provides default host information for the installation. It can be
-	 * both hostname or IP address.
+	 * Method provides default host information for the installation. It can be both hostname or IP address.
 	 *
 	 * @return a default host information.
 	 */
 	public String getDefaultHost();
 
 	/**
-	 * Method provides an array of all local host informations, by default it
-	 * contains defaultHost.
+	 * Method provides an array of all local host informations, by default it contains defaultHost.
 	 *
 	 * @return an array of all local hosts.
 	 */
 	default String[] getDefaultHosts() {
-		return new String[] { getDefaultHost() };
+		return new String[]{getDefaultHost()};
 	}
 
 	/**
-	 * Method provides alternative host information for the current instance. By
-	 * default falls back to the default host information.
+	 * Method provides alternative host information for the current instance. By default falls back to the default host
+	 * information.
 	 *
 	 * @return alternative host information.
 	 */
@@ -73,7 +72,9 @@ public interface DNSResolverIfc {
 	 * Resolve IP address for the given <code>hostname</code>
 	 *
 	 * @param hostname the domain name for which this record is valid
+	 *
 	 * @return <code>IP address</code> of the machine providing the service.
+	 *
 	 * @throws UnknownHostException
 	 */
 	default public String getHostIP(String hostname) throws UnknownHostException {
@@ -84,47 +85,51 @@ public interface DNSResolverIfc {
 	 * Resolve all IP addresses for the given <code>hostname</code>
 	 *
 	 * @param hostname the domain name for which this record is valid
+	 *
 	 * @return Array of all <code>IP addresses</code> on which target host provide service.
+	 *
 	 * @throws UnknownHostException
 	 */
 	public String[] getHostIPs(String hostname) throws UnknownHostException;
 
 	/**
-	 * Retrieves list of SRV DNS entries for given <code>hostname</code>. Performs lookup
-	 * for <code>_xmpp-server._tcp</code> SRV records.
+	 * Retrieves list of SRV DNS entries for given <code>hostname</code>. Performs lookup for
+	 * <code>_xmpp-server._tcp</code> SRV records.
 	 *
 	 * @param hostname the domain name for which this record is valid
+	 *
 	 * @return Array of the DNSEntry objects containing SRV DNS records
+	 *
 	 * @throws UnknownHostException
 	 */
-	default public DNSEntry[] getHostSRV_Entries(String hostname)
-					throws UnknownHostException {
+	default public DNSEntry[] getHostSRV_Entries(String hostname) throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
-		int    defPort = 5269;
+		int defPort = 5269;
 
 		return getHostSRV_Entries(hostname, service, defPort);
 	}
 
 	/**
-	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying
-	 * particular type of SRV record.
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
 	 *
 	 * @param hostname the domain name for which this record is valid
 	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
 	 * @param defPort default port number in case DNS records is missing one.
+	 *
 	 * @return Array of the DNSEntry records
+	 *
 	 * @throws UnknownHostException
 	 */
 	default public DNSEntry[] getHostSRV_Entries(String hostname, String service, int defPort)
-					throws UnknownHostException {
+			throws UnknownHostException {
 		String key = service + "." + hostname;
 
-		String                    result_host = hostname;
-		int                       port        = defPort;
-		int                       priority    = 0;
-		int                       weight      = 0;
-		long                      ttl         = 3600 * 1000;
-		final ArrayList<DNSEntry> entries     = new ArrayList<DNSEntry>();
+		String result_host = hostname;
+		int port = defPort;
+		int priority = 0;
+		int weight = 0;
+		long ttl = 3600 * 1000;
+		final ArrayList<DNSEntry> entries = new ArrayList<DNSEntry>();
 
 		try {
 			Hashtable<String, String> env = new Hashtable<String, String>(5);
@@ -132,8 +137,7 @@ public interface DNSResolverIfc {
 			env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory");
 
 			DirContext ctx = new InitialDirContext(env);
-			Attributes attrs = ctx.getAttributes(service + "." + hostname, new String[] {
-					"SRV" });
+			Attributes attrs = ctx.getAttributes(service + "." + hostname, new String[]{"SRV"});
 			Attribute att = attrs.get("SRV");
 
 			// System.out.println("SRV Attribute: " + att);
@@ -163,8 +167,7 @@ public interface DNSResolverIfc {
 						// host entries then none of the rest would be even considered.
 						String[] ip_addresses = getHostIPs(result_host);
 
-						entries.add(new DNSEntry(hostname, result_host, ip_addresses, port, ttl,
-								priority, weight));
+						entries.add(new DNSEntry(hostname, result_host, ip_addresses, port, ttl, priority, weight));
 					} catch (Exception e) {
 
 						// There is no more processing anyway but for the sake of clarity
@@ -180,8 +183,7 @@ public interface DNSResolverIfc {
 		} catch (NamingException e) {
 			result_host = hostname;
 			if (log.isLoggable(Level.FINER)) {
-				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname,
-						e);
+				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname, e);
 			}
 		}    // end of try-catch
 		if (entries.isEmpty()) {
@@ -190,40 +192,40 @@ public interface DNSResolverIfc {
 			entries.add(new DNSEntry(hostname, ip_address, port));
 		}
 
-		DNSEntry[] result = entries.toArray(new DNSEntry[] {});
+		DNSEntry[] result = entries.toArray(new DNSEntry[]{});
 
 		return result;
 	}
 
 	/**
-	 * Retrieves service DNS entry with highest priority for given <code>hostname</code>.
-	 * Performs lookup for <code>_xmpp-server._tcp</code> SRV records.
+	 * Retrieves service DNS entry with highest priority for given <code>hostname</code>. Performs lookup for
+	 * <code>_xmpp-server._tcp</code> SRV records.
 	 *
 	 * @param hostname name to resolve
-	 * @return DNSEntry object containing DNS record with highest priority for given
-	 * <code>hostname</code>
+	 *
+	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
+	 *
 	 * @throws UnknownHostException
 	 */
 	default public DNSEntry getHostSRV_Entry(String hostname) throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
-		int    defPort = 5269;
+		int defPort = 5269;
 
 		return getHostSRV_Entry(hostname, service, defPort);
 	}
 
 	/**
-	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying
-	 * particular type of SRV record.
+	 * Retrieves list of DNS entries for given <code>hostname</code>. Allow specifying particular type of SRV record.
+	 *
 	 * @param hostname name to resolve
 	 * @param service type of SRV records, for example <code>_xmpp-server._tcp</code>
 	 * @param defPort default port number in case DNS records is missing one.
-	 * @return DNSEntry object containing DNS record with highest priority for given
-	 * <code>hostname</code>
+	 *
+	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
 	 *
 	 * @throws UnknownHostException
 	 */
-	default public DNSEntry getHostSRV_Entry(String hostname, String service, int defPort)
-					throws UnknownHostException {
+	default public DNSEntry getHostSRV_Entry(String hostname, String service, int defPort) throws UnknownHostException {
 		DNSEntry[] entries = getHostSRV_Entries(hostname, service, defPort);
 
 		if ((entries == null) || (entries.length == 0)) {
@@ -231,19 +233,19 @@ public interface DNSResolverIfc {
 		}
 
 		// Let's find the entry with the highest priority
-		int      priority = Integer.MAX_VALUE;
-		DNSEntry result   = null;
+		int priority = Integer.MAX_VALUE;
+		DNSEntry result = null;
 
 		// We try to get random entry here, in case there are multiple results and one
 		// is consistently broken
 		int start = rand.nextInt(entries.length);
-		int idx   = 0;
+		int idx = 0;
 
 		for (int i = 0; i < entries.length; ++i) {
 			idx = (i + start) % entries.length;
 			if (entries[idx].getPriority() < priority) {
 				priority = entries[idx].getPriority();
-				result   = entries[idx];
+				result = entries[idx];
 			}
 		}
 		if (result == null) {
@@ -255,8 +257,7 @@ public interface DNSResolverIfc {
 		}
 		if (log.isLoggable(Level.FINEST)) {
 			log.log(Level.FINEST, "Start idx: {0}, last idx: {1}, selected DNSEntry: {2}",
-					new Object[] { start,
-					idx, result });
+					new Object[]{start, idx, result});
 		}
 
 		return result;
@@ -266,22 +267,15 @@ public interface DNSResolverIfc {
 	 * Returns <code>IP address</code> of the machine providing the service.
 	 *
 	 * @param hostname the domain name for which this record is valid
-	 * @return<code>IP address</code> of the machine providing the service.
 	 *
 	 * @return
+	 *
 	 * @throws UnknownHostException
 	 */
 	default public String getHostSRV_IP(String hostname) throws UnknownHostException {
 		DNSEntry entry = getHostSRV_Entry(hostname);
 
-
-
-
-		return (entry != null)
-				? entry.getIp()
-				: null;
+		return (entry != null) ? entry.getIp() : null;
 	}
-
-
 
 }

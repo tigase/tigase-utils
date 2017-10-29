@@ -19,17 +19,16 @@
  */
 package tigase.xmpp;
 
-import tigase.util.stringprep.TigaseStringprepException;
-
 import junit.framework.TestCase;
+import tigase.util.stringprep.TigaseStringprepException;
 import tigase.xmpp.jid.BareJID;
 import tigase.xmpp.jid.JID;
 
 /**
- *
  * @author Wojciech Kapcia <wojciech.kapcia@tigase.org>
  */
-public class JIDTest extends TestCase {
+public class JIDTest
+		extends TestCase {
 
 	public void testGetBareJid() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b/c");

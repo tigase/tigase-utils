@@ -26,28 +26,27 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Wojciech Kapcia
  */
 public class Fields {
 
+	protected final Logger log = Logger.getLogger(this.getClass().getName());
 	private List<Field> fields = new ArrayList<Field>();
 	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
-	protected final Logger log = Logger.getLogger( this.getClass().getName() );
 
-	public void addField( final Field field ) {
-		Field cf = ( field.getVar() != null ) ? this.fieldsByVar.get( field.getVar() ) : null;
+	public void addField(final Field field) {
+		Field cf = (field.getVar() != null) ? this.fieldsByVar.get(field.getVar()) : null;
 
-		if ( cf != null ){
-			int p = this.fields.indexOf( cf );
+		if (cf != null) {
+			int p = this.fields.indexOf(cf);
 
-			this.fields.remove( cf );
-			this.fields.add( p, field );
+			this.fields.remove(cf);
+			this.fields.add(p, field);
 		} else {
-			this.fields.add( field );
+			this.fields.add(field);
 		}
-		if ( field.getVar() != null ){
-			this.fieldsByVar.put( field.getVar(), field );
+		if (field.getVar() != null) {
+			this.fieldsByVar.put(field.getVar(), field);
 		}
 	}
 
@@ -56,23 +55,23 @@ public class Fields {
 		this.fieldsByVar.clear();
 	}
 
-	public Field get( String var ) {
-		return this.fieldsByVar.get( var );
+	public Field get(String var) {
+		return this.fieldsByVar.get(var);
 	}
 
 	public List<Field> getAllFields() {
 		return this.fields;
 	}
 
-	public Boolean getAsBoolean( String var ) {
-		Field f = get( var );
+	public Boolean getAsBoolean(String var) {
+		Field f = get(var);
 
-		if ( f != null ){
+		if (f != null) {
 			String v = f.getValue();
 
-			if ( v == null ){
+			if (v == null) {
 				return null;
-			} else if ( "1".equals( v ) || "true".equals( v ) ){
+			} else if ("1".equals(v) || "true".equals(v)) {
 				return Boolean.TRUE;
 			} else {
 				return Boolean.FALSE;
@@ -82,34 +81,34 @@ public class Fields {
 		}
 	}
 
-	public Integer getAsInteger( String var ) {
-		Field f = get( var );
+	public Integer getAsInteger(String var) {
+		Field f = get(var);
 
-		if ( f != null ){
+		if (f != null) {
 			String v = f.getValue();
 
-			return Integer.parseInt( v );
+			return Integer.parseInt(v);
 		} else {
 			return null;
 		}
 	}
 
-	public Long getAsLong( String var ) {
-		Field f = get( var );
+	public Long getAsLong(String var) {
+		Field f = get(var);
 
-		if ( f != null ){
+		if (f != null) {
 			String v = f.getValue();
 
-			return Long.parseLong( v );
+			return Long.parseLong(v);
 		} else {
 			return null;
 		}
 	}
 
-	public String getAsString( String var ) {
-		Field f = get( var );
+	public String getAsString(String var) {
+		Field f = get(var);
 
-		if ( f != null ){
+		if (f != null) {
 			String v = f.getValue();
 
 			return v;
@@ -118,10 +117,10 @@ public class Fields {
 		}
 	}
 
-	public String[] getAsStrings( String var ) {
-		Field f = get( var );
+	public String[] getAsStrings(String var) {
+		Field f = get(var);
 
-		if ( f != null ){
+		if (f != null) {
 			String[] v = f.getValues();
 
 			return v;
@@ -130,15 +129,15 @@ public class Fields {
 		}
 	}
 
-	public boolean is( String var ) {
-		return this.fieldsByVar.containsKey( var );
+	public boolean is(String var) {
+		return this.fieldsByVar.containsKey(var);
 	}
 
-	public void removeField( final String var ) {
-		Field cf = this.fieldsByVar.remove( var );
+	public void removeField(final String var) {
+		Field cf = this.fieldsByVar.remove(var);
 
-		if ( cf != null ){
-			this.fields.remove( cf );
+		if (cf != null) {
+			this.fields.remove(cf);
 		}
 	}
 

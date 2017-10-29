@@ -28,8 +28,8 @@ import java.util.Calendar;
 
 /**
  * This is too slow.
- *
- *
+ * <p>
+ * <p>
  * Created: Tue Oct 28 21:08:58 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -39,9 +39,6 @@ public abstract class TimeUtils {
 
 	/**
 	 * Method description
-	 *
-	 *
-	 * 
 	 */
 	public static int getHourNow() {
 		Calendar cal = Calendar.getInstance();
@@ -51,9 +48,6 @@ public abstract class TimeUtils {
 
 	/**
 	 * Method description
-	 *
-	 *
-	 * 
 	 */
 	public static int getMinuteNow() {
 		Calendar cal = Calendar.getInstance();
@@ -62,8 +56,6 @@ public abstract class TimeUtils {
 	}
 }
 
-
 //~ Formatted in Sun Code Convention
-
 
 //~ Formatted by Jindent --- http://www.jindent.com

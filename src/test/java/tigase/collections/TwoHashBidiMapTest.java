@@ -20,29 +20,15 @@
 
 package tigase.collections;
 
+import junit.framework.TestCase;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
-
-public class TwoHashBidiMapTest extends TestCase {
+public class TwoHashBidiMapTest
+		extends TestCase {
 
 	private BidiMap<String, Integer> map = new TwoHashBidiMap<String, Integer>();
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		map.clear();
-		map.put("JEDEN", Integer.valueOf(1));
-		map.put("DWA", Integer.valueOf(2));
-		map.put("TRZY", Integer.valueOf(3));
-		map.put("CZTERY", Integer.valueOf(4));
-		map.put("PIEC", Integer.valueOf(5));
-		map.put("SZESC", Integer.valueOf(6));
-		map.put("SIEDEM", Integer.valueOf(7));
-		map.put("OSIEM", Integer.valueOf(8));
-	}
 
 	public void testClear() {
 		map.clear();
@@ -119,6 +105,21 @@ public class TwoHashBidiMapTest extends TestCase {
 
 	public void testSize() {
 		assertEquals(8, map.size());
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		map.clear();
+		map.put("JEDEN", Integer.valueOf(1));
+		map.put("DWA", Integer.valueOf(2));
+		map.put("TRZY", Integer.valueOf(3));
+		map.put("CZTERY", Integer.valueOf(4));
+		map.put("PIEC", Integer.valueOf(5));
+		map.put("SZESC", Integer.valueOf(6));
+		map.put("SIEDEM", Integer.valueOf(7));
+		map.put("OSIEM", Integer.valueOf(8));
 	}
 
 }

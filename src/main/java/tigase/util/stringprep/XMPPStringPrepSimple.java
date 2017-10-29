@@ -18,7 +18,6 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
-
 package tigase.util.stringprep;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -33,7 +32,9 @@ import java.util.regex.Pattern;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */
-public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
+public class XMPPStringPrepSimple
+		implements XMPPStringPrepIfc {
+
 	private static final Pattern p = Pattern.compile("[ @&()\\[\\]\t\n\r\f\\a\\e]");
 
 	//~--- methods --------------------------------------------------------------
@@ -42,7 +43,7 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 	public String nameprep(String domain) throws TigaseStringprepException {
 		String result = domain.trim().toLowerCase();
 
-		if ( !checkString(result)) {
+		if (!checkString(result)) {
 			throw new TigaseStringprepException("Illegal characters in string, domain = " + domain);
 		}
 
@@ -53,7 +54,7 @@ public class XMPPStringPrepSimple implements XMPPStringPrepIfc {
 	public String nodeprep(String localpart) throws TigaseStringprepException {
 		String result = localpart.trim();
 
-		if ( !checkString(result)) {
+		if (!checkString(result)) {
 			throw new TigaseStringprepException("Illegal characters in string, localpart = " + localpart);
 		}
 

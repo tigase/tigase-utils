@@ -26,19 +26,18 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- *
- * <p>
- * Created: 2007-05-27 11:41:02
- * </p>
+ * <p> Created: 2007-05-27 11:41:02 </p>
  *
  * @author bmalkow
  */
-public class Form extends AbstractForm {
+public class Form
+		extends AbstractForm {
+
 	protected Fields fields = new Fields();
 
 	public Form(Element form) {
 
-		super(form );
+		super(form);
 
 		List<Element> children = form.getChildren();
 
@@ -50,18 +49,18 @@ public class Form extends AbstractForm {
 					if (log.isLoggable(Level.FINEST)) {
 						log.finest("read Data Form field [" + field.getVar() + "]");
 					}
-					fields.addField( field );
+					fields.addField(field);
 				}
 			}
 		}
 	}
 
 	public Form(String type, String title, String instruction) {
-		super(type, title, instruction );
+		super(type, title, instruction);
 	}
 
 	public void addField(final Field field) {
-		fields.addField( field );
+		fields.addField(field);
 	}
 
 	public void clear() {
@@ -102,7 +101,7 @@ public class Form extends AbstractForm {
 	}
 
 	public Field get(String var) {
-		return this.fields.get( var );
+		return this.fields.get(var);
 	}
 
 	public List<Field> getAllFields() {
@@ -110,23 +109,23 @@ public class Form extends AbstractForm {
 	}
 
 	public Boolean getAsBoolean(String var) {
-		return fields.getAsBoolean( var );
+		return fields.getAsBoolean(var);
 	}
 
 	public Integer getAsInteger(String var) {
-		return fields.getAsInteger( var );
+		return fields.getAsInteger(var);
 	}
 
 	public Long getAsLong(String var) {
-		return fields.getAsLong( var );
+		return fields.getAsLong(var);
 	}
 
 	public String getAsString(String var) {
-		return fields.getAsString( var );
+		return fields.getAsString(var);
 	}
 
 	public String[] getAsStrings(String var) {
-		return fields.getAsStrings( var );
+		return fields.getAsStrings(var);
 	}
 
 	@Override
@@ -146,13 +145,28 @@ public class Form extends AbstractForm {
 	}
 
 	@Override
+	public void setInstruction(String instruction) {
+		this.instruction = instruction;
+	}
+
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
 	@Override
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@Override
@@ -164,7 +178,7 @@ public class Form extends AbstractForm {
 	}
 
 	public boolean is(String var) {
-		return this.fields.is( var );
+		return this.fields.is(var);
 	}
 
 	@Override
@@ -173,22 +187,7 @@ public class Form extends AbstractForm {
 	}
 
 	public void removeField(final String var) {
-		fields.removeField( var );
-	}
-
-	@Override
-	public void setInstruction(String instruction) {
-		this.instruction = instruction;
-	}
-
-	@Override
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@Override
-	public void setType(String type) {
-		this.type = type;
+		fields.removeField(var);
 	}
 
 	@Override

@@ -158,7 +158,7 @@ public class Version
 	}
 
 	private Version(String component, TYPE type, int major, int minor, int bugfix, int build, int typeNumber,
-	                String commit) {
+					String commit) {
 		this.component = component;
 		this.typeNumber = typeNumber;
 		this.versionType = type;
@@ -261,16 +261,16 @@ public class Version
 	@Override
 	public String toString() {
 		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", major, minor, bugfix,
-		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
-		                     build > 0 ? ("-b" + build) : "", commit != null ? ("/" + commit) : "");
+							 versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
+							 build > 0 ? ("-b" + build) : "", commit != null ? ("/" + commit) : "");
 	}
 
 	public String toString(int padding) {
 		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", String.format("%0" + padding + "d", major),
-		                     String.format("%0" + padding + "d", minor), String.format("%0" + padding + "d", bugfix),
-		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
-		                     build > 0 ? ("-b" + String.format("%0" + 3 * padding + "d", build)) : "",
-		                     commit != null ? ("/" + commit) : "");
+							 String.format("%0" + padding + "d", minor), String.format("%0" + padding + "d", bugfix),
+							 versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
+							 build > 0 ? ("-b" + String.format("%0" + 3 * padding + "d", build)) : "",
+							 commit != null ? ("/" + commit) : "");
 	}
 
 	static class Builder {

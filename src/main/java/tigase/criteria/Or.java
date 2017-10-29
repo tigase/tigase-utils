@@ -22,15 +22,13 @@ package tigase.criteria;
 import tigase.xml.Element;
 
 /**
- * 
- * <p>
- * Created: 2007-06-20 09:32:29
- * </p>
- * 
+ * <p> Created: 2007-06-20 09:32:29 </p>
+ *
  * @author bmalkow
  * @version $Rev$
  */
-public class Or implements Criteria {
+public class Or
+		implements Criteria {
 
 	private Criteria[] crits;
 

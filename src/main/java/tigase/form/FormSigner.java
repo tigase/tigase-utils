@@ -20,10 +20,10 @@
 
 package tigase.form;
 
+import tigase.xmpp.jid.JID;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-
-import tigase.xmpp.jid.JID;
 
 public class FormSigner {
 
@@ -35,11 +35,10 @@ public class FormSigner {
 
 	/**
 	 * Sign given form with current time. Signature will be added to form.
-	 * 
-	 * @param to
-	 *            the full destination address, including resource, if any.
-	 * @param form
-	 *            form form to sign.
+	 *
+	 * @param to the full destination address, including resource, if any.
+	 * @param form form form to sign.
+	 *
 	 * @throws FormSignerException
 	 */
 	public void signForm(JID to, Form form) throws FormSignerException {

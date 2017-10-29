@@ -20,11 +20,10 @@
 package tigase.util;
 
 /**
- *
  * @author andrzej
  */
 public interface IOListener {
 
 	boolean checkBufferLimit(int bufferSize);
-	
+
 }

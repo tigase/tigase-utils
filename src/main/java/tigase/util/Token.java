@@ -103,6 +103,31 @@ public class Token {
 		}
 	}
 
+	public String getEncoded() {
+		return Base64.encode(getBuff());
+	}
+
+	public String getHash() {
+		try {
+			MessageDigest sha = MessageDigest.getInstance("SHA-256");
+			return Base64.encode(sha.digest(getBuff()));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public BareJID getJid() {
+		return jid;
+	}
+
+	public String getRandom() {
+		return random;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
 	protected byte[] getBuff() {
 		String j = Base64.encode(this.jid.toString().getBytes(Charset.forName("UTF-8")));
 		String ts = String.valueOf(timestamp.getTime());
@@ -129,31 +154,6 @@ public class Token {
 //		buff[idx++] = 0;
 
 		return buff;
-	}
-
-	public String getEncoded() {
-		return Base64.encode(getBuff());
-	}
-
-	public String getHash() {
-		try {
-			MessageDigest sha = MessageDigest.getInstance("SHA-256");
-			return Base64.encode(sha.digest(getBuff()));
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	public BareJID getJid() {
-		return jid;
-	}
-
-	public String getRandom() {
-		return random;
-	}
-
-	public Date getTimestamp() {
-		return timestamp;
 	}
 
 }

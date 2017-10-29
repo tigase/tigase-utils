@@ -25,37 +25,36 @@ import java.util.logging.Logger;
 
 public class DNSResolverFactory {
 
-	private static volatile DNSResolverIfc instance = null;
 	public static final String TIGASE_RESOLVER_CLASS = "tigase-resolver-class";
-	
-	private static final Logger log = Logger.getLogger( DNSResolverFactory.class.getName() );
-
-	public static void setDnsResolverClassName(String property) {
-		Class<?> clazz = null;
-		try {
-			if ( property != null ){
-				clazz = Class.forName( property );
-			}
-
-			if ( clazz != null ){
-				DNSResolverFactory.instance = instance = (DNSResolverIfc) clazz.newInstance();
-			}
-
-		} catch ( ClassNotFoundException | InstantiationException | IllegalAccessException ex ) {
-			log.log(Level.SEVERE, "Failed initialization of class: {0} (property: {1}), using default: {2}",
-					new Object[] { clazz, property, DNSResolverDefault.class.getCanonicalName() } );
-		}
-		if (instance == null) {
-			instance = new DNSResolverDefault();
-		}
-	}
+	private static final Logger log = Logger.getLogger(DNSResolverFactory.class.getName());
+	private static volatile DNSResolverIfc instance = null;
 
 	static {
-		setDnsResolverClassName(System.getProperty( TIGASE_RESOLVER_CLASS ));
+		setDnsResolverClassName(System.getProperty(TIGASE_RESOLVER_CLASS));
 	}
 
 	public static DNSResolverIfc getInstance() {
 		return instance;
+	}
+
+	public static void setDnsResolverClassName(String property) {
+		Class<?> clazz = null;
+		try {
+			if (property != null) {
+				clazz = Class.forName(property);
+			}
+
+			if (clazz != null) {
+				DNSResolverFactory.instance = instance = (DNSResolverIfc) clazz.newInstance();
+			}
+
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+			log.log(Level.SEVERE, "Failed initialization of class: {0} (property: {1}), using default: {2}",
+					new Object[]{clazz, property, DNSResolverDefault.class.getCanonicalName()});
+		}
+		if (instance == null) {
+			instance = new DNSResolverDefault();
+		}
 	}
 
 }

@@ -23,31 +23,40 @@ package tigase.xmpp.rsm;
 import tigase.xml.Element;
 
 public class RSM {
-	public static final String XMLNS           = "http://jabber.org/protocol/rsm";
-	private static final String[] SET_AFTER_PATH  = { "set", "after" };
-	private static final String[] SET_BEFORE_PATH = { "set", "before" };
-	private static final String[] SET_INDEX_PATH = { "set", "index" };
 
-	String after  = null;
+	public static final String XMLNS = "http://jabber.org/protocol/rsm";
+	private static final String[] SET_AFTER_PATH = {"set", "after"};
+	private static final String[] SET_BEFORE_PATH = {"set", "before"};
+	private static final String[] SET_INDEX_PATH = {"set", "index"};
+
+	String after = null;
 	String before = null;
-	boolean hasBefore = false;
 	Integer count = null;
-	String first  = null;
-	String last   = null;
-	int max = 100;
+	String first = null;
+	boolean hasBefore = false;
 	Integer index = null;
+	String last = null;
+	int max = 100;
+
+	public static RSM parseRootElement(Element e, int defaultMax) {
+		return new RSM(defaultMax).fromElement(e);
+	}
+
+	public static RSM parseRootElement(Element e) {
+		return RSM.parseRootElement(e, 100);
+	}
 
 	public RSM(int defaultMax) {
 		this.max = defaultMax;
 	}
-	
+
 	public RSM() {
 	}
-	
+
 	public int getMax() {
 		return max;
 	}
-	
+
 	public void setMax(int max) {
 		this.max = max;
 	}
@@ -55,7 +64,11 @@ public class RSM {
 	public Integer getIndex() {
 		return index;
 	}
-	
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
+
 	public String getAfter() {
 		return after;
 	}
@@ -75,16 +88,16 @@ public class RSM {
 	public boolean hasBefore() {
 		return hasBefore;
 	}
-	
+
 	public void setHasBefore(boolean hasBefore) {
 		this.hasBefore = hasBefore;
 	}
-	
+
 	public Integer getCount() {
 		return count;
 	}
 
-	public void setCount( Integer count ) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 
@@ -104,14 +117,10 @@ public class RSM {
 		this.last = last;
 	}
 
-	public void setIndex(Integer index) {
-		this.index = index;
-	}
-	
 	public void setResults(Integer count, String first, String last) {
 		this.count = count;
 		this.first = first;
-		this.last  = last;
+		this.last = last;
 		this.index = null;
 	}
 
@@ -121,7 +130,7 @@ public class RSM {
 		this.first = null;
 		this.last = null;
 	}
-	
+
 	public RSM fromElement(Element e) {
 		if (e == null) {
 			return this;
@@ -136,7 +145,7 @@ public class RSM {
 		if (param != null) {
 			max = Integer.parseInt(param.getCData());
 		}
-		after  = e.getCDataStaticStr(SET_AFTER_PATH);
+		after = e.getCDataStaticStr(SET_AFTER_PATH);
 		Element beforeEl = e.findChildStaticStr(SET_BEFORE_PATH);
 		if (beforeEl != null) {
 			hasBefore = true;
@@ -146,10 +155,10 @@ public class RSM {
 		if (indexStr != null) {
 			index = Integer.parseInt(indexStr);
 		}
-		
+
 		return this;
 	}
-	
+
 	public Element toElement() {
 		Element set = new Element("set");
 
@@ -177,12 +186,4 @@ public class RSM {
 
 		return set;
 	}
-
-	public static RSM parseRootElement(Element e, int defaultMax) {
-		return new RSM(defaultMax).fromElement(e);
-	}
-	
-	public static RSM parseRootElement(Element e) {
-		return RSM.parseRootElement(e, 100);
-	}	
 }
