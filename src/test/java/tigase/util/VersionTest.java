@@ -25,6 +25,34 @@ import org.junit.Test;
 
 public class VersionTest {
 
+	@Test(expected = IllegalArgumentException.class)
+	public void incrementCommitFieldTest() {
+		Version v = Version.of("tigase-server-0.0.0-RC1-b0");
+		Assert.assertEquals(Version.of("tigase-server-0.0.0-RC1-b0"), v.increment(Version.FIELD.COMMIT, 1));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void incrementComponentFieldTest() {
+		Version v = Version.of("tigase-server-0.0.0-RC1-b0");
+		Assert.assertEquals(Version.of("tigase-server-0.0.0-RC1-b0"), v.increment(Version.FIELD.COMPONENT, 1));
+	}
+
+	@Test
+	public void incrementTest() {
+		Version v = Version.of("tigase-server-0.0.0-RC1-b0");
+		Assert.assertEquals(Version.of("tigase-server-1.0.0-RC1-b0"), v.increment(Version.FIELD.MAJOR, 1));
+		Assert.assertEquals(Version.of("tigase-server-0.1.0-RC1-b0"), v.increment(Version.FIELD.MINOR, 1));
+		Assert.assertEquals(Version.of("tigase-server-0.0.1-RC1-b0"), v.increment(Version.FIELD.BUGFIX, 1));
+		Assert.assertEquals(Version.of("tigase-server-0.0.0-RC1-b1"), v.increment(Version.FIELD.BUILD, 1));
+		Assert.assertEquals(Version.of("tigase-server-0.0.0-RC2-b0"), v.increment(Version.FIELD.TYPE_NUMBER, 1));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void incrementTypeFieldTest() {
+		Version v = Version.of("tigase-server-0.0.0-RC1-b0");
+		Assert.assertEquals(Version.of("tigase-server-0.0.0-RC1-b0"), v.increment(Version.FIELD.TYPE, 1));
+	}
+
 	@Test
 	public void testBuilder() {
 		Version build;
@@ -152,4 +180,5 @@ public class VersionTest {
 		Version.of("xxx19.2f2f2ff2f2f2.dsdf6-bsfsdfsdfsdfsfsdf4379");
 		Version.of("a.b.c");
 	}
+
 }

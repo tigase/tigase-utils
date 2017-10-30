@@ -21,6 +21,7 @@
 package tigase.util;
 
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -29,6 +30,8 @@ import java.util.regex.Pattern;
 public class Version
 		implements Comparable<Version> {
 
+	public static final EnumSet<FIELD> incrementableFields = EnumSet.of(FIELD.MAJOR, FIELD.MINOR, FIELD.BUGFIX,
+	                                                                    FIELD.BUILD, FIELD.TYPE_NUMBER);
 	private static final Comparator<Version> versionComparator = Comparator.comparingInt(Version::getMajor)
 			.thenComparingInt(Version::getMinor)
 			.thenComparingInt(Version::getBugfix)
@@ -40,6 +43,17 @@ public class Version
 			"(.*?)-?((\\d{1,20}\\.){2}\\d{1,20})(-(SNAPSHOT|RC|BETA)(\\d*))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?",
 			Pattern.CASE_INSENSITIVE);
 	public static final Version ZERO = Version.of("0.0.0-b0000");
+
+	public enum FIELD {
+		COMPONENT,
+		MAJOR,
+		MINOR,
+		BUGFIX,
+		TYPE,
+		TYPE_NUMBER,
+		BUILD,
+		COMMIT
+	}
 
 	public enum TYPE {
 		SNAPSHOT("-SNAPSHOT"),
@@ -57,7 +71,6 @@ public class Version
 			return id;
 		}
 	}
-
 	private final int bugfix;
 	private final int build;
 	private final String commit;
@@ -158,7 +171,7 @@ public class Version
 	}
 
 	private Version(String component, TYPE type, int major, int minor, int bugfix, int build, int typeNumber,
-					String commit) {
+	                String commit) {
 		this.component = component;
 		this.typeNumber = typeNumber;
 		this.versionType = type;
@@ -254,6 +267,43 @@ public class Version
 		return result;
 	}
 
+	/**
+	 * Method increments given field by the specified amount
+	 *
+	 * @param field to be incremented - only <i>incrementable</i> fields are supported, i.e. any of the {@link
+	 * Version#incrementableFields}.
+	 * @param amount by which version should be incremented
+	 *
+	 * @return incremented version if correct field was passed as argument, otherwise same non-incremented version is
+	 * returned.
+	 */
+	public Version increment(FIELD field, int amount) throws IllegalArgumentException {
+		if (incrementableFields.contains(field)) {
+			Builder builder = new Version.Builder(this);
+
+			switch (field) {
+				case MAJOR:
+					builder.major += amount;
+					break;
+				case MINOR:
+					builder.minor += amount;
+					break;
+				case BUGFIX:
+					builder.bugfix += amount;
+					break;
+				case TYPE_NUMBER:
+					builder.typeNumber += amount;
+					break;
+				case BUILD:
+					builder.build += amount;
+					break;
+			}
+			return builder.build();
+		} else {
+			throw new IllegalArgumentException("Only numeric fields can be incremented");
+		}
+	}
+
 	public boolean isZero() {
 		return major == 0 && minor == 0 && bugfix == 0 && build == 0;
 	}
@@ -261,16 +311,16 @@ public class Version
 	@Override
 	public String toString() {
 		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", major, minor, bugfix,
-							 versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
-							 build > 0 ? ("-b" + build) : "", commit != null ? ("/" + commit) : "");
+		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
+		                     build > 0 ? ("-b" + build) : "", commit != null ? ("/" + commit) : "");
 	}
 
 	public String toString(int padding) {
 		return String.format("%1$s.%2$s.%3$s%4$s%5$s%6$s", String.format("%0" + padding + "d", major),
-							 String.format("%0" + padding + "d", minor), String.format("%0" + padding + "d", bugfix),
-							 versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
-							 build > 0 ? ("-b" + String.format("%0" + 3 * padding + "d", build)) : "",
-							 commit != null ? ("/" + commit) : "");
+		                     String.format("%0" + padding + "d", minor), String.format("%0" + padding + "d", bugfix),
+		                     versionType != null ? versionType.getId() + (typeNumber > 0 ? typeNumber : "") : "",
+		                     build > 0 ? ("-b" + String.format("%0" + 3 * padding + "d", build)) : "",
+		                     commit != null ? ("/" + commit) : "");
 	}
 
 	static class Builder {
@@ -288,6 +338,17 @@ public class Version
 			this.major = major;
 			this.minor = minor;
 			this.bugfix = bugfix;
+		}
+
+		public Builder(Version version) {
+			this.major = version.major;
+			this.minor = version.minor;
+			this.bugfix = version.bugfix;
+			this.build = version.build;
+			this.component = version.component;
+			this.versionType = version.versionType;
+			this.typeNumber = version.typeNumber;
+			this.commit = version.commit;
 		}
 
 		public Version build() {
