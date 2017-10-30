@@ -130,13 +130,6 @@ public abstract class XMPPStringPrepFactory {
 		}
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param args
-	 *
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
 		long testTime = 30;    // 30 seconds by default
 

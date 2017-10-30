@@ -36,15 +36,6 @@ import gnu.inet.encoding.StringprepException;
 class XMPPStringPrepLibIDN
 		implements XMPPStringPrepIfc {
 
-	/**
-	 * Method description
-	 *
-	 * @param domain
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String nameprep(String domain) throws TigaseStringprepException {
 		try {
@@ -54,15 +45,6 @@ class XMPPStringPrepLibIDN
 		}
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param localpart
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String nodeprep(String localpart) throws TigaseStringprepException {
 		try {
@@ -72,15 +54,6 @@ class XMPPStringPrepLibIDN
 		}
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param resource
-	 *
-	 * @return
-	 *
-	 * @throws TigaseStringprepException
-	 */
 	@Override
 	public String resourceprep(String resource) throws TigaseStringprepException {
 		try {

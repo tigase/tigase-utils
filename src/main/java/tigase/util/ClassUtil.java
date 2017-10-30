@@ -46,13 +46,6 @@ public class ClassUtil {
 												 "org.apache.xml", "org.postgresql", "com.sun", "groovy",
 												 "org.codehaus.groovy", "org.netbeans", "org.python"};
 
-	/**
-	 * Method description
-	 *
-	 * @param fileName
-	 *
-	 * @return
-	 */
 	public static String getClassNameFromFileName(String fileName) {
 		String class_name = null;
 
@@ -71,13 +64,6 @@ public class ClassUtil {
 		return class_name;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param dir
-	 *
-	 * @return
-	 */
 	public static Set<String> getClassNamesFromDir(File dir) {
 		Set<String> tmp_set = getFileListDeep(dir);
 		Set<String> result = new TreeSet<String>();
@@ -95,15 +81,6 @@ public class ClassUtil {
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param jarFile
-	 *
-	 * @return
-	 *
-	 * @throws IOException
-	 */
 	public static Set<String> getClassNamesFromJar(File jarFile) throws IOException {
 		Set<String> result = new TreeSet<String>();
 		JarFile jar = new JarFile(jarFile);
@@ -123,14 +100,6 @@ public class ClassUtil {
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 *
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 */
 	public static Set<Class<?>> getClassesFromClassPath() throws IOException, ClassNotFoundException {
 		Set<Class<?>> classes_set = new TreeSet<Class<?>>(new ClassComparator());
 		String classpath = System.getProperty("java.class.path");
@@ -166,15 +135,6 @@ public class ClassUtil {
 		return classes_set;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param names
-	 *
-	 * @return
-	 *
-	 * @throws ClassNotFoundException
-	 */
 	public static Set<Class<?>> getClassesFromNames(Set<String> names) throws ClassNotFoundException {
 		Set<Class<?>> classes = new TreeSet<Class<?>>(new ClassComparator());
 
@@ -232,15 +192,6 @@ public class ClassUtil {
 		return classes;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param classes
-	 * @param cls
-	 * @param <T>
-	 *
-	 * @return
-	 */
 	@SuppressWarnings({"unchecked"})
 	public static <T extends Class> Set<T> getClassesImplementing(Collection<Class<?>> classes, T cls) {
 		Set<T> classes_set = new TreeSet<T>(new ClassComparator());
@@ -260,28 +211,10 @@ public class ClassUtil {
 		return classes_set;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param cls
-	 * @param <T>
-	 *
-	 * @return
-	 *
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 */
 	public static <T extends Class> Set<T> getClassesImplementing(T cls) throws IOException, ClassNotFoundException {
 		return getClassesImplementing(getClassesFromClassPath(), cls);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param path
-	 *
-	 * @return
-	 */
 	public static Set<String> getFileListDeep(File path) {
 		Set<String> set = new TreeSet<String>();
 
@@ -298,19 +231,6 @@ public class ClassUtil {
 		return set;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param obj
-	 * @param <T>
-	 *
-	 * @return
-	 *
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> getImplementations(Class<T> obj)
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -323,13 +243,6 @@ public class ClassUtil {
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param base_dir
-	 * @param path
-	 * @param set
-	 */
 	public static void walkInDirForFiles(File base_dir, String path, Set<String> set) {
 		File tmp_file = new File(base_dir, path);
 

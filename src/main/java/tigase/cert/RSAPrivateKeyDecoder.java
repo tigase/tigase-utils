@@ -45,33 +45,16 @@ public class RSAPrivateKeyDecoder {
 
 	//~--- constructors ---------------------------------------------------------
 
-	/**
-	 * Constructs ...
-	 *
-	 * @param bytes
-	 */
 	public RSAPrivateKeyDecoder(byte[] bytes) {
 		this(new ByteArrayInputStream(bytes));
 	}
 
-	/**
-	 * Constructs ...
-	 *
-	 * @param is
-	 */
 	public RSAPrivateKeyDecoder(InputStream is) {
 		this.is = is;
 	}
 
 	//~--- get methods ----------------------------------------------------------
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 *
-	 * @throws IOException
-	 */
 	public RSAPrivateCrtKeySpec getKeySpec() throws IOException {
 
 		// Skip to the beginning of the sequence:
@@ -92,15 +75,6 @@ public class RSAPrivateKeyDecoder {
 		return new RSAPrivateCrtKeySpec(mod, pubExp, privExp, prime1, prime2, exp1, exp2, coef);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 *
-	 * @throws IOException
-	 * @throws InvalidKeySpecException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 

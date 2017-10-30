@@ -37,18 +37,12 @@ import java.util.Calendar;
  */
 public abstract class TimeUtils {
 
-	/**
-	 * Method description
-	 */
 	public static int getHourNow() {
 		Calendar cal = Calendar.getInstance();
 
 		return cal.get(Calendar.HOUR_OF_DAY);
 	}
 
-	/**
-	 * Method description
-	 */
 	public static int getMinuteNow() {
 		Calendar cal = Calendar.getInstance();
 

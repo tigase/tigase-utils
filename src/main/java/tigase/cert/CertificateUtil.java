@@ -590,11 +590,6 @@ public abstract class CertificateUtil {
 								   " file.der - load private key from DER file.");
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param includeServices
-	 */
 	private static void printProviders(boolean includeServices) {
 
 		// Initialization, basic information

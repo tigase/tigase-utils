@@ -82,15 +82,6 @@ public class ZLibWrapper {
 
 	private IOListener listener = null;
 
-	//~--- constructors ---------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 * @param args
-	 *
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
 		ZLibWrapper zlib = new ZLibWrapper(Deflater.BEST_COMPRESSION);
 		String[] inputs = {"Stream compression implementation for The Tigase XMPP Server.",
@@ -273,30 +264,16 @@ public class ZLibWrapper {
 		System.out.println("input.equals(output)=" + (input.equals(output)) + "\n");
 	}
 
-	/**
-	 * Constructs ...
-	 */
 	public ZLibWrapper() {
 		this(Deflater.BEST_COMPRESSION, COMPRESSED_BUFF_SIZE);
 	}
 
-	/**
-	 * Constructs ...
-	 *
-	 * @param level
-	 */
 	public ZLibWrapper(int level) {
 		this(level, COMPRESSED_BUFF_SIZE);
 	}
 
 	//~--- methods --------------------------------------------------------------
 
-	/**
-	 * Constructs ...
-	 *
-	 * @param level
-	 * @param comp_buff_size
-	 */
 	public ZLibWrapper(int level, int comp_buff_size) {
 		this.compression_level = level;
 		this.compressed_buff_size = comp_buff_size;
@@ -309,29 +286,14 @@ public class ZLibWrapper {
 		decompress_input = new byte[compressed_buff_size];
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 */
 	public float averageCompressionRate() {
 		return average_compression_rate;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 */
 	public float averageDecompressionRate() {
 		return average_decompression_rate;
 	}
 
-	/**
-	 * @param input
-	 *
-	 * @return
-	 */
 	public ByteBuffer compress(ByteBuffer input) {
 
 		// Arrays where all compressed bytes are saved.
@@ -458,15 +420,6 @@ public class ZLibWrapper {
 	}
 	*/
 
-	/**
-	 * Method description
-	 *
-	 * @param input
-	 *
-	 * @return
-	 *
-	 * @throws CharacterCodingException
-	 */
 	public ByteBuffer compress(String input) throws CharacterCodingException {
 		encoder.reset();
 
@@ -479,13 +432,6 @@ public class ZLibWrapper {
 		return compressedBuffer;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param input
-	 *
-	 * @return
-	 */
 	public ByteBuffer decompress(ByteBuffer input) throws IOException {
 
 		// Arrays where decompressed bytes are stored
@@ -582,15 +528,6 @@ public class ZLibWrapper {
 		return result;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param input
-	 *
-	 * @return
-	 *
-	 * @throws CharacterCodingException
-	 */
 	public String decompressToString(ByteBuffer input) throws CharacterCodingException, IOException {
 		ByteBuffer decompressed_buff = decompress(input);
 		CharBuffer cb = decoder.decode(decompressed_buff);
@@ -599,9 +536,6 @@ public class ZLibWrapper {
 		return output;
 	}
 
-	/**
-	 * Method description
-	 */
 	public void end() {
 		this.compresser.end();
 		this.decompresser.end();
@@ -611,20 +545,10 @@ public class ZLibWrapper {
 		this.decompress_input = null;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 */
 	public float lastCompressionRate() {
 		return last_compression_rate;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 */
 	public float lastDecompressionRate() {
 		return last_decompression_rate;
 	}

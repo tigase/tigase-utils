@@ -47,98 +47,34 @@ public class ElementCriteria
 
 	//~--- constructors ---------------------------------------------------------
 
-	/**
-	 * Method description
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria empty() {
 		return new ElementCriteria(null, null, null, null);
 	}
 
-	//~--- methods --------------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 * @param name
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria name(String name) {
 		return new ElementCriteria(name, null, null, null);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param name
-	 * @param xmlns
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria name(String name, String xmlns) {
 		return new ElementCriteria(name, null, new String[]{"xmlns"}, new String[]{xmlns});
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param name
-	 * @param cdata
-	 * @param attNames
-	 * @param attValues
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria name(String name, String cdata, String[] attNames, String[] attValues) {
 		return new ElementCriteria(name, cdata, attNames, attValues);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param name
-	 * @param attNames
-	 * @param attValues
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria name(String name, String[] attNames, String[] attValues) {
 		return new ElementCriteria(name, null, attNames, attValues);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param name
-	 * @param type
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria nameType(String name, String type) {
 		return new ElementCriteria(name, null, new String[]{"type"}, new String[]{type});
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param xmlns
-	 *
-	 * @return
-	 */
 	public static final ElementCriteria xmlns(String xmlns) {
 		return new ElementCriteria(null, null, new String[]{"xmlns"}, new String[]{xmlns});
 	}
 
-	/**
-	 * Constructs ...
-	 *
-	 * @param name
-	 * @param cdata
-	 * @param attname
-	 * @param attValue
-	 */
 	public ElementCriteria(String name, String cdata, String[] attname, String[] attValue) {
 		this.cdata = cdata;
 		this.name = name;
@@ -149,13 +85,6 @@ public class ElementCriteria
 		}
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param criteria
-	 *
-	 * @return
-	 */
 	public Criteria add(Criteria criteria) {
 		if (this.nextCriteria == null) {
 			this.nextCriteria = criteria;
@@ -168,19 +97,6 @@ public class ElementCriteria
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tigase.criteria.Criteria#match(tigase.xml.Element)
-	 */
-
-	/**
-	 * Method description
-	 *
-	 * @param element
-	 *
-	 * @return
-	 */
 	public boolean match(Element element) {
 		if ((name != null) && (name != element.getName())) {
 			return false;

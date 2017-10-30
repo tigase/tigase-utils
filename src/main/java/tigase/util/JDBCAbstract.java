@@ -110,37 +110,14 @@ public abstract class JDBCAbstract {
 
 	//~--- methods --------------------------------------------------------------
 
-	/**
-	 * Method description
-	 *
-	 * @param uri
-	 */
 	public void setResourceUri(String uri) {
 		db_conn = uri;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param query
-	 *
-	 * @return
-	 *
-	 * @throws SQLException
-	 */
 	public CallableStatement prepareCallable(String query) throws SQLException {
 		return conn.prepareCall(query);
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param query
-	 *
-	 * @return
-	 *
-	 * @throws SQLException
-	 */
 	public PreparedStatement prepareQuery(String query) throws SQLException {
 		if (query.startsWith(SP_STARTS_WITH)) {
 			return conn.prepareCall(query);
@@ -149,17 +126,6 @@ public abstract class JDBCAbstract {
 		}
 	}
 
-	//~--- set methods ----------------------------------------------------------
-
-	/**
-	 * Method description
-	 *
-	 * @param query
-	 *
-	 * @return
-	 *
-	 * @throws SQLException
-	 */
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return conn.prepareStatement(query);
 	}

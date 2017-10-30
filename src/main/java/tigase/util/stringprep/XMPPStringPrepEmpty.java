@@ -36,37 +36,16 @@ package tigase.util.stringprep;
 public class XMPPStringPrepEmpty
 		implements XMPPStringPrepIfc {
 
-	/**
-	 * Method description
-	 *
-	 * @param domain
-	 *
-	 * @return
-	 */
 	@Override
 	public String nameprep(String domain) {
 		return domain;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param localpart
-	 *
-	 * @return
-	 */
 	@Override
 	public String nodeprep(String localpart) {
 		return localpart;
 	}
 
-	/**
-	 * Method description
-	 *
-	 * @param resource
-	 *
-	 * @return
-	 */
 	@Override
 	public String resourceprep(String resource) {
 		return resource;

@@ -71,8 +71,6 @@ public class DNSResolver {
 
 	//~--- static initializers --------------------------------------------------
 
-	// ~--- static initializers
-	// --------------------------------------------------
 	static {
 		long start = System.currentTimeMillis();
 
@@ -143,9 +141,9 @@ public class DNSResolver {
 	//~--- methods --------------------------------------------------------------
 
 	/**
-	 * Method description
+	 * Method returns names associated with this host.
 	 *
-	 * @return
+	 * @return array of strings
 	 */
 	public static String[] getDefHostNames() {
 		return ((localnames != null) ? Arrays.copyOf(localnames, localnames.length) : null);
@@ -154,9 +152,9 @@ public class DNSResolver {
 	//~--- get methods ----------------------------------------------------------
 
 	/**
-	 * Method description
+	 * Method returns default host name associated with this host.
 	 *
-	 * @return
+	 * @return string
 	 */
 	public static String getDefaultHostname() {
 		return defaultHostname;
