@@ -38,6 +38,20 @@ public class VersionTest {
 	}
 
 	@Test
+	public void baseVersionTest() {
+
+		final Version v1 = Version.of("7.2.0-SNAPSHOT-b4904/12e027f7");
+		final Version v2 = Version.of("7.2.0-SNAPSHOT-b1/xyz");
+		Assert.assertFalse(v1.equals(v2));
+		Assert.assertTrue(v1.getBaseVersion().equals(v2.getBaseVersion()));
+
+		final Version v3 = Version.ZERO;
+		final Version v4 = Version.of("0.0.0");
+		Assert.assertTrue(v3.equals(v4));
+		Assert.assertTrue(v3.getBaseVersion().equals(v4.getBaseVersion()));
+	}
+
+	@Test
 	public void incrementTest() {
 		Version v = Version.of("tigase-server-0.0.0-RC1-b0");
 		Assert.assertEquals(Version.of("tigase-server-1.0.0-RC1-b0"), v.increment(Version.FIELD.MAJOR, 1));
@@ -57,7 +71,8 @@ public class VersionTest {
 	public void testBuilder() {
 		Version build;
 		build = new Version.Builder(5, 0, 0).build();
-		Assert.assertTrue(Version.of("5.0.0").equals(build));
+		final Version v5 = Version.of("5.0.0");
+		Assert.assertTrue(v5.equals(build));
 
 		build = new Version.Builder(5, 0, 0).setVersionType(Version.TYPE.SNAPSHOT).build();
 		Assert.assertTrue(Version.of("5.0.0-SNAPSHOT").equals(build));

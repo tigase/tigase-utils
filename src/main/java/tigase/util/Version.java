@@ -95,10 +95,10 @@ public class Version
 		int major = 0;
 		int minor = 0;
 		int bugfix = 0;
-		int build = -1;
+		int build = 0;
 		String commit = null;
 		TYPE versionType = TYPE.FINAL;
-		int typeNumber = -1;
+		int typeNumber = 0;
 
 		final Matcher matcher = PATTERN.matcher(str);
 		if (matcher.find()) {
@@ -326,12 +326,12 @@ public class Version
 	static class Builder {
 
 		private int bugfix = 0;
-		private int build = -1;
+		private int build = 0;
 		private String commit = null;
 		private String component = null;
 		private int major = 0;
 		private int minor = 0;
-		private int typeNumber = -1;
+		private int typeNumber = 0;
 		private TYPE versionType = TYPE.FINAL;
 
 		public Builder(int major, int minor, int bugfix) {
