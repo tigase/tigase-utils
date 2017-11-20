@@ -27,8 +27,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Describe class Algorithms here.
- * <p>
- * <p>
  * Created: Wed May  4 13:24:03 2005
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -103,9 +101,9 @@ public class Algorithms {
 	/**
 	 * Calculates dialback key as decribed in <a href='http://xmpp.org/extensions/xep-0185.html'>XEP-0185</a> version
 	 * 1.0.
-	 * <p>
-	 * <p> Implemented algorithm (recomended in XEP-0185):
-	 * <p>
+	 * <br>
+	 * <br> Implemented algorithm (recomended in XEP-0185):
+	 * <br>
 	 * <pre>
 	 * key = HMAC-SHA256
 	 *       (
@@ -117,8 +115,6 @@ public class Algorithms {
 	 *         }
 	 *       )
 	 * </pre>
-	 * <p>
-	 * </p>
 	 *
 	 * @param originatingServer the hostname of the Originating Server
 	 * @param receivingServer the hostname of the Receiving Server

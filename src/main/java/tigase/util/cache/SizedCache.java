@@ -25,8 +25,8 @@ import java.util.Map;
 
 /**
  * Describe class SizedCache here.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Mon Mar  3 15:16:52 2008
  *
  * @param <K>

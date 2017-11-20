@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 
 /**
  * <code>JIDUtils</code> class contains static methods for <em>JIDUtils</em> manipulation.
- * <p>
+ * <br>
  * <p> Created: Thu Jan 27 22:53:41 2005 </p>
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

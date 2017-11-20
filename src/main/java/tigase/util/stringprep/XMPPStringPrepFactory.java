@@ -39,13 +39,10 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class XMPPStringPrepFactory {
 
-	/** Field description */
 	public static final String STRINGPREP_PROCESSOR_PROP_KEY = "stringprep-processor";
 
-	/** Field description */
 	public static final String[] STRINGPREP_PROCESSORS = {"libidn", "simple", "empty"};
 
-	/** Field description */
 	public static String STRINGPREP_PROCESSOR = "simple";
 
 	//~--- get methods ----------------------------------------------------------

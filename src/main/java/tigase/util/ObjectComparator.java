@@ -24,8 +24,8 @@ import java.util.Comparator;
 
 /**
  * Describe class ObjectComparator here.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Tue May 17 23:53:20 2005
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -39,8 +39,8 @@ public class ObjectComparator
 	/**
 	 * Describe <code>compare</code> method here.
 	 *
-	 * @param object an <code>Object</code> value
-	 * @param object1 an <code>Object</code> value
+	 * @param o1 an <code>Object</code> value
+	 * @param o2 an <code>Object</code> value
 	 *
 	 * @return an <code>int</code> value
 	 */

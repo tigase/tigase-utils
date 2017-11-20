@@ -22,7 +22,7 @@ package tigase.util;
 /**
  * Class with string utilities, mostly helping with canonical representation of String
  *
- * @author Wojciech Kapcia <wojciech.kapcia@tigase.org>
+ * @author wojtek
  */
 public class StringUtilities {
 

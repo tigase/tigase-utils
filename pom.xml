@@ -59,13 +59,9 @@
                             <source>1.8</source>
                             <quiet>true</quiet>
                             <aggregate>true</aggregate>
-                            <includeDependencySources>true</includeDependencySources>
-                            <dependencySourceIncludes>
-                                <dependencySourceInclude>tigase:*</dependencySourceInclude>
-                            </dependencySourceIncludes>
+                            <includeDependencySources>false</includeDependencySources>
 
                             <finalName>${project.artifactId}-${project.version}-b${gitVersion}</finalName>
-                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </execution>
                 </executions>

@@ -27,7 +27,7 @@ import java.util.Comparator;
  * In a few cases classes have to be kept in <code>Set</code>. This <code>Comparator</code> implementation has been
  * created to return proper value for <code>compare</code> method and to make it possible to store classes in any
  * <code>Set</code>.
- * <p>
+ * <br>
  * <p> Created: Sat Oct  9 22:27:54 2004 </p>
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

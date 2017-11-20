@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 
 /**
  * Describe class SimpleCache here.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Sun Nov 26 19:55:22 2006
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

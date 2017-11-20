@@ -22,8 +22,8 @@ package tigase.util.cache;
 
 /**
  * Describe class CacheObject here.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Mon Mar  3 15:02:14 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

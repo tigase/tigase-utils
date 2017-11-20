@@ -40,12 +40,12 @@ import java.util.zip.Inflater;
 //~--- classes ----------------------------------------------------------------
 
 /**
- * This is a warpper for java.util.zip package and Deflater/Inflater classes specifically. This implementation allows
+ * <p>This is a warpper for java.util.zip package and Deflater/Inflater classes specifically. This implementation allows
  * for easy interaction between Deflater/Inflater and java.nio API which operates on ByteBuffer data. It also does some
- * tricky stuff to flush Deflater without reseting it and allow a better compression ration on the data. <p/> There are
+ * tricky stuff to flush Deflater without reseting it and allow a better compression ration on the data.</p> <br> There are
  * a few convenience methods allowing to directly compress String to ByteBuffer and other way around - from ByteBuffer
- * to String decompression. For these methods data are assumed to be UTF-8 character String.<p/>
- * <p>
+ * to String decompression. For these methods data are assumed to be UTF-8 character String.<br>
+ * <br>
  * Created: Jul 30, 2009 11:46:55 AM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -53,9 +53,7 @@ import java.util.zip.Inflater;
  */
 public class ZLibWrapper {
 
-	/** Field description */
 	public static final int COMPRESSED_BUFF_SIZE = 512;
-	/** Field description */
 	public static final int DECOMPRESSED_BUFF_SIZE = 10 * COMPRESSED_BUFF_SIZE;
 	private static final byte[] EMPTYBYTEARRAY = new byte[0];
 	/**

@@ -57,10 +57,8 @@ public class DNSResolver {
 	 */
 	private static final Logger log = Logger.getLogger(DNSResolver.class.getName());
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
-	/** Field description */
 	public static Map<String, DNSEntry> ip_cache = Collections.synchronizedMap(
 			new SimpleCache<String, DNSEntry>(100, DNS_CACHE_TIME));
-	/** Field description */
 	public static Map<String, DNSEntry[]> srv_cache = Collections.synchronizedMap(
 			new SimpleCache<String, DNSEntry[]>(100, DNS_CACHE_TIME));
 	private static String defaultHostname = null;

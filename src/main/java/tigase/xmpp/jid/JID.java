@@ -29,8 +29,8 @@ import java.util.Objects;
 /**
  * The class defines an instance of a single XMPP JID identifier. When the object is created all parameters are checked
  * and processed through the stringprep. An exception is thrown in case of a stringprep processing error.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Dec 28, 2009 10:48:04 PM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -49,9 +49,9 @@ public final class JID
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
 	 * <code>String</code> instance as a resource part.
-	 * <p/>
+	 * <br>
 	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
-	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/> The resourve parameter is parsed,
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br> The resourve parameter is parsed,
 	 * checked and run through the stringprep processing. In case of stringprep error, an exception is thrown.
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
@@ -71,7 +71,7 @@ public final class JID
 
 	/**
 	 * Creates a new <code>JID</code> instance using given <code>BareJID</code> instance as a parameter. The resource
-	 * part is set to null.<br/> As the <code>BareJID</code> instances are immutable the constructor doesn't create a
+	 * part is set to null.<br> As the <code>BareJID</code> instances are immutable the constructor doesn't create a
 	 * copy of the given <code>BareJID</code>, instead it saves the reference to a given object.
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
@@ -101,7 +101,7 @@ public final class JID
 
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters.
-	 * <p/>
+	 * <br>
 	 * All the <code>String</code> parameters are parsed, checked and run through the stringprep processing. In case of
 	 * stringprep error, an exception is thrown.
 	 *
@@ -118,7 +118,7 @@ public final class JID
 
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters.
-	 * <p/>
+	 * <br>
 	 * All the <code>String</code> parameters are parsed, checked and run through the stringprep processing. In case of
 	 * stringprep error, an exception is thrown.
 	 *
@@ -138,9 +138,9 @@ public final class JID
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
 	 * <code>String</code> instance as a resource part. <strong>Note, this method does not perform stringprep processing
 	 * on input parameters.</strong>
-	 * <p/>
+	 * <br>
 	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
-	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br>
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 *
@@ -154,9 +154,9 @@ public final class JID
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
 	 * <code>String</code> instance as a resource part. <strong>Note, this method does not perform stringprep processing
 	 * on input parameters.</strong>
-	 * <p/>
+	 * <br>
 	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
-	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br>
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 * @param p_resource is a <code>String</code> instance representing JID's resource part.
@@ -190,7 +190,7 @@ public final class JID
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters. <strong>Note, this method
 	 * does not perform stringprep processing on input parameters.</strong>
-	 * <p/>
+	 * <br>
 	 *
 	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
 	 * @param domain is a <code>String</code> instance representing JID's domain part.
@@ -205,7 +205,7 @@ public final class JID
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>String</code> parameters. <strong>Note, this method
 	 * does not perform stringprep processing on input parameters.</strong>
-	 * <p/>
+	 * <br>
 	 *
 	 * @param localpart is a <code>String</code> instance representing JID's localpart (nickname) part.
 	 * @param domain is a <code>String</code> instance representing JID's domain part.
@@ -219,9 +219,9 @@ public final class JID
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
 	 * <code>String</code> instance as a resource part.
-	 * <p/>
+	 * <br>
 	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
-	 * <code>BareJID</code>, instead it saves the reference to a given object.<br/>
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br>
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 * @param resource is a <code>String</code> instance representing JID's resource part.

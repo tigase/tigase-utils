@@ -24,7 +24,7 @@ package tigase.util;
 /**
  * Portable PHP password hashing framework rewritten in Java - code almost copied directly. This class is used for user
  * authentication for against PHP based websites' databases.
- * <p>
+ * <br>
  * Created: Mar 29, 2010 11:49:39 PM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

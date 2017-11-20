@@ -27,7 +27,7 @@ package tigase.util.stringprep;
  * All methods simply return value passed as the method call parameter. Use of this implementation is recommended inly
  * in strictly controlled systems where there is no possibility of getting incorrectly formated JIDs to the system. Of
  * course this implementation causes no impact on the system performance.
- * <p>
+ * <br>
  * Created: Feb 4, 2010 9:52:41 AM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

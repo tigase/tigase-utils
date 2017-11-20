@@ -28,8 +28,8 @@ import java.util.Calendar;
 
 /**
  * This is too slow.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Tue Oct 28 21:08:58 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

@@ -39,7 +39,7 @@ public class FormSigner {
 	 * @param to the full destination address, including resource, if any.
 	 * @param form form form to sign.
 	 *
-	 * @throws FormSignerException
+	 * @throws FormSignerException when the key is invalid or the algorithm is not supported
 	 */
 	public void signForm(JID to, Form form) throws FormSignerException {
 		try {

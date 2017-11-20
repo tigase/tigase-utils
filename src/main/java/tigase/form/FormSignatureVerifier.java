@@ -39,8 +39,8 @@ public class FormSignatureVerifier {
 	/**
 	 * Verify signature of given form.
 	 *
-	 * @param to
-	 * @param form
+	 * @param to the full destination address, including resource, if any.
+	 * @param form signed Form to verify.
 	 *
 	 * @return timestamp of signature is signature is valid. If signature is invalid exception will be throwed.
 	 *

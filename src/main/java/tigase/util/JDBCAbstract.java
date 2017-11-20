@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 
 /**
  * The class has been deprecated in favor of <code>DataRepository</code> class. Please update your code accordingly.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Mon Mar  3 10:43:44 2008
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -44,11 +44,8 @@ import java.util.logging.Logger;
 @TigaseDeprecated(since = "3.3.11", removeIn = "4.1.0")
 public abstract class JDBCAbstract {
 
-	/** Field description */
 	public static final String SP_STARTS_WITH = "{ call";
-	/** Field description */
 	public static final String DERBY_CONNVALID_QUERY = "values 1";
-	/** Field description */
 	public static final String JDBC_CONNVALID_QUERY = "select 1";
 	/**
 	 * Private logger for class instance.

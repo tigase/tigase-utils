@@ -27,8 +27,8 @@ import java.net.Socket;
 
 /**
  * Describe class Telnet here.
- * <p>
- * <p>
+ * <br>
+ * <br>
  * Created: Sat Jan 28 21:18:46 2006
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>

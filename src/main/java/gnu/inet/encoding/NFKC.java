@@ -27,7 +27,7 @@ public class NFKC {
 
 	/**
 	 * Entire hangul code copied from: http://www.unicode.org/unicode/reports/tr15/
-	 * <p>
+	 * <br>
 	 * Several hangul specific constants
 	 */
 	static final int SBase = 0xAC00;

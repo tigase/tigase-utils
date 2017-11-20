@@ -32,16 +32,16 @@ import tigase.util.stringprep.XMPPStringPrepIfc;
  * Instance of the <code>BareJID</code> class holds a single, bare JID. When the object is created the parameters are
  * checked and processed through the stringprep. An exception is throw in case of stringprep processing error. The
  * instances of the class are immutable objects.
- * <p/>
+ * <br>
  * There are planed various optimisations for the class implementation, one of them is to allow for comparing the
  * instanced by references ('==') instead of of equals() method. This is to improve the performance and lower memory
- * usage. Other improvements and optimisations are also planed.<br/> Some of the optimisations require that the
+ * usage. Other improvements and optimisations are also planed.<br> Some of the optimisations require that the
  * instances are created in strictly controlled way, hence there is no public constructor and you have to use factory
  * methods to create a new instance of the <code>BareJID</code> class.
- * <p/>
+ * <br>
  * The class also offers a few utility methods for parsing and constructing JID strings. Please see JavaDoc
  * documentation for more details.
- * <p>
+ * <br>
  * Created: Dec 28, 2009 10:47:51 PM
  *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
@@ -64,11 +64,11 @@ public final class BareJID
 	/**
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from the
 	 * <code>String</code> parameter.
-	 * <p/>
+	 * <br>
 	 * The localpart (nick name) and the domain part of the JID are parsed and processed through the stringprep. If a
-	 * strngprep parsing error occurs an exception is thrown.<br/> The resource part, if provided in the JID paramater,
+	 * strngprep parsing error occurs an exception is thrown.<br> The resource part, if provided in the JID paramater,
 	 * is thrown away.
-	 * <p/>
+	 * <br>
 	 * Please note, the method does not necessarily has to return a new instance of the class. It may return the same
 	 * exact object every time you pass parameters which refer to the same bare JID identifier.
 	 *
@@ -90,9 +90,9 @@ public final class BareJID
 	/**
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from two
 	 * <code>String</code> parameters.
-	 * <p/>
+	 * <br>
 	 * The localpart (nick name) and the domain part of the JID are parsed and processed through the stringprep. If a
-	 * strngprep parsing error occurs an exception is thrown.<br/> Please note, the method does not necessarily has to
+	 * strngprep parsing error occurs an exception is thrown.<br> Please note, the method does not necessarily has to
 	 * return a new instance of the class. It may return the same exact object every time you pass parameters which
 	 * refer to the same bare JID identifier.
 	 *
@@ -117,9 +117,9 @@ public final class BareJID
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from the
 	 * <code>String</code> parameter. <strong>Note, this method does not perform stringprep processing on input
 	 * parameters.</strong>
-	 * <p/>
+	 * <br>
 	 * The resource part, if provided in the JID paramater, is thrown away.
-	 * <p/>
+	 * <br>
 	 * Please note, the method does not necessarily has to return a new instance of the class. It may return the same
 	 * exact object every time you pass parameters which refer to the same bare JID identifier.
 	 *
@@ -137,7 +137,7 @@ public final class BareJID
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from two
 	 * <code>String</code> parameters. <strong>Note, this method does not perform stringprep processing on input
 	 * parameters.</strong>
-	 * <p/>
+	 * <br>
 	 * Please note, the method does not necessarily has to return a new instance of the class. It may return the same
 	 * exact object every time you pass parameters which refer to the same bare JID identifier.
 	 *
