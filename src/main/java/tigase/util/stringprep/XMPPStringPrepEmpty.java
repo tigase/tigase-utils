@@ -20,8 +20,6 @@
 
 package tigase.util.stringprep;
 
-//~--- classes ----------------------------------------------------------------
-
 /**
  * Class implementing stringprep processor interface. This is a dummy implementation performing no processing at all.
  * All methods simply return value passed as the method call parameter. Use of this implementation is recommended inly
@@ -52,6 +50,3 @@ public class XMPPStringPrepEmpty
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

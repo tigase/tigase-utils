@@ -20,16 +20,12 @@
 
 package tigase.criteria;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.xml.Element;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * <p> Created: 2007-06-19 20:34:57 </p>
@@ -44,8 +40,6 @@ public class ElementCriteria
 	private String cdata = null;
 	private String name;
 	private Criteria nextCriteria;
-
-	//~--- constructors ---------------------------------------------------------
 
 	public static final ElementCriteria empty() {
 		return new ElementCriteria(null, null, null, null);
@@ -136,4 +130,3 @@ public class ElementCriteria
 	}
 }
 
-//~ Formatted in Tigase Code Convention on 13/02/20

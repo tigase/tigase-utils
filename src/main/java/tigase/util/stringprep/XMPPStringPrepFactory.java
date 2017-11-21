@@ -20,16 +20,10 @@
 
 package tigase.util.stringprep;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.xmpp.jid.BareJID;
 import tigase.xmpp.jid.JID;
 
 import java.util.concurrent.TimeUnit;
-
-//~--- JDK imports ------------------------------------------------------------
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Created: Dec 28, 2009 10:02:31 PM
@@ -44,8 +38,6 @@ public abstract class XMPPStringPrepFactory {
 	public static final String[] STRINGPREP_PROCESSORS = {"libidn", "simple", "empty"};
 
 	public static String STRINGPREP_PROCESSOR = "simple";
-
-	//~--- get methods ----------------------------------------------------------
 
 	private static boolean doWithJID(JID jid) {
 		return jid.toString() != null;
@@ -99,8 +91,6 @@ public abstract class XMPPStringPrepFactory {
 	public static XMPPStringPrepIfc getSimpleXMPPStringPrep() {
 		return new XMPPStringPrepSimple();
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * @param stringprepProcessor
@@ -161,6 +151,3 @@ public abstract class XMPPStringPrepFactory {
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

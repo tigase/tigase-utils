@@ -19,8 +19,6 @@
  */
 package tigase.cert;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.annotations.TigaseDeprecated;
 import tigase.util.Algorithms;
 import tigase.util.Base64;
@@ -38,10 +36,6 @@ import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//~--- JDK imports ------------------------------------------------------------
-
-//~--- classes ----------------------------------------------------------------
-
 /**
  * Created: Sep 22, 2010 3:09:01 PM
  *

@@ -20,8 +20,6 @@
 
 package tigase.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -36,8 +34,6 @@ import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * <p>This is a warpper for java.util.zip package and Deflater/Inflater classes specifically. This implementation allows
@@ -61,7 +57,6 @@ public class ZLibWrapper {
 	 */
 	private static Logger log = Logger.getLogger(ZLibWrapper.class.getName());
 
-	//~--- fields ---------------------------------------------------------------
 	private float average_compression_rate = 0f;
 	private float average_decompression_rate = 0f;
 	private byte[] compress_input = null;
@@ -269,8 +264,6 @@ public class ZLibWrapper {
 	public ZLibWrapper(int level) {
 		this(level, COMPRESSED_BUFF_SIZE);
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	public ZLibWrapper(int level, int comp_buff_size) {
 		this.compression_level = level;
@@ -625,6 +618,3 @@ public class ZLibWrapper {
 	*/
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

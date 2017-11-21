@@ -20,8 +20,6 @@
 
 package tigase.xmpp.jid;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.util.stringprep.TigaseStringprepException;
 
 import java.util.Objects;
@@ -44,8 +42,6 @@ public final class JID
 	private final String resource;
 	private final String to_string;
 
-	//~--- constructors ---------------------------------------------------------
-
 	/**
 	 * Constructs a new <code>JID</code> instance using given <code>BareJID</code> instance as user bare JID and
 	 * <code>String</code> instance as a resource part.
@@ -66,8 +62,6 @@ public final class JID
 
 		return new JID(bareJid, f_resource);
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Creates a new <code>JID</code> instance using given <code>BareJID</code> instance as a parameter. The resource
@@ -309,8 +303,6 @@ public final class JID
 		return result;
 	}
 
-	//~--- get methods ----------------------------------------------------------
-
 	/**
 	 * Method returns <code>BareJID</code> instance for this JID.
 	 *
@@ -346,8 +338,6 @@ public final class JID
 	public String getResource() {
 		return resource;
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Method returns a hash code calculated for the <code>JID</code> instance.

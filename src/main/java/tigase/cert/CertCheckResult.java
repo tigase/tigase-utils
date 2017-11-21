@@ -19,8 +19,6 @@
  */
 package tigase.cert;
 
-//~--- constant enums ---------------------------------------------------------
-
 /**
  * Created: Oct 29, 2010 3:39:59 PM
  *
@@ -37,6 +35,3 @@ public enum CertCheckResult {
 	none;
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

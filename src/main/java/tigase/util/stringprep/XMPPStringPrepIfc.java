@@ -20,8 +20,6 @@
 
 package tigase.util.stringprep;
 
-//~--- interfaces -------------------------------------------------------------
-
 /**
  * Interface defining stringprep processor API. According to RFC-3920 all JID's parts have to be stringprep processed,
  * each part should go through different algorithm. The interface and XMPPStringPrepFactory allow for pluggable
@@ -67,6 +65,3 @@ public interface XMPPStringPrepIfc {
 	String resourceprep(String resource) throws TigaseStringprepException;
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

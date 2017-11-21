@@ -19,8 +19,6 @@
  */
 package tigase.util;
 
-//~--- classes ----------------------------------------------------------------
-
 /**
  * Portable PHP password hashing framework rewritten in Java - code almost copied directly. This class is used for user
  * authentication for against PHP based websites' databases.
@@ -34,6 +32,3 @@ public class PasswordHash {
 
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

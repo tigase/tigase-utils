@@ -20,15 +20,11 @@
 
 package tigase.util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import tigase.annotations.TigaseDeprecated;
 
 import java.sql.*;
 import java.util.Map;
 import java.util.logging.Logger;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * The class has been deprecated in favor of <code>DataRepository</code> class. Please update your code accordingly.
@@ -52,7 +48,6 @@ public abstract class JDBCAbstract {
 	 */
 	private static final Logger log = Logger.getLogger(JDBCAbstract.class.getName());
 
-	//~--- fields ---------------------------------------------------------------
 	/**
 	 * Database active connection.
 	 */
@@ -79,8 +74,6 @@ public abstract class JDBCAbstract {
 	 */
 	private long lastConnectionValidated = 0;
 
-	//~--- methods --------------------------------------------------------------
-
 	/**
 	 * <code>initRepository</code> method is doing lazy initialization with database. Connection to database will be
 	 * established during the first authentication request.
@@ -94,8 +87,6 @@ public abstract class JDBCAbstract {
 	 */
 	public abstract void initRepository(String conn_str, Map<String, String> params) throws SQLException;
 
-	//~--- get methods ----------------------------------------------------------
-
 	/**
 	 * <code>getResourceUri</code> method returns database connection string.
 	 *
@@ -104,8 +95,6 @@ public abstract class JDBCAbstract {
 	public String getResourceUri() {
 		return db_conn;
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	public void setResourceUri(String uri) {
 		db_conn = uri;
@@ -126,8 +115,6 @@ public abstract class JDBCAbstract {
 	public PreparedStatement prepareStatement(String query) throws SQLException {
 		return conn.prepareStatement(query);
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * <code>checkConnection</code> method checks database connection before any query. For some database servers (or
@@ -198,6 +185,3 @@ public abstract class JDBCAbstract {
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

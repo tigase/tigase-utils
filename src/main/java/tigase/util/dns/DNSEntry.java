@@ -20,8 +20,6 @@
 
 package tigase.util.dns;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Arrays;
 
 /**
@@ -39,8 +37,6 @@ public class DNSEntry {
 	private int priority = 0;
 	private long ttl = 3600 * 1000;
 	private int weight = 0;
-
-	//~--- constructors ---------------------------------------------------------
 
 	/**
 	 * Constructs DNS entry with hostname and IP to which it resolves.
@@ -116,8 +112,6 @@ public class DNSEntry {
 		this.weight = weight;
 	}
 
-	//~--- get methods ----------------------------------------------------------
-
 	/**
 	 * Returns the domain name for which this record is valid
 	 *
@@ -191,8 +185,6 @@ public class DNSEntry {
 		return weight;
 	}
 
-	//~--- methods --------------------------------------------------------------
-
 	/**
 	 * Returns string interpretation of the DNS entry
 	 *
@@ -205,6 +197,3 @@ public class DNSEntry {
 	}
 }
 
-//~ Formatted in Tigase Code Convention on 13/02/21
-
-//~ Formatted by Jindent --- http://www.jindent.com

@@ -20,11 +20,7 @@
 
 package tigase.util.stringprep;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.regex.Pattern;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Created: Feb 4, 2010 9:31:23 AM
@@ -36,8 +32,6 @@ public class XMPPStringPrepSimple
 		implements XMPPStringPrepIfc {
 
 	private static final Pattern p = Pattern.compile("[ @&()\\[\\]\t\n\r\f\\a\\e]");
-
-	//~--- methods --------------------------------------------------------------
 
 	@Override
 	public String nameprep(String domain) throws TigaseStringprepException {

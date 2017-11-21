@@ -20,11 +20,7 @@
 
 package tigase.util.datetime;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Calendar;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * This is too slow.
@@ -50,6 +46,3 @@ public abstract class TimeUtils {
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

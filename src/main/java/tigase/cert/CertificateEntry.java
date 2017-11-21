@@ -19,12 +19,8 @@
  */
 package tigase.cert;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Created: Oct 9, 2010 5:08:30 PM

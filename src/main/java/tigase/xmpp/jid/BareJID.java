@@ -20,13 +20,9 @@
 
 package tigase.xmpp.jid;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.util.stringprep.TigaseStringprepException;
 import tigase.util.stringprep.XMPPStringPrepFactory;
 import tigase.util.stringprep.XMPPStringPrepIfc;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Instance of the <code>BareJID</code> class holds a single, bare JID. When the object is created the parameters are
@@ -52,14 +48,10 @@ public final class BareJID
 
 	static XMPPStringPrepIfc stringPrep = XMPPStringPrepFactory.getDefaultXMPPStringPrep();
 
-	//~--- fields ---------------------------------------------------------------
-
 	private final String domain;
 	private final int hashcode;
 	private final String localpart;
 	private final String to_string;
-
-	//~--- constructors ---------------------------------------------------------
 
 	/**
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from the
@@ -84,8 +76,6 @@ public final class BareJID
 
 		return bareJIDInstance(parsedJid[0], parsedJid[1]);
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * The method creates an instance of the <code>BareJID</code> class. The bare JID is parsed and constructed from two
@@ -309,8 +299,6 @@ public final class BareJID
 		return result;
 	}
 
-	//~--- get methods ----------------------------------------------------------
-
 	/**
 	 * Method returns a domain part of the <code>BareJID</code>. Please note the <code>String</code> returned is parsed,
 	 * checked and processed via stringprep, hence it represents a valid domain name as defined in XMPP RFC.
@@ -330,8 +318,6 @@ public final class BareJID
 	public String getLocalpart() {
 		return localpart;
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	/**
 	 * Method returns a hash code calculated for the <code>BareJID</code> instance.

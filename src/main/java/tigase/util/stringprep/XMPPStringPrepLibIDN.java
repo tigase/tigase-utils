@@ -20,12 +20,8 @@
 
 package tigase.util.stringprep;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import gnu.inet.encoding.Stringprep;
 import gnu.inet.encoding.StringprepException;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Created: Dec 28, 2009 10:04:08 PM
@@ -64,6 +60,3 @@ class XMPPStringPrepLibIDN
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

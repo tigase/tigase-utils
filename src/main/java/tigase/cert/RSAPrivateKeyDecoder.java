@@ -19,8 +19,6 @@
  */
 package tigase.cert;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateCrtKeySpec;
-
-//~--- classes ----------------------------------------------------------------
 
 /**
  * Created: Oct 9, 2010 9:16:55 PM
@@ -43,8 +39,6 @@ public class RSAPrivateKeyDecoder {
 
 	private InputStream is = null;
 
-	//~--- constructors ---------------------------------------------------------
-
 	public RSAPrivateKeyDecoder(byte[] bytes) {
 		this(new ByteArrayInputStream(bytes));
 	}
@@ -52,8 +46,6 @@ public class RSAPrivateKeyDecoder {
 	public RSAPrivateKeyDecoder(InputStream is) {
 		this.is = is;
 	}
-
-	//~--- get methods ----------------------------------------------------------
 
 	public RSAPrivateCrtKeySpec getKeySpec() throws IOException {
 
@@ -80,8 +72,6 @@ public class RSAPrivateKeyDecoder {
 
 		return keyFactory.generatePrivate(getKeySpec());
 	}
-
-	//~--- methods --------------------------------------------------------------
 
 	private BigInteger nextInt() throws IOException {
 		int tag = is.read();
@@ -124,6 +114,3 @@ public class RSAPrivateKeyDecoder {
 	}
 }
 
-//~ Formatted in Sun Code Convention
-
-//~ Formatted by Jindent --- http://www.jindent.com

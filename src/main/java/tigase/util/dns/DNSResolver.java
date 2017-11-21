@@ -20,8 +20,6 @@
 
 package tigase.util.dns;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import tigase.annotations.TigaseDeprecated;
 import tigase.util.cache.SimpleCache;
 
@@ -36,8 +34,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * DNSResolver class for handling DNS names
@@ -66,8 +62,6 @@ public class DNSResolver {
 	private static String opendns_hit_nxdomain_ip = null;
 	private static Random rand = new Random();
 	private static long resolveDefaultTime = 0;
-
-	//~--- static initializers --------------------------------------------------
 
 	static {
 		long start = System.currentTimeMillis();
@@ -136,8 +130,6 @@ public class DNSResolver {
 		}
 	}
 
-	//~--- methods --------------------------------------------------------------
-
 	/**
 	 * Method returns names associated with this host.
 	 *
@@ -146,8 +138,6 @@ public class DNSResolver {
 	public static String[] getDefHostNames() {
 		return ((localnames != null) ? Arrays.copyOf(localnames, localnames.length) : null);
 	}
-
-	//~--- get methods ----------------------------------------------------------
 
 	/**
 	 * Method returns default host name associated with this host.
@@ -480,4 +470,3 @@ public class DNSResolver {
 	}
 }
 
-//~ Formatted in Tigase Code Convention on 14/02/07
