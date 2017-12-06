@@ -130,7 +130,7 @@
                                 } catch (Exception e) {
                                     version = '0'
                                 }
-                                println "setting revision to: " + version
+                                log.info("setting revision to: " + version)
 
                                 project.properties.setProperty('gitVersion', version)
 
@@ -149,37 +149,6 @@
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <packageName>tigase/</packageName>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Implementation-Title>${project.name}</Implementation-Title>
-                            <Implementation-Version>${project.version}-b${gitVersion}/${buildNumber}
-                            </Implementation-Version>
-                            <Implementation-Build>${gitVersion}/${buildNumber} (${maven.build.timestamp})
-                            </Implementation-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>**/annotations/*</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
