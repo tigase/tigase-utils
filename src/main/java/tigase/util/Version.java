@@ -32,7 +32,7 @@ public class Version
 
 	public static final EnumSet<FIELD> incrementableFields = EnumSet.of(FIELD.MAJOR, FIELD.MINOR, FIELD.BUGFIX,
 	                                                                    FIELD.BUILD, FIELD.TYPE_NUMBER);
-	private static final Comparator<Version> versionComparator = Comparator.comparingInt(Version::getMajor)
+	public static final Comparator<Version> VERSION_COMPARATOR = Comparator.comparingInt(Version::getMajor)
 			.thenComparingInt(Version::getMinor)
 			.thenComparingInt(Version::getBugfix)
 			.thenComparing(Version::getVersionType)
@@ -184,7 +184,7 @@ public class Version
 
 	@Override
 	public int compareTo(Version that) {
-		return versionComparator.compare(this, that);
+		return VERSION_COMPARATOR.compare(this, that);
 	}
 
 	@Override
