@@ -323,7 +323,7 @@ public class Version
 		                     commit != null ? ("/" + commit) : "");
 	}
 
-	static class Builder {
+	public static class Builder {
 
 		private int bugfix = 0;
 		private int build = 0;
