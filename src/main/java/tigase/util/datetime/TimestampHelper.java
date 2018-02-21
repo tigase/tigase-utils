@@ -80,4 +80,10 @@ public class TimestampHelper {
 		}
 	}
 
+	public String formatWithMs(Date ts) {
+		synchronized (TIMESTAMP_FORMATTER3) {
+			return TIMESTAMP_FORMATTER3.format(ts);
+		}
+	}
+
 }
