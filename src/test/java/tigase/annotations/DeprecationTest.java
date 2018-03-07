@@ -46,9 +46,9 @@ public class DeprecationTest {
 
 	@Test
 	public void test() throws IOException, ClassNotFoundException {
-		String version = System.getenv("project.version");
+		String version = System.getProperty("project.version");
 		versionMatcher = new VersionBiggerMatcher(Version.parse(version).get());
-		Set<String> classNames = ClassUtil.getClassNamesFromDir(new File(System.getenv("project.target")));
+		Set<String> classNames = ClassUtil.getClassNamesFromDir(new File(System.getProperty("project.target")));
 		Set<Class<?>> classes = ClassUtil.getClassesFromNames(classNames);
 
 		classes.stream().forEach(this::checkClass);
