@@ -40,7 +40,7 @@ public class Version
 			.thenComparingInt(Version::getBuild);
 	private static final Logger log = Logger.getLogger("tigase.util.updater.UpdatesChecker");
 	private static final Pattern PATTERN = Pattern.compile(
-			"(.*?)-?((\\d{1,20}\\.){2}\\d{1,20})(-(SNAPSHOT|RC|BETA)(\\d*))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?",
+			"(.*?)-?((\\d{1,20}\\.){1,2}\\d{1,20})(-(SNAPSHOT|RC|BETA)(\\d*))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?",
 			Pattern.CASE_INSENSITIVE);
 	public static final Version ZERO = Version.of("0.0.0-b0000");
 

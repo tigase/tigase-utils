@@ -187,6 +187,12 @@ public class VersionTest {
 
 		version = "tigase-server-7.1.0-b4379/12e027f7.exe";
 		Assert.assertEquals("7.1.0-b4379/12e027f7", (Version.of(version)).toString());
+
+		version = "5.1";
+		Assert.assertEquals("5.1.0", (Version.of(version)).toString());
+
+		version = "5.1-SNAPSHOT";
+		Assert.assertEquals("5.1.0-SNAPSHOT", (Version.of(version)).toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
