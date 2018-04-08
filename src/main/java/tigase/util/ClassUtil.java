@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -101,6 +102,10 @@ public class ClassUtil {
 	}
 
 	public static Set<Class<?>> getClassesFromClassPath() throws IOException, ClassNotFoundException {
+		return getClassesFromClassPath(ClassUtil::filterSkipStartWith);
+	}
+	
+	public static Set<Class<?>> getClassesFromClassPath(Predicate<String> classNamesFilter) throws IOException, ClassNotFoundException {
 		Set<Class<?>> classes_set = new TreeSet<Class<?>>(new ClassComparator());
 		String classpath = System.getProperty("java.class.path");
 
@@ -117,7 +122,7 @@ public class ClassUtil {
 					// System.out.println("directory: "+path);
 					Set<String> class_names = getClassNamesFromDir(file);
 
-					classes_set.addAll(getClassesFromNames(class_names));
+					classes_set.addAll(getClassesFromNames(class_names, classNamesFilter));
 				} // end of if (file.isDirectory())
 
 				if (file.isFile()) {
@@ -125,7 +130,7 @@ public class ClassUtil {
 					// System.out.println("jar file: "+path);
 					Set<String> class_names = getClassNamesFromJar(file);
 
-					classes_set.addAll(getClassesFromNames(class_names));
+					classes_set.addAll(getClassesFromNames(class_names, classNamesFilter));
 
 					// System.out.println("Loaded jar file: "+path);
 				} // end of if (file.isFile())
@@ -136,6 +141,10 @@ public class ClassUtil {
 	}
 
 	public static Set<Class<?>> getClassesFromNames(Set<String> names) throws ClassNotFoundException {
+		return getClassesFromNames(names, ClassUtil::filterSkipStartWith);
+	}
+
+	public static Set<Class<?>> getClassesFromNames(Set<String> names, Predicate<String> filter) throws ClassNotFoundException {
 		Set<Class<?>> classes = new TreeSet<Class<?>>(new ClassComparator());
 
 		for (String name : names) {
@@ -149,15 +158,9 @@ public class ClassUtil {
 						break;
 					}
 				}
-
-				if (!skip_class) {
-					for (String test_str : SKIP_STARTS) {
-						skip_class = name.startsWith(test_str);
-
-						if (skip_class) {
-							break;
-						}
-					}
+				
+				if (!filter.test(name)) {
+					skip_class = true;
 				}
 
 				for (String test_str : SKIP_WHITELIST) {
@@ -257,5 +260,14 @@ public class ClassUtil {
 			// System.out.println("File: " + path.toString());
 			set.add(path);
 		} // end of if (file.isDirectory()) else
+	}
+
+	private static boolean filterSkipStartWith(String name) {
+		for (String test_str : SKIP_STARTS) {
+			if (name.startsWith(test_str)) {
+				return false;
+			}
+		}
+		return true;
 	}
 } // ClassUtil
