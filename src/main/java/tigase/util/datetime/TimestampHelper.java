@@ -21,6 +21,7 @@ package tigase.util.datetime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -84,6 +85,13 @@ public class TimestampHelper {
 		synchronized (TIMESTAMP_FORMATTER3) {
 			return TIMESTAMP_FORMATTER3.format(ts);
 		}
+	}
+
+	public String formatInLegacyDelayedDelivery(Date date) {
+		Calendar now = Calendar.getInstance();
+		now.setTimeZone(TimeZone.getTimeZone("GMT"));
+		now.setTime(date);
+		return String.format("%1$tY%1$tm%1$tdT%1$tH:%1$tM:%1$tS", now);
 	}
 
 }
