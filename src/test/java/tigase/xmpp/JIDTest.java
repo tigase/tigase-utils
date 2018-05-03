@@ -84,5 +84,11 @@ public class JIDTest
 		assertNotSame("A@b/c", jid.toString());
 		assertNotSame("a@B/c", jid.toString());
 	}
-
+	
+	public void testEquals() throws TigaseStringprepException {
+		JID jid1 = JID.jidInstance("a@b/t");
+		JID jid2 = JID.jidInstance("A@B/t");
+		assertTrue(jid1.equals(jid2));
+		assertFalse(jid1.equals(null));
+	}
 }
