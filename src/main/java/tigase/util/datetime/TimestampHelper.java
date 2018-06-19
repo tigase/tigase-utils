@@ -49,26 +49,13 @@ public class TimestampHelper {
 
 		Date date = null;
 
-		boolean useXXX = (tmp.charAt(tmp.length() - 6) == '+');
 		if (tmp.contains(".")) {
-			if (useXXX) {
-				synchronized (TIMESTAMP_FORMATTER4) {
-					date = TIMESTAMP_FORMATTER4.parse(tmp);
-				}
-			} else {
-				synchronized (TIMESTAMP_FORMATTER3) {
-					date = TIMESTAMP_FORMATTER4.parse(tmp);
-				}
+			synchronized (TIMESTAMP_FORMATTER4) {
+				date = TIMESTAMP_FORMATTER4.parse(tmp);
 			}
 		} else {
-			if (useXXX) {
-				synchronized (TIMESTAMP_FORMATTER2) {
-					date = TIMESTAMP_FORMATTER2.parse(tmp);
-				}
-			} else {
-				synchronized (TIMESTAMP_FORMATTER1) {
-					date = TIMESTAMP_FORMATTER1.parse(tmp);
-				}
+			synchronized (TIMESTAMP_FORMATTER2) {
+				date = TIMESTAMP_FORMATTER2.parse(tmp);
 			}
 		}
 

@@ -63,9 +63,8 @@ public class TimestampHelperTest {
 		assertEquals(date, result);
 	}
 
-
 	@Test
-	public void testParsingWithMsAndZone() throws ParseException {
+	public void testParsingWithMsAndZonePositive() throws ParseException {
 		Date result = helper.parseTimestamp("2018-04-27T17:57:02.597+02:00");
 		long milis = 1524844622597l;
 		Date date = new Date(milis);
@@ -73,10 +72,59 @@ public class TimestampHelperTest {
 	}
 	
 	@Test
-	public void testParsingWitoutMsAndZone() throws ParseException {
+	public void testParsingWitoutMsAndZonePositive() throws ParseException {
 		Date result = helper.parseTimestamp("2018-04-27T17:57:02+02:00");
 		long milis = 1524844622000l;
 		Date date = new Date(milis);
 		assertEquals(date, result);
 	}
+
+	@Test
+	public void testParsingWithMsAndZoneNegative() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:57:02.597-02:00");
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWitoutMsAndZoneNegative() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:57:02-02:00");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWithMsAndZonePositiveHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T18:27:02.597+02:30");
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWitoutMsAndZonePositiveHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T18:27:02+02:30");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWithMsAndZoneNegativeHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:27:02.597-02:30");
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWitoutMsAndZoneNegativeHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:27:02-02:30");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
 }
