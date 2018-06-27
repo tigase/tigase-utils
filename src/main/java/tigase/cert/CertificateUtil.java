@@ -431,6 +431,17 @@ public abstract class CertificateUtil {
 				CertificateEntry ce = loadCertificate(file);
 
 				System.out.println(ce.toString());
+
+				final ArrayList<Certificate> certs = new ArrayList<>(Arrays.asList(ce.getCertChain()));
+				if (getRootCertificateCertificate(certs) == null) {
+					System.out.println("Can't find root certificate in chain!");
+					for (Certificate x509Certificate : certs) {
+						Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
+						Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
+						System.out.println(s + " ~ ISSUED BY: " + i);
+					}
+
+				}
 			}
 
 			if (args[0].equals(STORE_CERT) || args[0].equals(STORE_CERT_SHORT)) {
@@ -648,14 +659,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static List<Certificate> sort(List<Certificate> certs) {
-		Certificate rt = null;
-		for (Certificate x509Certificate : certs) {
-			Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
-			Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
-			if (i.equals(s)) {
-				rt = x509Certificate;
-			}
-		}
+		Certificate rt = getRootCertificateCertificate(certs);
 
 		if (rt == null) {
 			throw new RuntimeException("Can't find root certificate in chain!");
@@ -685,6 +689,18 @@ public abstract class CertificateUtil {
 		}
 
 		return res;
+	}
+
+	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
+		Certificate rt = null;
+		for (Certificate x509Certificate : certs) {
+			Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
+			Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
+			if (i.equals(s)) {
+				rt = x509Certificate;
+			}
+		}
+		return rt;
 	}
 
 	public static void storeCertificate(String file, CertificateEntry entry)
