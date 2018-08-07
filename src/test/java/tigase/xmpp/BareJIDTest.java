@@ -18,12 +18,15 @@
  */
 package tigase.xmpp;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
 import tigase.util.TigaseStringprepException;
 
 import junit.framework.TestCase;
 
-public class BareJIDTest extends TestCase {
+public class BareJIDTest {
 
+	@Test
 	public void testBareJIDInstance() throws TigaseStringprepException {
 		assertEquals(BareJID.bareJIDInstance("a@b"), BareJID.bareJIDInstance("a@b"));
 		assertEquals(BareJID.bareJIDInstance("a@b"), BareJID.bareJIDInstance("a", "b"));
@@ -34,16 +37,19 @@ public class BareJIDTest extends TestCase {
 		assertEquals(BareJID.bareJIDInstance("a@b").hashCode(), BareJID.bareJIDInstance("A@B").hashCode());
 	}
 
+	@Test
 	public void testGetDomain() throws TigaseStringprepException {
 		BareJID jid = BareJID.bareJIDInstance("a@b");
 		assertEquals("b", jid.getDomain());
 	}
 
+	@Test
 	public void testGetLocalpart() throws TigaseStringprepException {
 		BareJID jid = BareJID.bareJIDInstance("a@b");
 		assertEquals("a", jid.getLocalpart());
 	}
 
+	@Test
 	public void testPercentJids() throws TigaseStringprepException {
 		BareJID jid = BareJID.bareJIDInstance("-101100311719181%chat.facebook.com@domain.com");
 
@@ -52,6 +58,7 @@ public class BareJIDTest extends TestCase {
 		assertEquals("-101100311719181%chat.facebook.com@domain.com", jid.toString());
 	}
 
+	@Test
 	public void testToString() throws TigaseStringprepException {
 		BareJID jid = BareJID.bareJIDInstance("a@b");
 		assertEquals("a@b", jid.toString());
@@ -66,4 +73,25 @@ public class BareJIDTest extends TestCase {
 		assertEquals("A@b", jid.toString());
 	}
 
+	@Test(expected = TigaseStringprepException.class)
+	public void testEmpty1StringDomain() throws TigaseStringprepException {
+		BareJID.bareJIDInstance("");
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testEmpty2StringDomain() throws TigaseStringprepException {
+		BareJID.bareJIDInstance(null, "");
+	}
+
+	@Test()
+	public void testEmpty1StringDomainNS() {
+		BareJID jid = BareJID.bareJIDInstanceNS("");
+		assertNull("null should be returned for empty domain", jid);
+	}
+
+	@Test()
+	public void testEmpty2StringDomainNS() {
+		BareJID jid = BareJID.bareJIDInstanceNS(null, "");
+		assertNull("null should be returned for empty domain", jid);
+	}
 }

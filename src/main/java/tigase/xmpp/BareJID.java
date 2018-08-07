@@ -90,7 +90,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 * the JID given as the parameter.
 	 *
 	 * @throws TigaseStringprepException if the stringprep processing fails for any
-	 * JID part used to create the instance.
+	 * JID part used to create the instance or if passed string is null or effectively empty.
 	 */
 	public static BareJID bareJIDInstance(String jid) throws TigaseStringprepException {
 		String[] parsedJid = parseJID(jid);
@@ -120,11 +120,14 @@ public final class BareJID implements Comparable<BareJID> {
 	 * the JID given as the parameter.
 	 *
 	 * @throws TigaseStringprepException if the stringprep processing fails for any
-	 * JID part used to create the instance.
+	 * JID part used to create the instance or if string passed for domain is null or effectively empty.
 	 */
 	public static BareJID bareJIDInstance(String p_localpart, String p_domain)
 			throws TigaseStringprepException {
 		String f_localpart = (p_localpart == null) ? null : stringPrep.nodeprep(p_localpart);
+		if (p_domain == null || p_domain.trim().isEmpty()) {
+			throw new TigaseStringprepException("Domain part is required");
+		}
 		String f_domain = stringPrep.nameprep(p_domain);
 
 		return new BareJID(f_localpart, f_domain);
@@ -146,7 +149,7 @@ public final class BareJID implements Comparable<BareJID> {
 	 * instance.
 	 *
 	 * @return an instance of the <code>BareJID</code> class which corresponds to
-	 * the JID given as the parameter.
+	 * the JID given as the parameter or null if passed string is null or effectively empty.
 	 *
 	 */
 	public static BareJID bareJIDInstanceNS(String jid) {
@@ -173,11 +176,12 @@ public final class BareJID implements Comparable<BareJID> {
 	 * be null.
 	 *
 	 * @return an instance of the <code>BareJID</code> class which corresponds to
-	 * the JID given as the parameter.
+	 * the JID given as the parameter or null if string passed for domain is null
+	 * or effectively empty.
 	 *
 	 */
 	public static BareJID bareJIDInstanceNS(String p_localpart, String p_domain) {
-		return new BareJID(p_localpart, p_domain);
+		return (p_domain == null || p_domain.trim().isEmpty()) ? null : new BareJID(p_localpart, p_domain);
 	}
 
 	/**

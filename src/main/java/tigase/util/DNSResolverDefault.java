@@ -72,7 +72,7 @@ public class DNSResolverDefault implements DNSResolverIfc {
 		boolean isTigasePrimaryHostValid = false;
 
 		try {
-			if ( tigasePrimaryHost != null ){
+			if ( tigasePrimaryHost != null && !tigasePrimaryHost.trim().isEmpty() ){
 				InetAddress.getByName( tigasePrimaryHost );
 				isTigasePrimaryHostValid = true;
 			}
@@ -256,24 +256,16 @@ public class DNSResolverDefault implements DNSResolverIfc {
 	public String getSecondaryHost() {
 
 		String property = System.getProperty(TIGASE_SECONDARY_ADDRESS );
-		if ( property != null ){
+		if ( property != null  && !property.trim().isEmpty() ){
 			try {
 				InetAddress.getByName( property );
 				secondaryHost = property;
 			} catch ( UnknownHostException ex ) {
 				log.log( Level.SEVERE, "Invalid secondary host property: " + property + ", using default: " + getDefaultHost() );
-				secondaryHost = null;
 			}
-		} else {
-			secondaryHost = null;
 		}
 
-		if ( secondaryHost != null ){
-			return secondaryHost;
-
-		} else {
-			return getDefaultHost();
-		}
+		return secondaryHost != null ? secondaryHost : getDefaultHost();
 	}
 
 	/**

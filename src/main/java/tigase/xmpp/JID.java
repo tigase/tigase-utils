@@ -1,17 +1,17 @@
-/* 
+/*
  * Tigase Jabber/XMPP Server
  * Copyright (C) 2004-2015 "Tigase, Inc." <office@tigase.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. Look for COPYING file in the top folder.
  * If not, see http://www.gnu.org/licenses/.
@@ -88,7 +88,7 @@ public final class JID
 	 * @return <code>JID</code> class instance.
 	 *
 	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 *                                   stringprep processing or null if string passed for domain is null or effectively empty.
 	 */
 	public static JID jidInstance( BareJID bareJid, String p_resource )
 			throws TigaseStringprepException {
@@ -96,6 +96,9 @@ public final class JID
 												? null
 												: BareJID.stringPrep.resourceprep( p_resource );
 
+		if (bareJid == null) {
+			throw new TigaseStringprepException("BareJID can't be null");
+		}
 		return new JID( bareJid, f_resource );
 	}
 
@@ -109,10 +112,10 @@ public final class JID
 	 * @param bareJid is a <code>BareJID</code> instance used to create the
 	 *                <code>JID</code> instance.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if passed BareJID is null.
 	 */
 	public static JID jidInstance( BareJID bareJid ) {
-		return new JID( bareJid, null );
+		return bareJid != null ? new JID( bareJid, null ) : null;
 	}
 
 	/**
@@ -127,7 +130,8 @@ public final class JID
 	 * @return <code>JID</code> class instance.
 	 *
 	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 *                                   stringprep processing or if passed string
+	 *                                   is null or effectively empty.
 	 */
 	public static JID jidInstance( String jid ) throws TigaseStringprepException {
 		String[] parsedJid = BareJID.parseJID( jid );
@@ -151,7 +155,9 @@ public final class JID
 	 * @return <code>JID</code> class instance.
 	 *
 	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 *                                   stringprep processing or if string
+	 *                                   passed for domain is null or effectively
+	 *                                   empty.
 	 */
 	public static JID jidInstance( String localpart, String domain )
 			throws TigaseStringprepException {
@@ -176,7 +182,8 @@ public final class JID
 	 * @return <code>JID</code> class instance.
 	 *
 	 * @throws TigaseStringprepException exception if there was an error during
-	 *                                   stringprep processing.
+	 *                                   stringprep processing or if string passed
+	 *                                   for domain is null or effectively empty.
 	 */
 	public static JID jidInstance( String localpart, String domain, String resource )
 			throws TigaseStringprepException {
@@ -197,10 +204,10 @@ public final class JID
 	 * @param bareJid is a <code>BareJID</code> instance used to create the
 	 *                <code>JID</code> instance.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if passed BareJID is null.
 	 */
 	public static JID jidInstanceNS( BareJID bareJid ) {
-		return new JID( bareJid, null );
+		return bareJid != null ? new JID( bareJid, null ) : null;
 	}
 
 	/**
@@ -219,10 +226,11 @@ public final class JID
 	 * @param p_resource is a <code>String</code> instance representing JID's
 	 *                   resource part.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if string passed for domain
+	 * is null or effectively empty.
 	 */
 	public static JID jidInstanceNS( BareJID bareJid, String p_resource ) {
-		return new JID( bareJid, p_resource );
+		return bareJid != null ? new JID( bareJid, p_resource ) : null;
 	}
 
 	/**
@@ -234,7 +242,8 @@ public final class JID
 	 * The method does not throw <code>NullPointerException</code> if the
 	 * <code>String</code> passed is null.
 	 *
-	 * @param jid a JID parameter given as a <code>String</code> instance.
+	 * @param jid a JID parameter given as a <code>String</code> instance or null
+	 * if string passed for domain is null or effectively empty.
 	 *
 	 * @return <code>JID</code> class instance or null.
 	 */
@@ -262,7 +271,8 @@ public final class JID
 	 * @param resource  is a <code>String</code> instance representing JID's
 	 *                  resource part.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if string passed for
+	 * domain is null or effectively empty.
 	 */
 	public static JID jidInstanceNS( String localpart, String domain, String resource ) {
 		return jidInstanceNS( BareJID.bareJIDInstanceNS( localpart, domain ), resource );
@@ -280,7 +290,8 @@ public final class JID
 	 * @param domain    is a <code>String</code> instance representing JID's
 	 *                  domain part.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if string passed for
+	 * domain is null or effectively empty.
 	 */
 	public static JID jidInstanceNS( String localpart, String domain ) {
 		return jidInstanceNS( BareJID.bareJIDInstanceNS( localpart, domain ) );
