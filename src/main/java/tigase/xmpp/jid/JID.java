@@ -47,7 +47,7 @@ public final class JID
 	 * <code>String</code> instance as a resource part.
 	 * <br>
 	 * As the <code>BareJID</code> instances are immutable the constructor doesn't create a copy of the given
-	 * <code>BareJID</code>, instead it saves the reference to a given object.<br> The resourve parameter is parsed,
+	 * <code>BareJID</code>, instead it saves the reference to a given object.<br> The resource parameter is parsed,
 	 * checked and run through the stringprep processing. In case of stringprep error, an exception is thrown.
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
@@ -55,11 +55,15 @@ public final class JID
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing or null if passed
+	 * string/domain was null or effectively empty..
 	 */
 	public static JID jidInstance(BareJID bareJid, String p_resource) throws TigaseStringprepException {
 		String f_resource = (p_resource == null) ? null : BareJID.stringPrep.resourceprep(p_resource);
 
+		if (bareJid == null) {
+			throw new TigaseStringprepException("BareJID can't be null");
+		}
 		return new JID(bareJid, f_resource);
 	}
 
@@ -73,7 +77,7 @@ public final class JID
 	 * @return <code>JID</code> class instance.
 	 */
 	public static JID jidInstance(BareJID bareJid) {
-		return new JID(bareJid, null);
+		return bareJid != null ? new JID(bareJid, null) : null;
 	}
 
 	/**
@@ -85,7 +89,8 @@ public final class JID
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing or null if passed
+	 * string/domain was null or effectively empty..
 	 */
 	public static JID jidInstance(String jid) throws TigaseStringprepException {
 		String[] parsedJid = BareJID.parseJID(jid);
@@ -104,7 +109,8 @@ public final class JID
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing or null if
+	 * passed string/domain was null or effectively empty..
 	 */
 	public static JID jidInstance(String localpart, String domain) throws TigaseStringprepException {
 		return jidInstance(BareJID.bareJIDInstance(localpart, domain));
@@ -122,7 +128,8 @@ public final class JID
 	 *
 	 * @return <code>JID</code> class instance.
 	 *
-	 * @throws TigaseStringprepException exception if there was an error during stringprep processing.
+	 * @throws TigaseStringprepException exception if there was an error during stringprep processing or if
+	 * passed string/domain was null or effectively empty..
 	 */
 	public static JID jidInstance(String localpart, String domain, String resource) throws TigaseStringprepException {
 		return jidInstance(BareJID.bareJIDInstance(localpart, domain), resource);
@@ -138,10 +145,10 @@ public final class JID
 	 *
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if passed string/domain was null or effectively empty.
 	 */
 	public static JID jidInstanceNS(BareJID bareJid) {
-		return new JID(bareJid, null);
+		return jidInstanceNS(bareJid, null);
 	}
 
 	/**
@@ -155,10 +162,10 @@ public final class JID
 	 * @param bareJid is a <code>BareJID</code> instance used to create the <code>JID</code> instance.
 	 * @param p_resource is a <code>String</code> instance representing JID's resource part.
 	 *
-	 * @return <code>JID</code> class instance.
+	 * @return <code>JID</code> class instance or null if passed string/domain was null or effectively empty.
 	 */
 	public static JID jidInstanceNS(BareJID bareJid, String p_resource) {
-		return new JID(bareJid, p_resource);
+		return bareJid != null ? new JID(bareJid, p_resource) : null;
 	}
 
 	/**

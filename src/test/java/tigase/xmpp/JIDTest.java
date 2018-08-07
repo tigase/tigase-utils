@@ -19,37 +19,43 @@
  */
 package tigase.xmpp;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import tigase.util.stringprep.TigaseStringprepException;
 import tigase.xmpp.jid.BareJID;
 import tigase.xmpp.jid.JID;
 
+import static org.junit.Assert.*;
+
 /**
  * @author Wojciech Kapcia <wojciech.kapcia@tigase.org>
  */
-public class JIDTest
-		extends TestCase {
+public class JIDTest {
 
+	@Test
 	public void testGetBareJid() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b/c");
 		assertEquals(BareJID.bareJIDInstance("a", "b"), jid.getBareJID());
 	}
 
+	@Test
 	public void testGetDomain() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b/c");
 		assertEquals("b", jid.getDomain());
 	}
 
+	@Test
 	public void testGetLocalpart() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b/c");
 		assertEquals("a", jid.getLocalpart());
 	}
 
+	@Test
 	public void testGetResource() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b/c");
 		assertEquals("c", jid.getResource());
 	}
 
+	@Test
 	public void testJIDInstance() throws TigaseStringprepException {
 //		assertEquals(JID.jidInstance("a@b"), JID.jidInstance("a@b"));
 //		assertEquals(JID.jidInstance("a@b"), JID.jidInstance("a", "b"));
@@ -66,6 +72,7 @@ public class JIDTest
 		assertFalse(JID.jidInstance("a@b/C").hashCode() == JID.jidInstance("a@b/c").hashCode());
 	}
 
+	@Test
 	public void testPercentJids() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("-101100311719181%chat.facebook.com@domain.com");
 
@@ -75,6 +82,7 @@ public class JIDTest
 		assertEquals("-101100311719181%chat.facebook.com@domain.com", jid.toString());
 	}
 
+	@Test
 	public void testToString() throws TigaseStringprepException {
 		JID jid = JID.jidInstance("a@b");
 		assertEquals("a@b", jid.toString());
@@ -84,11 +92,33 @@ public class JIDTest
 		assertNotSame("A@b/c", jid.toString());
 		assertNotSame("a@B/c", jid.toString());
 	}
-	
+
 	public void testEquals() throws TigaseStringprepException {
 		JID jid1 = JID.jidInstance("a@b/t");
 		JID jid2 = JID.jidInstance("A@B/t");
 		assertTrue(jid1.equals(jid2));
 		assertFalse(jid1.equals(null));
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testEmpty1StringDomain() throws TigaseStringprepException {
+		JID.jidInstance("");
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testEmpty2StringDomain() throws TigaseStringprepException {
+		JID.jidInstance(null, "", null);
+	}
+
+	@Test()
+	public void testEmpty1StringDomainNS() {
+		JID jid = JID.jidInstanceNS("");
+		assertNull("null should be returned for empty domain", jid);
+	}
+
+	@Test()
+	public void testEmpty2StringDomainNS() {
+		JID jid = JID.jidInstanceNS(null, "", null);
+		assertNull("null should be returned for empty domain", jid);
 	}
 }

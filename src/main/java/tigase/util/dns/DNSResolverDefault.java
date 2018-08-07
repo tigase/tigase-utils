@@ -56,7 +56,7 @@ public class DNSResolverDefault
 
 	protected static boolean isHostValid(String host) {
 		try {
-			if (host != null) {
+			if (host != null && !host.trim().isEmpty()) {
 				InetAddress.getByName(host);
 				return true;
 			}

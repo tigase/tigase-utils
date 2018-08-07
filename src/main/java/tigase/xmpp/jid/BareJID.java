@@ -98,6 +98,9 @@ public final class BareJID
 	 */
 	public static BareJID bareJIDInstance(String p_localpart, String p_domain) throws TigaseStringprepException {
 		String f_localpart = (p_localpart == null) ? null : stringPrep.nodeprep(p_localpart);
+		if (p_domain == null || p_domain.trim().isEmpty()) {
+			throw new TigaseStringprepException("Domain part is required");
+		}
 		String f_domain = stringPrep.nameprep(p_domain);
 
 		return new BareJID(f_localpart, f_domain);
@@ -115,7 +118,8 @@ public final class BareJID
 	 *
 	 * @param jid is a <code>String</code> parameter used to create the bare JID instance.
 	 *
-	 * @return an instance of the <code>BareJID</code> class which corresponds to the JID given as the parameter.
+	 * @return an instance of the <code>BareJID</code> class which corresponds to the JID given as the parameter or
+	 * null if passed string/domain was null or effectively empty.
 	 */
 	public static BareJID bareJIDInstanceNS(String jid) {
 		String[] parsedJid = parseJID(jid);
@@ -136,10 +140,11 @@ public final class BareJID
 	 * @param p_domain is a <code>String</code> parameter assumed to be a JID domain part and used to create the bare
 	 * JID instance. This parameter must not be null.
 	 *
-	 * @return an instance of the <code>BareJID</code> class which corresponds to the JID given as the parameter.
+	 * @return an instance of the <code>BareJID</code> class which corresponds to the JID given as the parameter or null if
+	 * passed domain was null or effectively empty.
 	 */
 	public static BareJID bareJIDInstanceNS(String p_localpart, String p_domain) {
-		return new BareJID(p_localpart, p_domain);
+		return (p_domain == null || p_domain.trim().isEmpty()) ? null : new BareJID(p_localpart, p_domain);
 	}
 
 	/**
