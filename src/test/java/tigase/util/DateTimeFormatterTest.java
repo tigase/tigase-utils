@@ -24,7 +24,9 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import tigase.util.datetime.DateTimeFormatter;
 
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class DateTimeFormatterTest
@@ -80,10 +82,6 @@ public class DateTimeFormatterTest
 		assertEquals("11:12:13Z", actual);
 	}
 
-	/**
-	 * Test method for {@link tigase.muc.DateTimeFormatter#parseDateTime(java.lang.String)}.
-	 */
-
 	public void testParse() {
 
 	}
@@ -120,8 +118,8 @@ public class DateTimeFormatterTest
 	public void testParse04() throws Exception {
 		try {
 			dt.parseDateTime("2009-09-11T11:12:13");
-			Assert.fail("Must throw IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			Assert.fail("Must throw ParseException");
+		} catch (ParseException e) {
 			// OK
 		}
 	}
@@ -153,11 +151,21 @@ public class DateTimeFormatterTest
 	}
 
 	public void testParse08() throws Exception {
-		Calendar actual = dt.parseDateTime("2015-01-06T20:12:26.584Z");
+		Calendar actual = dt.parseDateTime("2018-08-21T08:48:22.792921Z");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		expected.clear();
-		expected.set(2015, 0, 6, 20, 12, 26);
-		expected.set(Calendar.MILLISECOND, 584);
+		expected.set(2018, 7, 21, 8, 48, 22);
+		expected.set(Calendar.MILLISECOND, 792921);
 		assertEquals(expected, actual);
+		assertEquals(new Date(1534842094921l), actual.getTime());
 	}
+
+	public void testParseException() throws Exception {
+		try {
+			dt.parseDateTime("2018-08-21T08:48:22.79292z0Z");
+			fail("Exception should be throwed");
+		} catch (ParseException ignore) {
+		}
+	}
+
 }

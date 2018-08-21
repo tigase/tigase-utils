@@ -20,6 +20,7 @@
 package tigase.util.datetime;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -78,7 +79,7 @@ public class DateTimeFormatter {
 		return timeFormatUTC.format(date);
 	}
 
-	public Calendar parseDateTime(final String value) {
+	public Calendar parseDateTime(final String value) throws ParseException {
 		Matcher m = dateTimePattern.matcher(value);
 
 		if (m.find()) {
@@ -141,7 +142,6 @@ public class DateTimeFormatter {
 			return calendar;
 		}
 
-		throw new IllegalArgumentException("Can't parse datetime, date or time: " + value);
-
+		throw new ParseException("Can't parse datetime, date or time: " + value, -1);
 	}
 }
