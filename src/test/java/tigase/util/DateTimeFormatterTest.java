@@ -22,6 +22,7 @@ package tigase.util;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.Test;
 import tigase.util.datetime.DateTimeFormatter;
 
 import java.text.ParseException;
@@ -160,12 +161,20 @@ public class DateTimeFormatterTest
 		assertEquals(new Date(1534842094921l), actual.getTime());
 	}
 
+	@Test
+	public void testParseEmptyString() throws ParseException {
+		assertNull(dt.parseDateTime(""));
+		assertNull(dt.parseDateTime(null));
+	}
+
+	@Test
 	public void testParseException() throws Exception {
 		try {
 			dt.parseDateTime("2018-08-21T08:48:22.79292z0Z");
 			fail("Exception should be throwed");
 		} catch (ParseException ignore) {
 		}
+
 	}
 
 }

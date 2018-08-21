@@ -80,6 +80,9 @@ public class DateTimeFormatter {
 	}
 
 	public Calendar parseDateTime(final String value) throws ParseException {
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
 		Matcher m = dateTimePattern.matcher(value);
 
 		if (m.find()) {
