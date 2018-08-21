@@ -35,6 +35,7 @@ public class DateTimeFormatterTest
 
 	DateTimeFormatter dt = new DateTimeFormatter();
 
+	@Test
 	public void testFormat01() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(2009, 8, 11, 11, 12, 13);
@@ -43,6 +44,7 @@ public class DateTimeFormatterTest
 		assertEquals("2009-09-11T11:12:13Z", actual);
 	}
 
+	@Test
 	public void testFormat02() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"));
 		cal.set(2009, 8, 11, 13, 12, 13);
@@ -51,6 +53,7 @@ public class DateTimeFormatterTest
 		assertEquals("2009-09-11T11:12:13Z", actual);
 	}
 
+	@Test
 	public void testFormat03() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(2009, 8, 11, 11, 12, 13);
@@ -59,6 +62,7 @@ public class DateTimeFormatterTest
 		assertEquals("2009-09-11", actual);
 	}
 
+	@Test
 	public void testFormat04() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"));
 		cal.set(2009, 8, 11, 13, 12, 13);
@@ -67,6 +71,7 @@ public class DateTimeFormatterTest
 		assertEquals("2009-09-11", actual);
 	}
 
+	@Test
 	public void testFormat05() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(2009, 8, 11, 11, 12, 13);
@@ -75,6 +80,7 @@ public class DateTimeFormatterTest
 		assertEquals("11:12:13Z", actual);
 	}
 
+	@Test
 	public void testFormat06() {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"));
 		cal.set(2009, 8, 11, 13, 12, 13);
@@ -83,10 +89,23 @@ public class DateTimeFormatterTest
 		assertEquals("11:12:13Z", actual);
 	}
 
-	public void testParse() {
-
+	@Test
+	public void testFormatInLegacyDelayedDelivery() {
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		String result = dt.formatInLegacyDelayedDelivery(date);
+		assertEquals("20180427T15:57:02", result);
 	}
 
+	@Test
+	public void testFormattingWithMs() {
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		String result = dt.formatWithMs(date);
+		assertEquals("2018-04-27T15:57:02.597Z", result);
+	}
+
+	@Test
 	public void testParse01() throws Exception {
 		Calendar actual = dt.parseDateTime("11:12:13Z");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -97,6 +116,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse02() throws Exception {
 		Calendar actual = dt.parseDateTime("11:12:13-01:30");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("GMT-01:30"));
@@ -108,6 +128,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse03() throws Exception {
 		Calendar actual = dt.parseDateTime("2009-09-11T11:12:13-01:30");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("GMT-01:30"));
@@ -116,6 +137,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse04() throws Exception {
 		try {
 			dt.parseDateTime("2009-09-11T11:12:13");
@@ -125,6 +147,7 @@ public class DateTimeFormatterTest
 		}
 	}
 
+	@Test
 	public void testParse05() throws Exception {
 		Calendar actual = dt.parseDateTime("2009-09-11");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -133,6 +156,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse06() throws Exception {
 		Calendar actual = dt.parseDateTime("2009-09-11T11:12:13Z");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -141,6 +165,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse07() throws Exception {
 		Calendar actual = dt.parseDateTime("11:12:13");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -151,6 +176,7 @@ public class DateTimeFormatterTest
 		assertEquals(expected, actual);
 	}
 
+	@Test
 	public void testParse08() throws Exception {
 		Calendar actual = dt.parseDateTime("2018-08-21T08:48:22.792921Z");
 		Calendar expected = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -174,7 +200,6 @@ public class DateTimeFormatterTest
 			fail("Exception should be throwed");
 		} catch (ParseException ignore) {
 		}
-
 	}
 
 }

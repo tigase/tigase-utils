@@ -38,19 +38,13 @@ public class DateTimeFormatter {
 	private static final String TIME = "(\\d\\d):(\\d\\d):(\\d\\d)(.\\d+)?";
 
 	private static final String TIME_ZONE = "(([+-]\\d\\d:\\d\\d)|Z)";
-
+	private final SimpleDateFormat TIMESTAMP_FORMATTER_WITH_MS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXX");
 	private final DateFormat dateFormat;
-
 	private final Pattern datePattern;
-
 	private final DateFormat dateTimeFormatUTC;
-
 	private final Pattern dateTimePattern;
-
 	private final DateFormat timeFormatUTC;
-
 	private final Pattern timePattern;
-
 	private final TimeZone timeZoneUTC = TimeZone.getTimeZone("UTC");
 
 	public DateTimeFormatter() {
@@ -65,6 +59,7 @@ public class DateTimeFormatter {
 
 		this.timeFormatUTC = new SimpleDateFormat("HH:mm:ss'Z'");
 		this.timeFormatUTC.setTimeZone(timeZoneUTC);
+		TIMESTAMP_FORMATTER_WITH_MS.setTimeZone(timeZoneUTC);
 	}
 
 	public String formatDate(final Date date) {
@@ -75,8 +70,21 @@ public class DateTimeFormatter {
 		return dateTimeFormatUTC.format(date);
 	}
 
+	public String formatInLegacyDelayedDelivery(Date date) {
+		Calendar now = Calendar.getInstance();
+		now.setTimeZone(TimeZone.getTimeZone("GMT"));
+		now.setTime(date);
+		return String.format("%1$tY%1$tm%1$tdT%1$tH:%1$tM:%1$tS", now);
+	}
+
 	public String formatTime(final Date date) {
 		return timeFormatUTC.format(date);
+	}
+
+	public String formatWithMs(Date date) {
+		synchronized (TIMESTAMP_FORMATTER_WITH_MS) {
+			return TIMESTAMP_FORMATTER_WITH_MS.format(date);
+		}
 	}
 
 	public Calendar parseDateTime(final String value) throws ParseException {
