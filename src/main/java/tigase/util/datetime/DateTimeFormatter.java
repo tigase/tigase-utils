@@ -19,6 +19,8 @@
  */
 package tigase.util.datetime;
 
+import tigase.annotations.TigaseDeprecated;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,7 +32,10 @@ import java.util.regex.Pattern;
 
 /**
  * @author bmalkow
+ * @deprecated use {@linkplain TimestampHelper} instead.
  */
+@Deprecated
+@TigaseDeprecated(since = "4.0.0", removeIn = "4.1.0")
 public class DateTimeFormatter {
 
 	private static final String DATE = "(\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d)";

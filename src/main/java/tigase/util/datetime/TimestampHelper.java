@@ -20,57 +20,98 @@
 package tigase.util.datetime;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import static java.time.temporal.ChronoField.*;
 
 /**
  * @author andrzej
  */
 public class TimestampHelper {
 
-	private final SimpleDateFormat TIMESTAMP_FORMATTER1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXX");
-	private final SimpleDateFormat TIMESTAMP_FORMATTER2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-	private final SimpleDateFormat TIMESTAMP_FORMATTER3 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXX");
-	private final SimpleDateFormat TIMESTAMP_FORMATTER4 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	private final java.time.format.DateTimeFormatter TIMESTAMP_ISO_DATE_TIME = new DateTimeFormatterBuilder().parseCaseInsensitive()
+			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+			.appendLiteral('T')
+			.appendValue(HOUR_OF_DAY, 2)
+			.appendLiteral(':')
+			.appendValue(MINUTE_OF_HOUR, 2)
+			.optionalStart()
+			.appendLiteral(':')
+			.appendValue(SECOND_OF_MINUTE, 2)
+			.appendOffsetId()
+			.toFormatter();
+	private final java.time.format.DateTimeFormatter TIMESTAMP_ISO_DATE_TIMEMS = new DateTimeFormatterBuilder().parseCaseInsensitive()
+			.append(DateTimeFormatter.ISO_LOCAL_DATE)
+			.appendLiteral('T')
+			.appendValue(HOUR_OF_DAY, 2)
+			.appendLiteral(':')
+			.appendValue(MINUTE_OF_HOUR, 2)
+			.optionalStart()
+			.appendLiteral(':')
+			.appendValue(SECOND_OF_MINUTE, 2)
+			.optionalStart()
+			.appendFraction(NANO_OF_SECOND, 0, 9, true)
+			.appendOffsetId()
+			.toFormatter();
+	/** For parsing only. */
+	private final java.time.format.DateTimeFormatter TIMESTAMP_ISO_ZONED_DATE_TIME = DateTimeFormatter.ISO_ZONED_DATE_TIME;
+	private final java.time.format.DateTimeFormatter TIMESTAMP_LEGACY = new DateTimeFormatterBuilder().parseCaseInsensitive()
+			.appendValue(YEAR, 4)
+			.appendValue(MONTH_OF_YEAR, 2)
+			.appendValue(DAY_OF_MONTH, 2)
+			.appendLiteral('T')
+			.appendValue(HOUR_OF_DAY, 2)
+			.appendLiteral(':')
+			.appendValue(MINUTE_OF_HOUR, 2)
+			.optionalStart()
+			.appendLiteral(':')
+			.appendValue(SECOND_OF_MINUTE, 2)
+			.toFormatter();
 
+	private boolean useUTC;
+
+	/**
+	 * Creates helper configured to produce timestamps in UTC timezone.
+	 *
+	 * @see TimestampHelper#setUseUTC(boolean)
+	 */
 	public TimestampHelper() {
-		TIMESTAMP_FORMATTER1.setTimeZone(TimeZone.getTimeZone("UTC"));
-		TIMESTAMP_FORMATTER2.setTimeZone(TimeZone.getTimeZone("UTC"));
-		TIMESTAMP_FORMATTER3.setTimeZone(TimeZone.getTimeZone("UTC"));
-		TIMESTAMP_FORMATTER4.setTimeZone(TimeZone.getTimeZone("UTC"));
+		this.useUTC = true;
 	}
 
-	public Date parseTimestamp(String tmp) throws ParseException {
-		if (tmp == null || tmp.isEmpty()) {
-			return null;
-		}
+	/**
+	 * Creates helper configured to produce timestamps in UTC timezone or local timezone.
+	 *
+	 * @param useUTC <code>true</code> to use UTC timezone, <code>false</code> to use local timezone.
+	 *
+	 * @see TimestampHelper#setUseUTC(boolean)
+	 */
+	public TimestampHelper(boolean useUTC) {
+		this.useUTC = useUTC;
+	}
 
-		Date date = null;
+	private String format(final DateTimeFormatter formatter, final Date time) {
+		final ZonedDateTime zdt = time.toInstant().atZone(ZoneOffset.UTC);
 
-		if (tmp.contains(".")) {
-			synchronized (TIMESTAMP_FORMATTER4) {
-				date = TIMESTAMP_FORMATTER4.parse(tmp);
-			}
+		if (useUTC) {
+			return zdt.withZoneSameInstant(ZoneOffset.UTC).format(formatter);
 		} else {
-			synchronized (TIMESTAMP_FORMATTER2) {
-				date = TIMESTAMP_FORMATTER2.parse(tmp);
-			}
+			return zdt.withZoneSameInstant(ZoneId.systemDefault()).format(formatter);
 		}
-
-		return date;
 	}
 
 	public String format(Date ts) {
-		synchronized (TIMESTAMP_FORMATTER1) {
-			return TIMESTAMP_FORMATTER1.format(ts);
-		}
-	}
-
-	public String formatWithMs(Date ts) {
-		synchronized (TIMESTAMP_FORMATTER3) {
-			return TIMESTAMP_FORMATTER3.format(ts);
+		synchronized (TIMESTAMP_ISO_DATE_TIME) {
+			return format(TIMESTAMP_ISO_DATE_TIME, ts);
 		}
 	}
 
@@ -79,6 +120,49 @@ public class TimestampHelper {
 		now.setTimeZone(TimeZone.getTimeZone("GMT"));
 		now.setTime(date);
 		return String.format("%1$tY%1$tm%1$tdT%1$tH:%1$tM:%1$tS", now);
+	}
+
+	public String formatWithMs(Date ts) {
+		synchronized (TIMESTAMP_ISO_DATE_TIMEMS) {
+			return format(TIMESTAMP_ISO_DATE_TIMEMS, ts);
+		}
+	}
+
+	public boolean isUseUTC() {
+		return useUTC;
+	}
+
+	/**
+	 * If <code>false</code> then generated timestamps will be in local timezone. In other case UTC will be used.
+	 *
+	 * <code>true</code> by default.
+	 *
+	 * @param useUTC <code>true</code> to use UTC timezone, <code>false</code> to use local timezone.
+	 */
+	public void setUseUTC(boolean useUTC) {
+		this.useUTC = useUTC;
+	}
+
+	public Date parseTimestamp(String tmp) throws ParseException {
+		if (tmp == null || tmp.isEmpty()) {
+			return null;
+		}
+		try {
+			if (!tmp.contains("-")) {
+				// try to use legacy format
+				synchronized (TIMESTAMP_LEGACY) {
+					LocalDateTime dt = LocalDateTime.parse(tmp, TIMESTAMP_LEGACY);
+					return Date.from(dt.toInstant(ZoneOffset.UTC));
+				}
+			} else {
+				synchronized (TIMESTAMP_ISO_ZONED_DATE_TIME) {
+					ZonedDateTime dt = ZonedDateTime.parse(tmp, TIMESTAMP_ISO_ZONED_DATE_TIME);
+					return Date.from(dt.toInstant());
+				}
+			}
+		} catch (DateTimeParseException e) {
+			throw new ParseException(e.getMessage(), e.getErrorIndex());
+		}
 	}
 
 }

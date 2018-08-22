@@ -32,7 +32,15 @@ public class TimestampHelperTest {
 	private final TimestampHelper helper = new TimestampHelper();
 
 	@Test
-	public void testformattingWithMs() {
+	public void testFormatInLegacyDelayedDelivery() {
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		String result = helper.formatInLegacyDelayedDelivery(date);
+		assertEquals("20180427T15:57:02", result);
+	}
+
+	@Test
+	public void testFormattingWithMs() {
 		long milis = 1524844622597l;
 		Date date = new Date(milis);
 		String result = helper.formatWithMs(date);
@@ -40,7 +48,7 @@ public class TimestampHelperTest {
 	}
 
 	@Test
-	public void testformattingWithoutMs() {
+	public void testFormattingWithoutMs() {
 		long milis = 1524844622597l;
 		Date date = new Date(milis);
 		String result = helper.format(date);
@@ -48,33 +56,17 @@ public class TimestampHelperTest {
 	}
 
 	@Test
+	public void testParsingLegacyDelayedDelivery() throws ParseException {
+		Date result = helper.parseTimestamp("20180427T15:57:02");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
 	public void testParsingWithMs() throws ParseException {
 		Date result = helper.parseTimestamp("2018-04-27T15:57:02.597Z");
 		long milis = 1524844622597l;
-		Date date = new Date(milis);
-		assertEquals(date, result);
-	}
-
-	@Test
-	public void testParsingWitoutMs() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T15:57:02Z");
-		long milis = 1524844622000l;
-		Date date = new Date(milis);
-		assertEquals(date, result);
-	}
-
-	@Test
-	public void testParsingWithMsAndZonePositive() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T17:57:02.597+02:00");
-		long milis = 1524844622597l;
-		Date date = new Date(milis);
-		assertEquals(date, result);
-	}
-	
-	@Test
-	public void testParsingWitoutMsAndZonePositive() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T17:57:02+02:00");
-		long milis = 1524844622000l;
 		Date date = new Date(milis);
 		assertEquals(date, result);
 	}
@@ -88,9 +80,17 @@ public class TimestampHelperTest {
 	}
 
 	@Test
-	public void testParsingWitoutMsAndZoneNegative() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T13:57:02-02:00");
-		long milis = 1524844622000l;
+	public void testParsingWithMsAndZoneNegativeHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:27:02.597-02:30");
+		long milis = 1524844622597l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWithMsAndZonePositive() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T17:57:02.597+02:00");
+		long milis = 1524844622597l;
 		Date date = new Date(milis);
 		assertEquals(date, result);
 	}
@@ -104,17 +104,33 @@ public class TimestampHelperTest {
 	}
 
 	@Test
-	public void testParsingWitoutMsAndZonePositiveHalf() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T18:27:02+02:30");
+	public void testParsingWithMsLong() throws ParseException {
+		Date result = helper.parseTimestamp("2018-08-21T08:48:22.792921Z");
+		long milis = 1534841302792l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWithMsLongAndZonePositiveHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-08-21T08:48:22.792921+02:30");
+		long milis = 1534832302792l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWitoutMs() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T15:57:02Z");
 		long milis = 1524844622000l;
 		Date date = new Date(milis);
 		assertEquals(date, result);
 	}
 
 	@Test
-	public void testParsingWithMsAndZoneNegativeHalf() throws ParseException {
-		Date result = helper.parseTimestamp("2018-04-27T13:27:02.597-02:30");
-		long milis = 1524844622597l;
+	public void testParsingWitoutMsAndZoneNegative() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T13:57:02-02:00");
+		long milis = 1524844622000l;
 		Date date = new Date(milis);
 		assertEquals(date, result);
 	}
@@ -127,4 +143,19 @@ public class TimestampHelperTest {
 		assertEquals(date, result);
 	}
 
+	@Test
+	public void testParsingWitoutMsAndZonePositive() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T17:57:02+02:00");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
+
+	@Test
+	public void testParsingWitoutMsAndZonePositiveHalf() throws ParseException {
+		Date result = helper.parseTimestamp("2018-04-27T18:27:02+02:30");
+		long milis = 1524844622000l;
+		Date date = new Date(milis);
+		assertEquals(date, result);
+	}
 }
