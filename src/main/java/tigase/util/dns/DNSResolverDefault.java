@@ -157,7 +157,10 @@ public class DNSResolverDefault
 
 		// Turn the Java DNS Cache off, we are caching ourselves and we want
 		// to have a full control over it.
-		java.security.Security.setProperty("networkaddress.cache.ttl", "0");
+		// actually this also impacts MySQL on AWS where sometimes DNS query causes exception
+		// making it impossible for the driver to reestablish connection. Let's have some
+		// small cache (https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-jvm-ttl.html)
+		java.security.Security.setProperty("networkaddress.cache.ttl", "120");
 		ip_cache.put(LOCALHOST, new DNSEntry(LOCALHOST, "127.0.0.1"));
 		setPrimaryHost(System.getProperty(TIGASE_PRIMARY_ADDRESS));
 		setSecondaryHost(System.getProperty(TIGASE_SECONDARY_ADDRESS));
