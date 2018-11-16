@@ -236,6 +236,10 @@ public final class JID
 		this.hashcode = Objects.hash(bareJid, resource);
 	}
 
+	public boolean hasResource() {
+		return resource != null && !resource.isEmpty();
+	}
+
 	/**
 	 * Method compares the <code>JID</code> instance with a given object. The implementation fulfills the specification
 	 * contract and returns a value as you would expect from the call:
