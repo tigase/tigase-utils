@@ -40,7 +40,7 @@ class StatisticsAnalyser {
 	public static void main(String[] args) {
 
 		if (args.length < 1 || args.length > 2) {
-			System.out.println("Wrong parameter list (either 1 or 2 supported");
+			System.out.println("Wrong parameter list (either 1 or 2 supported (path + filter)");
 		}
 
 		System.out.println("Using path: " + args[0]);
