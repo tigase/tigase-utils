@@ -74,6 +74,8 @@
                         <Export-Package>
                             gnu.inet.encoding.*;version=${project.version},tigase.annotations.*;version=${project.version},tigase.cert.*;version=${project.version},tigase.collections.*;version=${project.version},tigase.criteria.*;version=${project.version},tigase.form.*;version=${project.version},tigase.util.*;version=${project.version},tigase.xmpp.jid.*;version=${project.version},tigase.xmpp.rsm.*;version=${project.version}
                         </Export-Package>
+                        <Embed-Dependency>*;scope=compile|runtime;artifactId=!junit|org.osgi.core|slf4j-api
+                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
