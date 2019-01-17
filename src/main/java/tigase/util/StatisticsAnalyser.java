@@ -71,7 +71,7 @@ class StatisticsAnalyser {
 			for (String line : lines) {
 				String[] keyval;
 				if (!line.contains("Statistics time")) {
-					keyval = line.split("(\\t+|\\s{2})");
+					keyval = line.split("(\\t+|\\s{2,})");
 					if (keyval.length != 2) {
 						System.out.println(line + " : " + Arrays.toString(keyval));
 					}
