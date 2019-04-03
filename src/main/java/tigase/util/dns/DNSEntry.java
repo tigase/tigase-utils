@@ -71,6 +71,18 @@ public class DNSEntry {
 	}
 
 	/**
+	 * Constructs DNS entry with hostname, IPs to which it resolves and a default port number used for connections.
+	 *
+	 * @param hostname the domain name for which this record is valid
+	 * @param ip <code>IP address</code> of the machine providing the service.
+	 * @param port the TCP or UDP port on which the service is to be found
+	 */
+	public DNSEntry(String hostname, String[] ips, int port) {
+		this(hostname, ips);
+		this.port = port;
+	}
+
+	/**
 	 * Constructs complete SRV DNS entry.
 	 *
 	 * @param hostname the domain name for which this record is valid

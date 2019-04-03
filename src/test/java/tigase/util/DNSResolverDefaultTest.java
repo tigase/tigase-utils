@@ -18,8 +18,12 @@
 package tigase.util;
 
 import org.junit.Test;
+import tigase.util.dns.DNSEntry;
 import tigase.util.dns.DNSResolverFactory;
 import tigase.util.dns.DNSResolverIfc;
+
+import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertTrue;
 import static tigase.util.dns.DNSResolverIfc.TIGASE_PRIMARY_ADDRESS;
@@ -38,4 +42,11 @@ public class DNSResolverDefaultTest {
 		assertTrue("Secondary hostname is empty", !dnsResolverDefault.getSecondaryHost().isEmpty());
 	}
 
+	@Test
+	public void getSRV() throws UnknownHostException {
+		DNSEntry[] entries = DNSResolverFactory.getInstance().getHostSRV_Entries("jabber.ccc.de");
+		Arrays.stream(entries).forEach(entry -> {
+			System.out.println("entry: " + entry.toString());
+		});
+	}
 }

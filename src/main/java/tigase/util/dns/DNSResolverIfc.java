@@ -185,7 +185,7 @@ public interface DNSResolverIfc {
 			}
 		}    // end of try-catch
 		if (entries.isEmpty()) {
-			String ip_address = getHostIP(result_host);
+			String[] ip_address = getHostIPs(result_host);
 
 			entries.add(new DNSEntry(hostname, ip_address, port));
 		}
