@@ -68,7 +68,7 @@ public class OldSelfSignedCertificateGenerator
 
 		StringBuilder subject = new StringBuilder(1024);
 
-		appendName(subject, "CN", "*." + domain);
+		appendName(subject, "CN", domain);
 		appendName(subject, "EMAILADDRESS", email);
 		appendName(subject, "OU", organizationUnit);
 		appendName(subject, "O", organization);
