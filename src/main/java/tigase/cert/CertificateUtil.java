@@ -281,8 +281,8 @@ public abstract class CertificateUtil {
 		}
 	}
 
-	public static ArrayList<String> getCertAltCName(X509Certificate cert) {
-		log.log(Level.INFO, "getCertAltCName, x509Certificate: {0}", new Object[]{cert.toString()});
+	public static List<String> getCertAltCName(X509Certificate cert) {
+		log.log(Level.FINEST, "getCertAltCName, x509Certificate: {0}", new Object[]{cert.toString()});
 		try {
 			Collection<List<?>> subjectAlternativeNames = cert.getSubjectAlternativeNames();
 			ArrayList<String> result = new ArrayList<>();
@@ -295,10 +295,10 @@ public abstract class CertificateUtil {
 					}
 				}
 			}
-			log.log(Level.INFO, "getCertAltCName, AltCName: {0}", new Object[]{result});
+			log.log(Level.INFO, "Certificate alternative names: {0}", new Object[]{result});
 			return result;
 		} catch (CertificateParsingException e) {
-			return null;
+			return Collections.emptyList();
 		}
 	}
 
@@ -312,7 +312,7 @@ public abstract class CertificateUtil {
 			String[] ns = n.trim().split("=");
 
 			if (ns[0].equals("CN")) {
-				log.log(Level.INFO, "getCertCName, AltCName: {0}", new Object[]{ns[1]});
+				log.log(Level.INFO, "Certificate DN: {0}", new Object[]{ns[1]});
 				return ns[1];
 			}
 		}
@@ -428,7 +428,8 @@ public abstract class CertificateUtil {
 				String file = args[1];
 				CertificateEntry ce = loadCertificate(file);
 
-				System.out.println(ce.toString());
+				final boolean basic = args.length == 3 && "-simple".equals(args[2]);
+				System.out.println(ce.toString(basic));
 
 				final ArrayList<Certificate> certs = new ArrayList<>(Arrays.asList(ce.getCertChain()));
 				if (getRootCertificateCertificate(certs) == null) {
@@ -438,8 +439,8 @@ public abstract class CertificateUtil {
 						Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
 						System.out.println(s + " ~ ISSUED BY: " + i);
 					}
-
 				}
+				sort(ce.getCertChain());
 			}
 
 			if (args[0].equals(STORE_CERT) || args[0].equals(STORE_CERT_SHORT)) {
