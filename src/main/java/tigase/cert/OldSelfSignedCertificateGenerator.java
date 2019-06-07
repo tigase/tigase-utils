@@ -34,7 +34,7 @@ public class OldSelfSignedCertificateGenerator
 	private static final Logger log = Logger.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
 
 	private static void appendName(StringBuilder sb, String prefix, String value) {
-		log.log(Level.INFO, "appending value: {0} with prefix: {1} to sb: {2}",
+		log.log(Level.FINE, "appending value: {0} with prefix: {1} to sb: {2}",
 				new Object[]{value, prefix, sb.toString()});
 		if (value != null) {
 			if (sb.length() > 0) {
