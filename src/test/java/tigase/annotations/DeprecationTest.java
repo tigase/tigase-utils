@@ -80,7 +80,7 @@ public class DeprecationTest {
 		}
 		if (tigaseDeprecated != null) {
 			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
-					.orElseGet(() -> Version.parse(tigaseDeprecated.since()).get().nextMinor());
+					.orElseGet(() -> Version.parse(tigaseDeprecated.since()).get().nextMajor());
 			collector.checkThat("Class " + clazz + " should be removed in this version, deprecated since " +
 										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
@@ -102,7 +102,7 @@ public class DeprecationTest {
 		if (tigaseDeprecated != null) {
 			String since = tigaseDeprecated.since();
 			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
-					.orElseGet(() -> Version.parse(since).get().nextMinor());
+					.orElseGet(() -> Version.parse(since).get().nextMajor());
 			collector.checkThat("Field " + field + " should be removed in this version, deprecated since " +
 										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
@@ -133,7 +133,7 @@ public class DeprecationTest {
 		if (tigaseDeprecated != null) {
 			String since = tigaseDeprecated.since();
 			Version removeIn = Version.parse(tigaseDeprecated.removeIn())
-					.orElseGet(() -> Version.parse(since).get().nextMinor());
+					.orElseGet(() -> Version.parse(since).get().nextMajor());
 			collector.checkThat("Method " + method + " should be removed in this version, deprecated since " +
 										tigaseDeprecated.since(), removeIn, versionMatcher);
 		}
@@ -213,6 +213,10 @@ public class DeprecationTest {
 
 		public Version nextMinor() {
 			return new Version(major, minor + 1, 0);
+		}
+
+		public Version nextMajor() {
+			return new Version(major + 1, 0, 0);
 		}
 
 		@Override
