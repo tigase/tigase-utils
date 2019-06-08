@@ -25,10 +25,6 @@ import java.util.Map;
  * <br>
  * <br>
  * Created: Mon Mar  3 15:16:52 2008
- *
- * @param <K>
- * @param <V>
- *
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @version $Rev$
  */

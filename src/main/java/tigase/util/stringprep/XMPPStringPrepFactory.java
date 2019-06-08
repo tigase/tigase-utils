@@ -90,9 +90,7 @@ public abstract class XMPPStringPrepFactory {
 	}
 
 	/**
-	 * @param stringprepProcessor
 	 *
-	 * @return
 	 */
 	public static XMPPStringPrepIfc getXMPPStringPrep(String stringprepProcessor) {
 		if ("simple".equals(stringprepProcessor)) {

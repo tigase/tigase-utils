@@ -73,7 +73,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return <code>IP address</code> of the machine providing the service.
 	 *
-	 * @throws UnknownHostException
 	 */
 	default public String getHostIP(String hostname) throws UnknownHostException {
 		return getHostIPs(hostname)[0];
@@ -86,7 +85,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return Array of all <code>IP addresses</code> on which target host provide service.
 	 *
-	 * @throws UnknownHostException
 	 */
 	public String[] getHostIPs(String hostname) throws UnknownHostException;
 
@@ -98,7 +96,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return Array of the DNSEntry objects containing SRV DNS records
 	 *
-	 * @throws UnknownHostException
 	 */
 	default public DNSEntry[] getHostSRV_Entries(String hostname) throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
@@ -116,7 +113,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return Array of the DNSEntry records
 	 *
-	 * @throws UnknownHostException
 	 */
 	default public DNSEntry[] getHostSRV_Entries(String hostname, String service, int defPort)
 			throws UnknownHostException {
@@ -203,7 +199,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
 	 *
-	 * @throws UnknownHostException
 	 */
 	default public DNSEntry getHostSRV_Entry(String hostname) throws UnknownHostException {
 		String service = "_xmpp-server._tcp";
@@ -221,7 +216,6 @@ public interface DNSResolverIfc {
 	 *
 	 * @return DNSEntry object containing DNS record with highest priority for given <code>hostname</code>
 	 *
-	 * @throws UnknownHostException
 	 */
 	default public DNSEntry getHostSRV_Entry(String hostname, String service, int defPort) throws UnknownHostException {
 		DNSEntry[] entries = getHostSRV_Entries(hostname, service, defPort);
@@ -265,10 +259,6 @@ public interface DNSResolverIfc {
 	 * Returns <code>IP address</code> of the machine providing the service.
 	 *
 	 * @param hostname the domain name for which this record is valid
-	 *
-	 * @return
-	 *
-	 * @throws UnknownHostException
 	 */
 	default public String getHostSRV_IP(String hostname) throws UnknownHostException {
 		DNSEntry entry = getHostSRV_Entry(hostname);

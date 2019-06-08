@@ -137,7 +137,6 @@ public class CommandlineParameter {
 	/**
 	 * Retrives expected class of a parameter
 	 *
-	 * @return
 	 */
 	public Class getType() {
 		return type;

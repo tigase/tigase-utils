@@ -68,7 +68,6 @@ public class DNSResolverDefault
 	 *
 	 * @param args a <code>String[]</code> containing domains to query, if none provided default one will be used
 	 *
-	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
 	public static void main(final String[] args) throws Exception {
@@ -277,7 +276,6 @@ public class DNSResolverDefault
 	 *
 	 * @return Array of all <code>IP addresses</code> on which target host provide service.
 	 *
-	 * @throws UnknownHostException
 	 */
 	@Override
 	public String[] getHostIPs(String hostname) throws UnknownHostException {

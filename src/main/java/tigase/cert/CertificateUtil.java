@@ -357,13 +357,6 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Loads a certificate from a DER byte buffer.
-	 *
-	 * @param bytes
-	 *
-	 * @return
-	 *
-	 * @throws CertificateException
-	 * @throws NoSuchProviderException
 	 */
 	public static CertificateEntry loadCertificate(byte[] bytes) throws CertificateException, NoSuchProviderException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
@@ -473,10 +466,6 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Checks if hostname matches name or wildcard
-	 *
-	 * @param hostname
-	 * @param altName
-	 *
 	 * @return true if there is a match
 	 */
 	public static boolean match(final String hostname, final String altName) {
@@ -753,13 +742,8 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Method used to verify if certificate if valid for particular domain (if domain matches CN or ALT of certificate)
-	 *
-	 * @param cert
-	 * @param hostname
-	 *
 	 * @return true if certificate is valid
 	 *
-	 * @throws CertificateParsingException
 	 */
 	public static boolean verifyCertificateForDomain(X509Certificate cert, String hostname)
 			throws CertificateParsingException {
