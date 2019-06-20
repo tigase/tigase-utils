@@ -49,6 +49,21 @@
         <tag>HEAD</tag>
     </scm>
 
+    <profiles>
+        <profile>
+            <id>dist</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>dist</name>
+                </property>
+            </activation>
+            <properties>
+                <maven.javadoc.skip>false</maven.javadoc.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
