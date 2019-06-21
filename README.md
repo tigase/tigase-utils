@@ -1,7 +1,10 @@
 <p align="center">
+  <img src="https://github.com/tigaseinc/website-assets/blob/master/tigase/images/icons8-maintenance.png?raw=true" width="100px"/>
+  <br/>
 	<img src="https://github.com/tigaseinc/website-assets/blob/master/tigase/images/tigase-logo.png?raw=true" width="25px"/>
 	<img src="https://tc.tigase.net/app/rest/builds/buildType:(id:TigaseUtils_Build)/statusIcon" width="100"/>
 </p>
+
 
 # What it is
 
