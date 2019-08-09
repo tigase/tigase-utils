@@ -24,6 +24,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <code>ClassUtil</code> file contains code used for loading all implementations of specified <em>interface</em> or
@@ -36,6 +38,8 @@ import java.util.jar.JarFile;
  * @version $Rev$
  */
 public class ClassUtil {
+
+	private static final Logger log = Logger.getLogger(ClassUtil.class.getName());
 
 	private static final String[] SKIP_WHITELIST = {"tigase."};
 	private static final String[] SKIP_CONTAINS = {".ui.", ".swing", ".awt", ".sql.", ".xml.", ".terracotta."};
@@ -174,6 +178,8 @@ public class ClassUtil {
 
 					classes.add(cls);
 				}
+			} catch (UnsupportedClassVersionError e) {
+				log.log(Level.WARNING, "Class: " + name + " compiled using newer JDK version. Please upgrade your JDK!");
 			} catch (SecurityException e) {
 			} catch (NoClassDefFoundError e) {
 			} catch (UnsatisfiedLinkError e) {
