@@ -105,4 +105,24 @@ public class StringUtilities {
 		return result;
 	}
 
+	public static String convertNonPrintableCharactersToLiterals(final String input) {
+		StringBuilder output = new StringBuilder();
+
+		for (char c : input.toCharArray()) {
+			switch (Character.getType(c))
+			{
+				case Character.CONTROL:
+				case Character.PRIVATE_USE:
+				case Character.FORMAT:
+				case Character.UNASSIGNED:
+				case Character.SURROGATE:
+					output.append("\\u").append(String.format("%04X", (int) c));
+					break;
+				default:
+					output.append(c);
+					break;
+			}
+		}
+		return output.toString();
+	}
 }
