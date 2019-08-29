@@ -17,12 +17,16 @@
  */
 package tigase.util;
 
+import java.util.Arrays;
+
 /**
  * Class with string utilities, mostly helping with canonical representation of String
  *
  * @author wojtek
  */
 public class StringUtilities {
+
+	private static final char[] WHITE_CHARS = {'\t', '\n', '\r', ' '};
 
 	public enum JUSTIFY {
 		LEFT,
@@ -31,16 +35,26 @@ public class StringUtilities {
 	}
 
 	public static String convertNonPrintableCharactersToLiterals(final String input) {
+		return convertNonPrintableCharactersToLiterals(input, false);
+	}
+
+	public static String convertNonPrintableCharactersToLiterals(final String input, boolean maintainWhitespace) {
 		StringBuilder output = new StringBuilder();
 
 		for (char c : input.toCharArray()) {
 			switch (Character.getType(c)) {
-				case Character.CONTROL:
 				case Character.PRIVATE_USE:
 				case Character.FORMAT:
 				case Character.UNASSIGNED:
 				case Character.SURROGATE:
 					output.append("\\u").append(String.format("%04X", (int) c));
+					break;
+				case Character.CONTROL:
+					if (maintainWhitespace && Arrays.binarySearch(WHITE_CHARS, c) >= 0) {
+						output.append(c);
+					} else {
+						output.append("\\u").append(String.format("%04X", (int) c));
+					}
 					break;
 				default:
 					output.append(c);

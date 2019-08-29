@@ -20,42 +20,44 @@ package tigase.util;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static tigase.util.StringUtilities.JUSTIFY;
+import static tigase.util.StringUtilities.*;
 
 public class StringUtilitiesTest {
 
 	@Test
+	public void stripALLNonPrintable() {
+		final String input = "🂡	🂢\n🂣";
+		final String withoutWhitespace = convertNonPrintableCharactersToLiterals(input, false);
+		assertEquals("\\uD83C\\uDCA1\\u0009\\uD83C\\uDCA2\\u000A\\uD83C\\uDCA3", withoutWhitespace);
+		final String withWhitespace = convertNonPrintableCharactersToLiterals(input, true);
+		assertEquals("\\uD83C\\uDCA1\t\\uD83C\\uDCA2\n\\uD83C\\uDCA3", withWhitespace);
+	}
+
+	@Test
 	public void testPadToColumnString() {
 		final StringBuilder sb = new StringBuilder();
-		assertEquals("tigase    ", StringUtilities.padStringToColumn(sb,"tigase",JUSTIFY.LEFT,10,' ',null, null).toString());
-		assertEquals("tigase    tigase    ", StringUtilities.padStringToColumn(sb,"tigase",JUSTIFY.LEFT,20,' ',null, null).toString());
-		assertEquals("tigase    tigase        tigase", StringUtilities.padStringToColumn(sb,"tigase",JUSTIFY.RIGHT,30,' ',null, null).toString());
-
+		assertEquals("tigase    ", padStringToColumn(sb, "tigase", JUSTIFY.LEFT, 10, ' ', null, null).toString());
+		assertEquals("tigase    tigase    ",
+					 padStringToColumn(sb, "tigase", JUSTIFY.LEFT, 20, ' ', null, null).toString());
+		assertEquals("tigase    tigase        tigase",
+					 padStringToColumn(sb, "tigase", JUSTIFY.RIGHT, 30, ' ', null, null).toString());
 
 	}
+
 	@Test
 	public void testPadString() {
 
-		assertEquals("tigase    ", StringUtilities.padString(new StringBuilder(), "tigase", 10).toString());
+		assertEquals("tigase    ", padString(new StringBuilder(), "tigase", 10).toString());
 
 		assertEquals("[    tigase]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.RIGHT, 10, ' ', "[", "]")
-							 .toString());
+					 padString(new StringBuilder(), "tigase", JUSTIFY.RIGHT, 10, ' ', "[", "]").toString());
 		assertEquals("[  tigase  ]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.CENTRE, 10, ' ', "[", "]")
-							 .toString());
+					 padString(new StringBuilder(), "tigase", JUSTIFY.CENTRE, 10, ' ', "[", "]").toString());
 		assertEquals("[tigase    ]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.LEFT, 10, ' ', "[", "]")
-							 .toString());
+					 padString(new StringBuilder(), "tigase", JUSTIFY.LEFT, 10, ' ', "[", "]").toString());
 
-		assertEquals("[tigase]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.RIGHT, 1, ' ', "[", "]")
-							 .toString());
-		assertEquals("[tigase]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.CENTRE, 1, ' ', "[", "]")
-							 .toString());
-		assertEquals("[tigase]",
-					 StringUtilities.padString(new StringBuilder(), "tigase", JUSTIFY.LEFT, 1, ' ', "[", "]")
-							 .toString());
+		assertEquals("[tigase]", padString(new StringBuilder(), "tigase", JUSTIFY.RIGHT, 1, ' ', "[", "]").toString());
+		assertEquals("[tigase]", padString(new StringBuilder(), "tigase", JUSTIFY.CENTRE, 1, ' ', "[", "]").toString());
+		assertEquals("[tigase]", padString(new StringBuilder(), "tigase", JUSTIFY.LEFT, 1, ' ', "[", "]").toString());
 	}
 }
