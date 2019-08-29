@@ -24,6 +24,32 @@ package tigase.util;
  */
 public class StringUtilities {
 
+	public enum JUSTIFY {
+		LEFT,
+		CENTRE,
+		RIGHT
+	}
+
+	public static String convertNonPrintableCharactersToLiterals(final String input) {
+		StringBuilder output = new StringBuilder();
+
+		for (char c : input.toCharArray()) {
+			switch (Character.getType(c)) {
+				case Character.CONTROL:
+				case Character.PRIVATE_USE:
+				case Character.FORMAT:
+				case Character.UNASSIGNED:
+				case Character.SURROGATE:
+					output.append("\\u").append(String.format("%04X", (int) c));
+					break;
+				default:
+					output.append(c);
+					break;
+			}
+		}
+		return output.toString();
+	}
+
 	/**
 	 * Concatenate all elements of input array inserting separator between each
 	 *
@@ -62,6 +88,59 @@ public class StringUtilities {
 			}
 		}
 		return result;
+	}
+
+	public static StringBuilder padString(StringBuilder sb, String text, int width) {
+		return padString(sb, text, JUSTIFY.LEFT, width, ' ', null, null);
+	}
+
+	public static StringBuilder padString(StringBuilder sb, String text, int width, String leftBracket,
+										  String rightBracket) {
+		return padString(sb, text, JUSTIFY.LEFT, width, ' ', leftBracket, rightBracket);
+	}
+
+	public static StringBuilder padString(StringBuilder sb, String text, JUSTIFY justify, int width, char padChar,
+										  String leftBracket, String rightBracket) {
+		if (leftBracket != null && !leftBracket.isEmpty()) {
+			sb.append(leftBracket);
+		}
+		int textLength = text.length();
+		int padSize = width - textLength;
+		switch (justify) {
+			case LEFT:
+				sb.append(text);
+				while ((padSize--) > 0) {
+					sb.append(padChar);
+				}
+				break;
+			case RIGHT:
+				while ((padSize--) > 0) {
+					sb.append(padChar);
+				}
+				sb.append(text);
+				break;
+			case CENTRE:
+				int leftPad = (int) Math.floor(padSize / 2.0);
+				while ((leftPad--) > 0) {
+					sb.append(padChar);
+				}
+				sb.append(text);
+				int rightPad = (int) Math.ceil(padSize / 2.0);
+				while ((rightPad--) > 0) {
+					sb.append(padChar);
+				}
+				break;
+		}
+		if (rightBracket != null && !rightBracket.isEmpty()) {
+			sb.append(rightBracket);
+		}
+
+		return sb;
+	}
+
+	public static StringBuilder padStringToColumn(StringBuilder sb, String text, JUSTIFY justify, int column,
+												  char padChar, String leftBracket, String rightBracket) {
+		return padString(sb, text, justify, column - sb.length(), padChar, leftBracket, rightBracket);
 	}
 
 	/**
@@ -105,24 +184,4 @@ public class StringUtilities {
 		return result;
 	}
 
-	public static String convertNonPrintableCharactersToLiterals(final String input) {
-		StringBuilder output = new StringBuilder();
-
-		for (char c : input.toCharArray()) {
-			switch (Character.getType(c))
-			{
-				case Character.CONTROL:
-				case Character.PRIVATE_USE:
-				case Character.FORMAT:
-				case Character.UNASSIGNED:
-				case Character.SURROGATE:
-					output.append("\\u").append(String.format("%04X", (int) c));
-					break;
-				default:
-					output.append(c);
-					break;
-			}
-		}
-		return output.toString();
-	}
 }
