@@ -23,10 +23,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,7 +120,7 @@ public interface DNSResolverIfc {
 		int priority = 0;
 		int weight = 0;
 		long ttl = 3600 * 1000;
-		final ArrayList<DNSEntry> entries = new ArrayList<DNSEntry>();
+		final Set<DNSEntry> entries = new TreeSet<>();
 
 		try {
 			Hashtable<String, String> env = new Hashtable<String, String>(5);
@@ -177,7 +174,7 @@ public interface DNSResolverIfc {
 		} catch (NamingException e) {
 			result_host = hostname;
 			if (log.isLoggable(Level.FINER)) {
-				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname, e);
+				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname + ", " + e.getMessage());
 			}
 		}    // end of try-catch
 		if (entries.isEmpty()) {
@@ -186,9 +183,11 @@ public interface DNSResolverIfc {
 			entries.add(new DNSEntry(hostname, ip_address, port));
 		}
 
-		DNSEntry[] result = entries.toArray(new DNSEntry[]{});
+		if (log.isLoggable(Level.FINER)) {
+			log.log(Level.FINER, "Resolved DNS for : " + hostname + " to: " + entries);
+		}
 
-		return result;
+		return entries.toArray(new DNSEntry[]{});
 	}
 
 	/**

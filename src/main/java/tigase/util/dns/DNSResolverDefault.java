@@ -51,6 +51,8 @@ public class DNSResolverDefault
 	private static long resolveDefaultTime = 0;
 	private static String secondaryHost = null;
 
+	private final static Comparator<String> IPv4_PRIORITY_COMPARATOR = Comparator.comparing((String s) -> s.contains(":"));
+
 	protected static boolean isHostValid(String host) {
 		try {
 			if (host != null && !host.trim().isEmpty()) {
@@ -294,6 +296,8 @@ public class DNSResolverDefault
 				throw new UnknownHostException("OpenDNS NXDOMAIN");
 			}
 		}
+		Arrays.sort(ip_addresses, IPv4_PRIORITY_COMPARATOR);
+
 		ip_cache.put(hostname, new DNSEntry(hostname, ip_addresses));
 
 		return ip_addresses;

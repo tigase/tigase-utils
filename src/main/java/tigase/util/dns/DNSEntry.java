@@ -18,6 +18,7 @@
 package tigase.util.dns;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * The class defines an instance of a single DNS entry.
@@ -25,8 +26,10 @@ import java.util.Arrays;
  * @author <a href="mailto:artur.hefczyc@tigase.org">Artur Hefczyc</a>
  * @since Dec 19, 2009 10:29:23 PM
  */
-public class DNSEntry {
+public class DNSEntry
+		implements Comparable<DNSEntry> {
 
+	private final static Comparator<DNSEntry> DNS_PRIORITY_COMPARATOR = Comparator.comparingInt(DNSEntry::getPriority);
 	private String dnsResultHost = null;
 	private String hostname = null;
 	private String[] ips = null;
@@ -203,6 +206,11 @@ public class DNSEntry {
 	public String toString() {
 		return "hostname: " + dnsResultHost + ", port: " + port + ", ip(s): " + Arrays.toString(ips) + ", priority: " +
 				priority + ", weight: " + weight + ", ttl: " + (ttl / 1000);
+	}
+
+	@Override
+	public int compareTo(DNSEntry o) {
+		return DNS_PRIORITY_COMPARATOR.compare(this, o);
 	}
 }
 
