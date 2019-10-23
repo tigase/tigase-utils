@@ -25,8 +25,8 @@ import javax.crypto.Cipher;
 import javax.security.auth.x500.X500Principal;
 import java.io.*;
 import java.security.*;
-import java.security.cert.*;
 import java.security.cert.Certificate;
+import java.security.cert.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  * Created: Sep 22, 2010 3:09:01 PM
  *
@@ -320,6 +321,18 @@ public abstract class CertificateUtil {
 		return null;
 	}
 
+	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
+		Certificate rt = null;
+		for (Certificate x509Certificate : certs) {
+			Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
+			Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
+			if (i.equals(s)) {
+				rt = x509Certificate;
+			}
+		}
+		return rt;
+	}
+
 	public static boolean isExpired(X509Certificate cert) {
 		try {
 			cert.checkValidity();
@@ -466,6 +479,7 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Checks if hostname matches name or wildcard
+	 *
 	 * @return true if there is a match
 	 */
 	public static boolean match(final String hostname, final String altName) {
@@ -603,6 +617,17 @@ public abstract class CertificateUtil {
 		}
 	}
 
+	public static Certificate[] removeRootCACertificate(Certificate[] certChain) {
+		return Arrays.stream(certChain)
+				.filter(X509Certificate.class::isInstance)
+				.map(X509Certificate.class::cast)
+				.filter(cert -> {
+					final boolean[] keyUsage = cert.getKeyUsage();
+					return !(keyUsage != null && keyUsage[5] && isSelfSigned(cert));
+				})
+				.toArray(Certificate[]::new);
+	}
+
 	private static void selfSignedCertTest() throws Exception {
 		KeyPair keyPair = createKeyPair(1024, "secret");
 
@@ -679,18 +704,6 @@ public abstract class CertificateUtil {
 		return res;
 	}
 
-	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
-		Certificate rt = null;
-		for (Certificate x509Certificate : certs) {
-			Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
-			Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
-			if (i.equals(s)) {
-				rt = x509Certificate;
-			}
-		}
-		return rt;
-	}
-
 	public static void storeCertificate(String file, CertificateEntry entry)
 			throws CertificateEncodingException, IOException {
 		log.log(Level.FINEST, "storeCertificate, file: {0}, entry: {1}", new Object[]{file, entry});
@@ -742,8 +755,8 @@ public abstract class CertificateUtil {
 
 	/**
 	 * Method used to verify if certificate if valid for particular domain (if domain matches CN or ALT of certificate)
-	 * @return true if certificate is valid
 	 *
+	 * @return true if certificate is valid
 	 */
 	public static boolean verifyCertificateForDomain(X509Certificate cert, String hostname)
 			throws CertificateParsingException {
