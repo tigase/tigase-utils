@@ -1,4 +1,4 @@
-/**
+/*
  * Tigase Utils - Utilities module
  * Copyright (C) 2004 Tigase, Inc. (office@tigase.com)
  *
