@@ -451,10 +451,11 @@ public abstract class CertificateUtil {
 
 			if (args[0].equals(STORE_CERT) || args[0].equals(STORE_CERT_SHORT)) {
 				String file = args[1];
+				String cname = args[2];
 
 				// Certificate
 				String email = "artur.hefczyc@tigase.org";
-				String domain = "tigase.org";
+				String domain = cname != null ? cname : "tigase.org";
 				String ou = "XMPP Service";
 				String o = "Tigase.org";
 				String l = "Cambourne";
