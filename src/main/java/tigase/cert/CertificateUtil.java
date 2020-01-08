@@ -77,7 +77,7 @@ public abstract class CertificateUtil {
 	private static final String STORE_CERT_SHORT = "-sc";
 
 	private static int calculateLength(byte[] buffer, int start) throws ArrayIndexOutOfBoundsException {
-		log.log(Level.INFO, "calculating length, buffer: {0}, start: {1}", new Object[]{new String(buffer), start});
+		log.log(Level.FINE, "calculating length, buffer: {0}, start: {1}", new Object[]{new String(buffer), start});
 		int offset = start + 1;
 		int b = (buffer[offset] & 0xff);
 		if (b < 0x80) {
@@ -94,7 +94,7 @@ public abstract class CertificateUtil {
 	}
 
 	private final static int calculateOffset(byte[] buffer, int offset) throws ArrayIndexOutOfBoundsException {
-		log.log(Level.INFO, "calculating offset, buffer: {0}, start: {1}", new Object[]{new String(buffer), offset});
+		log.log(Level.FINE, "calculating offset, buffer: {0}, start: {1}", new Object[]{new String(buffer), offset});
 		int b = (buffer[(offset + 1)] & 0xff);
 		if (b < 0x80) {
 			return (offset + 2);
@@ -219,7 +219,7 @@ public abstract class CertificateUtil {
 	}
 
 	private static String extractValue(byte[] buffer, byte[] id) {
-		log.log(Level.INFO, "extracting value, buffer: {0}, id: {1}", new Object[]{new String(buffer), new String(id)});
+		log.log(Level.FINE, "extracting value, buffer: {0}, id: {1}", new Object[]{new String(buffer), new String(id)});
 		try {
 			if (buffer[0] != 0x30) {
 				return null;
@@ -296,7 +296,7 @@ public abstract class CertificateUtil {
 					}
 				}
 			}
-			log.log(Level.INFO, "Certificate alternative names: {0}", new Object[]{result});
+			log.log(Level.FINE, "Certificate alternative names: {0}", new Object[]{result});
 			return result;
 		} catch (CertificateParsingException e) {
 			return Collections.emptyList();
@@ -313,7 +313,7 @@ public abstract class CertificateUtil {
 			String[] ns = n.trim().split("=");
 
 			if (ns[0].equals("CN")) {
-				log.log(Level.INFO, "Certificate DN: {0}", new Object[]{ns[1]});
+				log.log(Level.FINE, "Certificate DN: {0}", new Object[]{ns[1]});
 				return ns[1];
 			}
 		}
@@ -345,7 +345,9 @@ public abstract class CertificateUtil {
 
 	public static boolean isSelfSigned(X509Certificate cert) {
 		final boolean result = cert.getIssuerDN().equals(cert.getSubjectDN());
-		log.log(Level.INFO, "isSelfSigned, result: {0}", new Object[]{result});
+		if (result) {
+			log.log(Level.INFO, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
+		}
 		log.log(Level.FINEST, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[]{result, cert});
 		return result;
 	}
@@ -388,7 +390,7 @@ public abstract class CertificateUtil {
 
 	public static PrivateKey loadPrivateKeyFromDER(File file)
 			throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-		log.log(Level.INFO, "loadPrivateKeyFromDER, file: {0}", new Object[]{file});
+		log.log(Level.CONFIG, "loadPrivateKeyFromDER, file: {0}", new Object[]{file});
 		DataInputStream dis = new DataInputStream(new FileInputStream(file));
 		byte[] privKeyBytes = new byte[(int) file.length()];
 
@@ -403,7 +405,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-		final Level lvl = Level.INFO;
+		final Level lvl = Level.FINE;
 		log.setLevel(lvl);
 		ConsoleHandler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(lvl);
