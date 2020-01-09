@@ -24,6 +24,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -40,6 +41,8 @@ public class DNSResolverDefault
 	private static final String LOCALHOST = "localhost";
 	private static final Logger log = Logger.getLogger(DNSResolverDefault.class.getName());
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
+	private final static Comparator<String> IPv4_PRIORITY_COMPARATOR = Comparator.comparing(
+			(String s) -> s.contains(":"));
 	public static Map<String, DNSEntry> ip_cache = Collections.synchronizedMap(
 			new SimpleCache<String, DNSEntry>(100, DNS_CACHE_TIME));
 	public static Map<String, DNSEntry[]> srv_cache = Collections.synchronizedMap(
@@ -50,8 +53,6 @@ public class DNSResolverDefault
 	private static String primaryHost = null;
 	private static long resolveDefaultTime = 0;
 	private static String secondaryHost = null;
-
-	private final static Comparator<String> IPv4_PRIORITY_COMPARATOR = Comparator.comparing((String s) -> s.contains(":"));
 
 	protected static boolean isHostValid(String host) {
 		try {
@@ -65,11 +66,19 @@ public class DNSResolverDefault
 		return false;
 	}
 
+	private static boolean isNumbersOnly(String hostname) {
+		try {
+			new BigInteger(hostname);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
 	/**
 	 * <code>main</code> method outputting various information about hostnames
 	 *
 	 * @param args a <code>String[]</code> containing domains to query, if none provided default one will be used
-	 *
 	 */
 	@SuppressWarnings("unchecked")
 	public static void main(final String[] args) throws Exception {
@@ -277,10 +286,13 @@ public class DNSResolverDefault
 	 * @param hostname the domain name for which this record is valid
 	 *
 	 * @return Array of all <code>IP addresses</code> on which target host provide service.
-	 *
 	 */
 	@Override
 	public String[] getHostIPs(String hostname) throws UnknownHostException {
+		if (!hostname.contains(".") && isNumbersOnly(hostname)) {
+			throw new UnknownHostException("Provided hostname was decimal IP representation which is not supported");
+		}
+
 		DNSEntry cache_res = ip_cache.get(hostname);
 
 		if (cache_res != null) {

@@ -78,6 +78,11 @@ public class BareJIDTest {
 		BareJID.bareJIDInstance("");
 	}
 
+	@Test
+	public void testNumericStringDomain() throws TigaseStringprepException {
+		BareJID.bareJIDInstance("2182181");
+	}
+
 	@Test(expected = TigaseStringprepException.class)
 	public void testEmpty2StringDomain() throws TigaseStringprepException {
 		BareJID.bareJIDInstance(null, "");

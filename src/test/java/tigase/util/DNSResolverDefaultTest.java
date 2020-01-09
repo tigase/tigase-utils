@@ -49,4 +49,15 @@ public class DNSResolverDefaultTest {
 			System.out.println("entry: " + entry.toString());
 		});
 	}
+
+	@Test(expected = UnknownHostException.class)
+	public void getIPOfDecimalHostname() throws UnknownHostException {
+		DNSResolverFactory.getInstance().getHostSRV_Entries("2182181");
+	}
+
+	@Test(expected = UnknownHostException.class)
+	public void getIPOfDecimalHostnameLong() throws UnknownHostException {
+		DNSResolverFactory.getInstance()
+				.getHostSRV_Entries("218218121821812182181218218121821812182181218218121821812182181");
+	}
 }
