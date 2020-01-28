@@ -84,6 +84,9 @@ public class Fields {
 
 		if (f != null) {
 			String v = f.getValue();
+			if (v == null) {
+				return null;
+			}
 
 			return Integer.parseInt(v);
 		} else {
@@ -96,7 +99,9 @@ public class Fields {
 
 		if (f != null) {
 			String v = f.getValue();
-
+			if (v == null) {
+				return null;
+			}
 			return Long.parseLong(v);
 		} else {
 			return null;
