@@ -34,6 +34,20 @@ public class StringUtilities {
 		RIGHT
 	}
 
+	public static boolean checkIfArrayContainsString(char[] data, String string) {
+		if (data == null || string.length() > data.length) {
+			return false;
+		} else {
+			final byte[] stringArray = string.getBytes();
+			for (int position = 0; position < string.length(); position++) {
+				if (data[position] != stringArray[position]) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
 	public static String convertNonPrintableCharactersToLiterals(final String input) {
 		return convertNonPrintableCharactersToLiterals(input, false);
 	}

@@ -19,10 +19,20 @@ package tigase.util;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static tigase.util.StringUtilities.*;
 
 public class StringUtilitiesTest {
+
+	@Test
+	public void arrayContainsString() {
+		final char[] chars = {'G', 'E', 'T'};
+		assertTrue(checkIfArrayContainsString(chars, "GET"));
+		assertTrue(checkIfArrayContainsString(chars, "GE"));
+		assertFalse(checkIfArrayContainsString(chars, "S"));
+		assertFalse(checkIfArrayContainsString(chars, "GETS"));
+		assertFalse(checkIfArrayContainsString(chars, "OPTIONS"));
+	}
 
 	@Test
 	public void stripALLNonPrintable() {
