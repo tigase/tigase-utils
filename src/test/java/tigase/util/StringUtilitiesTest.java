@@ -27,11 +27,20 @@ public class StringUtilitiesTest {
 	@Test
 	public void arrayContainsString() {
 		final char[] chars = {'G', 'E', 'T'};
-		assertTrue(checkIfArrayContainsString(chars, "GET"));
-		assertTrue(checkIfArrayContainsString(chars, "GE"));
-		assertFalse(checkIfArrayContainsString(chars, "S"));
-		assertFalse(checkIfArrayContainsString(chars, "GETS"));
-		assertFalse(checkIfArrayContainsString(chars, "OPTIONS"));
+		assertTrue(checkIfArrayContainsString(chars, "GET".toCharArray()));
+		assertTrue(checkIfArrayContainsString(chars, "GE".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, "S".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, "GETS".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, "OPTIONS".toCharArray()));
+	}
+
+	@Test
+	public void arrayContainsStringStartIndex() {
+		final char[] chars = {'G', 'E', 'T', ' ', '/', 'c','l','i','e','n','t','a','c','c','e','s','s','p','o','l','i','c','y','.','x','m','l'};
+		assertTrue(checkIfArrayContainsString(chars, 4,"/clientaccesspolicy.xml".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, 4, "/dummyclientaccesspolicy.xml".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, 4, "/client.xml".toCharArray()));
+		assertFalse(checkIfArrayContainsString(chars, 4, "/policy.xml".toCharArray()));
 	}
 
 	@Test

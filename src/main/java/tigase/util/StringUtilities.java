@@ -34,13 +34,16 @@ public class StringUtilities {
 		RIGHT
 	}
 
-	public static boolean checkIfArrayContainsString(char[] data, String string) {
-		if (data == null || string.length() > data.length) {
+	public static boolean checkIfArrayContainsString(char[] data, char[] string) {
+		return checkIfArrayContainsString(data, 0, string);
+	}
+
+	public static boolean checkIfArrayContainsString(char[] data, int fromIndex, char[] string) {
+		if (data == null || string.length > data.length + fromIndex) {
 			return false;
 		} else {
-			final byte[] stringArray = string.getBytes();
-			for (int position = 0; position < string.length(); position++) {
-				if (data[position] != stringArray[position]) {
+			for (int position = 0; position < string.length; position++) {
+				if (data[position+fromIndex] != string[position]) {
 					return false;
 				}
 			}
