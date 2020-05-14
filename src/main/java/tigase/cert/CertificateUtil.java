@@ -728,8 +728,12 @@ public abstract class CertificateUtil {
 													  boolean revocationEnabled)
 			throws NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException,
 				   CertificateException {
-		log.log(Level.FINEST, "validateCertificate, chain: {0}, trustKeystore: {1}, revocationEnabled: {2}",
-				new Object[]{chain, trustKeystore, revocationEnabled});
+		if (log.isLoggable(Level.FINEST)) {
+			log.log(Level.FINEST,
+					"Validating cert: {0}, chain size: {1}, trustKeystore size: {2}, revocationEnabled: {3}",
+					new Object[]{((X509Certificate) chain[0]).getSubjectDN(), chain.length, trustKeystore.size(),
+								 revocationEnabled});
+		}
 		CertPathValidator certPathValidator = CertPathValidator.getInstance(CertPathValidator.getDefaultType());
 		X509CertSelector selector = new X509CertSelector();
 		PKIXBuilderParameters params = new PKIXBuilderParameters(trustKeystore, selector);
