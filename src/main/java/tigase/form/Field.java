@@ -244,7 +244,7 @@ public class Field
 					if (v != null) {
 						valueList.add(v);
 					}
-				} else if ("value".equals(element.getName())) {
+				} else if ("option".equals(element.getName())) {
 					optionsLabelList.add(element.getAttributeStaticStr("label"));
 
 					Element v = element.getChild("value");
