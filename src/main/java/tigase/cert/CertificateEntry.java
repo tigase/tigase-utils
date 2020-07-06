@@ -19,8 +19,6 @@ package tigase.cert;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,18 +58,7 @@ public class CertificateEntry {
 
 		for (Certificate cert : chain) {
 			if (basic) {
-				if (cert instanceof X509Certificate) {
-					final X509Certificate certX509 = (X509Certificate) cert;
-					sb.append("CN: ").append(CertificateUtil.getCertCName(certX509)).append('\n');
-					final List<String> certAltCName = CertificateUtil.getCertAltCName(certX509);
-					if (certAltCName != null && !certAltCName.isEmpty()) {
-						sb.append('\t').append("alt: ").append(certAltCName).append('\n');
-					}
-					sb.append('\t').append("Issuer: ").append(certX509.getIssuerDN()).append('\n');
-					sb.append('\t').append("Not Before: ").append(certX509.getNotBefore()).append('\n');
-					sb.append('\t').append("Not After: ").append(certX509.getNotAfter()).append('\n');
-					sb.append('\n');
-				}
+				CertificateUtil.getCertificateBasicInfo(sb, cert);
 			} else {
 				sb.append(cert.toString());
 			}

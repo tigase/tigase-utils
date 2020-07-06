@@ -321,6 +321,26 @@ public abstract class CertificateUtil {
 		return null;
 	}
 
+	public static String getCertificateBasicInfo(Certificate cert) {
+		return getCertificateBasicInfo(new StringBuilder(), cert).toString();
+	}
+
+	public static StringBuilder getCertificateBasicInfo(StringBuilder sb, Certificate cert) {
+		if (cert instanceof X509Certificate) {
+			final X509Certificate certX509 = (X509Certificate) cert;
+			sb.append("CN: ").append(getCertCName(certX509)).append('\n');
+			final List<String> certAltCName = getCertAltCName(certX509);
+			if (certAltCName != null && !certAltCName.isEmpty()) {
+				sb.append('\t').append("alt: ").append(certAltCName).append('\n');
+			}
+			sb.append('\t').append("Issuer: ").append(certX509.getIssuerDN()).append('\n');
+			sb.append('\t').append("Not Before: ").append(certX509.getNotBefore()).append('\n');
+			sb.append('\t').append("Not After: ").append(certX509.getNotAfter()).append('\n');
+			sb.append('\n');
+		}
+		return sb;
+	}
+
 	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
 		Certificate rt = null;
 		for (Certificate x509Certificate : certs) {
