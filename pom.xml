@@ -22,7 +22,7 @@
 
     <issueManagement>
         <system>Redmine</system>
-        <url>https://projects.tigase.org/projects/tigase-utils</url>
+        <url>https://github.com/tigase/tigase-utils/</url>
     </issueManagement>
 
     <developers>
@@ -43,9 +43,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://git.tigase.tech/tigase-utils.git</connection>
-        <developerConnection>scm:git:https://git.tigase.tech/tigase-utils.git</developerConnection>
-        <url>https://tigase.tech/projects/tigase-utils/repository</url>
+        <connection>scm:git:https://github.com/tigase/tigase-utils.git</connection>
+        <developerConnection>scm:git:https://github.com/tigase/tigase-utils.git</developerConnection>
+        <url>https://github.com/tigase/tigase-utils/</url>
         <tag>HEAD</tag>
     </scm>
 
