@@ -92,7 +92,11 @@ public final class JID
 	public static JID jidInstance(String jid) throws TigaseStringprepException {
 		String[] parsedJid = BareJID.parseJID(jid);
 
-		return jidInstance(parsedJid[0], parsedJid[1], parsedJid[2]);
+		try {
+			return jidInstance(parsedJid[0], parsedJid[1], parsedJid[2]);
+		} catch (TigaseStringprepException e) {
+			throw new TigaseStringprepException("Invalid JID string: " + jid, e);
+		}
 	}
 
 	/**
@@ -110,7 +114,11 @@ public final class JID
 	 * passed string/domain was null or effectively empty..
 	 */
 	public static JID jidInstance(String localpart, String domain) throws TigaseStringprepException {
-		return jidInstance(BareJID.bareJIDInstance(localpart, domain));
+		try {
+			return jidInstance(BareJID.bareJIDInstance(localpart, domain));
+		} catch (TigaseStringprepException e) {
+			throw new TigaseStringprepException("Invalid JID, localpart: " + localpart + ", domain: " + domain, e);
+		}
 	}
 
 	/**

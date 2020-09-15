@@ -71,7 +71,11 @@ public final class BareJID
 	public static BareJID bareJIDInstance(String jid) throws TigaseStringprepException {
 		String[] parsedJid = parseJID(jid);
 
-		return bareJIDInstance(parsedJid[0], parsedJid[1]);
+		try {
+			return bareJIDInstance(parsedJid[0], parsedJid[1]);
+		} catch (TigaseStringprepException e) {
+			throw new TigaseStringprepException("Invalid BareJID string: " + jid, e);
+		}
 	}
 
 	/**
