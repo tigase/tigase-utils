@@ -96,7 +96,7 @@ public final class BareJID
 	public static BareJID bareJIDInstance(String p_localpart, String p_domain) throws TigaseStringprepException {
 		String f_localpart = (p_localpart == null) ? null : stringPrep.nodeprep(p_localpart);
 		if (p_domain == null || p_domain.trim().isEmpty()) {
-			throw new TigaseStringprepException("Domain part is required");
+			throw new TigaseStringprepException("Domain part is required! Localpart: " + p_localpart + ", domain: " + p_domain);
 		}
 		String f_domain = stringPrep.nameprep(p_domain);
 

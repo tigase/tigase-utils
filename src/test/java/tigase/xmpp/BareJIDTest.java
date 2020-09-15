@@ -88,6 +88,11 @@ public class BareJIDTest {
 		BareJID.bareJIDInstance(null, "");
 	}
 
+	@Test(expected = TigaseStringprepException.class)
+	public void testStringEmptyDomain() throws TigaseStringprepException {
+		BareJID.bareJIDInstance("localpart@");
+	}
+
 	@Test()
 	public void testEmpty1StringDomainNS() {
 		BareJID jid = BareJID.bareJIDInstanceNS("");
