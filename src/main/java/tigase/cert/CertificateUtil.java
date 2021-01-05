@@ -336,9 +336,21 @@ public abstract class CertificateUtil {
 			sb.append('\t').append("Issuer: ").append(certX509.getIssuerDN()).append('\n');
 			sb.append('\t').append("Not Before: ").append(certX509.getNotBefore()).append('\n');
 			sb.append('\t').append("Not After: ").append(certX509.getNotAfter()).append('\n');
+			try {
+				sb.append('\t').append("Fingerprint: ").append(getCertificateFingerprint(certX509)).append('\n');
+			} catch (Exception e) {
+				log.log(Level.WARNING, "Could not calculate fingerprint", e);
+			}
 			sb.append('\n');
 		}
 		return sb;
+	}
+
+	public static String getCertificateFingerprint(Certificate cert)
+			throws CertificateEncodingException, NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		md.update(cert.getEncoded());
+		return Algorithms.bytesToHex(md.digest());
 	}
 
 	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
