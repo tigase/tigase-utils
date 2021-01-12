@@ -405,6 +405,8 @@ public abstract class CertificateUtil {
 	/**
 	 * Loads a certificate from a DER byte buffer.
 	 */
+	@Deprecated
+	@TigaseDeprecated(since = "4.2.0", note = "Method loads only single certificate; use other #loadCertificate() methods")
 	public static CertificateEntry loadCertificate(byte[] bytes) throws CertificateException, NoSuchProviderException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
