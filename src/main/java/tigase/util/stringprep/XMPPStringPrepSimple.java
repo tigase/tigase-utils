@@ -54,7 +54,11 @@ public class XMPPStringPrepSimple
 
 	@Override
 	public String resourceprep(String resource) throws TigaseStringprepException {
-		return resource.trim();
+		// according to the RFC6122 it is allowed to have leading and trailing SPACE in the resource part so trimming it
+		// is not a good idea and if we want to forbid some chars we should throw TigaseStringprepException instead of
+		// just trimming string
+		return resource;
+		//return resource.trim();
 	}
 
 	private boolean checkString(String input) {
