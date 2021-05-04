@@ -24,6 +24,7 @@ import tigase.util.Base64;
 import javax.crypto.Cipher;
 import javax.security.auth.x500.X500Principal;
 import java.io.*;
+import java.math.BigInteger;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.*;
@@ -341,6 +342,10 @@ public abstract class CertificateUtil {
 			} catch (Exception e) {
 				log.log(Level.WARNING, "Could not calculate fingerprint", e);
 			}
+			getCertificateSerialNumber(certX509).ifPresent(serialNumber -> sb.append('\t')
+					.append("SerialNumber: [")
+					.append(serialNumber.toString(16))
+					.append("]\n"));
 			sb.append('\n');
 		}
 		return sb;
@@ -351,6 +356,15 @@ public abstract class CertificateUtil {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.update(cert.getEncoded());
 		return Algorithms.bytesToHex(md.digest());
+	}
+
+	public static Optional<BigInteger> getCertificateSerialNumber(Certificate cert)  {
+		BigInteger serialNumber = null;
+		if (cert instanceof X509Certificate) {
+			final X509Certificate certX509 = (X509Certificate) cert;
+			serialNumber = certX509.getSerialNumber();
+		}
+		return Optional.ofNullable(serialNumber);
 	}
 
 	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
