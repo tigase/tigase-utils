@@ -1,0 +1,38 @@
+version: 6
+jobs:
+- name: maven ci
+  steps:
+  - !CheckoutStep
+    name: checkout
+    cloneCredential: !DefaultCredential {}
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !CommandStep
+    name: detect build version
+    image: '@script:builtin:maven:determine-docker-image@'
+    commands:
+    - echo "Detecting project version (may require some time while downloading maven
+      dependencies)..."
+    - echo $(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version
+      -q -DforceStdout) > buildVersion
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !SetBuildVersionStep
+    name: set build version
+    buildVersion: '@file:buildVersion@'
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !CommandStep
+    name: run maven
+    image: '@script:builtin:maven:determine-docker-image@'
+    commands:
+    - mvn clean test
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  triggers:
+  - !BranchUpdateTrigger {}
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  cpuRequirement: 250m
+  memoryRequirement: 128m
+  caches:
+  - key: maven-cache
+    path: /root/.m2/repository
+  timeout: 3600
