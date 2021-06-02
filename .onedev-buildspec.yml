@@ -21,7 +21,7 @@ jobs:
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
   - !CommandStep
     name: run maven
-    image: '@script:builtin:maven:determine-docker-image@'
+    image: 'maven:3.6.1-jdk-8'
     commands:
     - mvn clean test
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
