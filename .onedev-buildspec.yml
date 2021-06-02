@@ -8,7 +8,7 @@ jobs:
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
   - !CommandStep
     name: detect build version
-    image: '@script:builtin:maven:determine-docker-image@'
+    image: 'maven:3.6.1-jdk-8'
     commands:
     - echo "Detecting project version (may require some time while downloading maven
       dependencies)..."
