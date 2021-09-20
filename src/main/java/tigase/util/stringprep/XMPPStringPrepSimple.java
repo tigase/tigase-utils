@@ -32,7 +32,10 @@ public class XMPPStringPrepSimple
 
 	@Override
 	public String nameprep(String domain) throws TigaseStringprepException {
-		String result = domain.trim().toLowerCase();
+		//according to rfc7622 (https://datatracker.ietf.org/doc/rfc7622/) space is not allowed in domain thus
+		//removing it with .trim() violates the specification.
+		String result = domain.toLowerCase();
+//		String result = domain.trim().toLowerCase();
 
 		if (!checkString(result)) {
 			throw new TigaseStringprepException("Illegal characters in string, domain = " + domain);
@@ -43,7 +46,10 @@ public class XMPPStringPrepSimple
 
 	@Override
 	public String nodeprep(String localpart) throws TigaseStringprepException {
-		String result = localpart.trim();
+		//according to rfc7622 (https://datatracker.ietf.org/doc/rfc7622/) space is not allowed in localpart thus
+		//removing it with .trim() violates the specification.
+		String result = localpart;
+//		String result = localpart.trim();
 
 		if (!checkString(result)) {
 			throw new TigaseStringprepException("Illegal characters in string, localpart = " + localpart);

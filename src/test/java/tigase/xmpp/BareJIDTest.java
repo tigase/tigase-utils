@@ -104,4 +104,24 @@ public class BareJIDTest {
 		BareJID jid = BareJID.bareJIDInstanceNS(null, "");
 		assertNull("null should be returned for empty domain", jid);
 	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testLocalpartStartsWithSpace() throws TigaseStringprepException {
+		BareJID jid = BareJID.bareJIDInstance("  username@domain.com/resource");
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testLocalpartWithSpace() throws TigaseStringprepException {
+		BareJID jid = BareJID.bareJIDInstance("use   rname@domain.com/resource");
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testDomainsWithSpace() throws TigaseStringprepException {
+		BareJID jid = BareJID.bareJIDInstance("username@dom   ain.com/resource");
+	}
+
+	@Test(expected = TigaseStringprepException.class)
+	public void testDomainsStartsWithSpace() throws TigaseStringprepException {
+		BareJID jid = BareJID.bareJIDInstance("username@   domain.com/resource");
+	}
 }
