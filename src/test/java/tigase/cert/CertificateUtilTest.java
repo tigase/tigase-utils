@@ -81,7 +81,7 @@ public class CertificateUtilTest
 			assertTrue("Checked certificate validty for yesterday - not valid", true);
 		}
 
-		cert.verify(keyPair.getPublic());
+		cert.verify(entry.getKeyPair().get().getPublic());
 		assertTrue("Verified certificate with public key - done", true);
 	}
 

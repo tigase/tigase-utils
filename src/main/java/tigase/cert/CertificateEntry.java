@@ -17,6 +17,7 @@
  */
 package tigase.cert;
 
+import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.util.Optional;
@@ -31,6 +32,22 @@ public class CertificateEntry {
 
 	private Certificate[] chain = null;
 	private PrivateKey privateKey = null;
+	private KeyPair keyPair = null;
+
+	public CertificateEntry() {
+	}
+
+	public CertificateEntry(Certificate[] chain, KeyPair keyPair) {
+		this.chain = chain;
+		this.keyPair = keyPair;
+		privateKey = keyPair.getPrivate();
+	}
+
+	public CertificateEntry(Certificate[] chain, PrivateKey privateKey) {
+		this.chain = chain;
+		this.privateKey = privateKey;
+		this.keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
+	}
 
 	public Certificate[] getCertChain() {
 		return chain;
@@ -38,14 +55,20 @@ public class CertificateEntry {
 
 	public void setCertChain(Certificate[] chain) {
 		this.chain = chain;
+		if (privateKey != null) {
+			keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
+		}
 	}
 
 	public PrivateKey getPrivateKey() {
-		return privateKey;
+		return keyPair.getPrivate();
 	}
 
 	public void setPrivateKey(PrivateKey privateKey) {
 		this.privateKey = privateKey;
+		if (chain != null) {
+			keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
+		}
 	}
 
 	@Override
@@ -66,6 +89,10 @@ public class CertificateEntry {
 
 		return "Private key: " + (privateKey != null ? privateKey.toString() : "private key missing!!! \n\n\n") + '\n' +
 				sb;
+	}
+
+	public Optional<KeyPair> getKeyPair() {
+		return Optional.ofNullable(keyPair);
 	}
 
 	public Optional<Certificate> getCertificate() {

@@ -29,8 +29,10 @@ public class CertificateGeneratorFactory {
 
 	static {
 		try {
-			generator = (CertificateGenerator) Class.forName("tigase.cert.OldSelfSignedCertificateGenerator")
-					.newInstance();
+			final String generatorClassName = Runtime.version().feature() >= 17
+											  ? "tigase.cert.KeytoolCertificateGenerator"
+											  : "tigase.cert.OldSelfSignedCertificateGenerator";
+			generator = (CertificateGenerator) Class.forName(generatorClassName).newInstance();
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 			log.log(Level.WARNING, "could not initialize self-signed SSL certificate generator", ex);
@@ -41,7 +43,6 @@ public class CertificateGeneratorFactory {
 		if (generator == null) {
 			throw new NoSuchProviderException("Self-signed certificate generator is unavailable.");
 		}
-
 		return generator;
 	}
 

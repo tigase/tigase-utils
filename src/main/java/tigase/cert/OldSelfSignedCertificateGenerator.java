@@ -21,6 +21,7 @@ import sun.security.x509.*;
 
 import java.io.IOException;
 import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -95,7 +96,7 @@ public class OldSelfSignedCertificateGenerator
 
 		// certInfo.set(X509CertInfo.ISSUER + "." +
 		// CertificateSubjectName.DN_NAME, issuerName);
-		AlgorithmId algorithm = new AlgorithmId(AlgorithmId.sha1WithRSAEncryption_oid);
+		AlgorithmId algorithm = new AlgorithmId(AlgorithmId.RSAEncryption_oid);
 		CertificateAlgorithmId certAlgorithm = new CertificateAlgorithmId(algorithm);
 
 		certInfo.set(X509CertInfo.ALGORITHM_ID, certAlgorithm);
@@ -113,5 +114,21 @@ public class OldSelfSignedCertificateGenerator
 		log.log(Level.FINEST, "creating self signed cert, newCert: {0}", newCert);
 
 		return newCert;
+	}
+
+	@Override
+	public CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
+															   String organization, String city, String state,
+															   String country, KeyPair keyPair)
+			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
+				   NoSuchProviderException, SignatureException {
+
+		X509Certificate cert = generateSelfSignedCertificate(email, domain, organizationUnit, organization, city, state,
+															 country, keyPair);
+		CertificateEntry entry = new CertificateEntry();
+
+		entry.setPrivateKey(keyPair.getPrivate());
+		entry.setCertChain(new Certificate[]{cert});
+		return entry;
 	}
 }

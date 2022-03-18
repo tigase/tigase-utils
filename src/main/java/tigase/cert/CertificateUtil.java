@@ -138,13 +138,12 @@ public abstract class CertificateUtil {
 
 		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
 		KeyPair keyPair = keyPairSupplier.get();
-		X509Certificate cert = generator.generateSelfSignedCertificate(email, domain, organizationUnit, organization,
-																	   city, state, country, keyPair);
-		CertificateEntry entry = new CertificateEntry();
-
-		entry.setPrivateKey(keyPair.getPrivate());
-		entry.setCertChain(new Certificate[]{cert});
-		return entry;
+		try {
+			return generator.generateSelfSignedCertificateEntry(email, domain, organizationUnit, organization,
+																city, state, country, keyPair);
+		} catch (GeneralSecurityException e) {
+			throw new CertificateException(e);
+		}
 	}
 
 	private static void encriptTest() throws Exception {
@@ -712,7 +711,11 @@ public abstract class CertificateUtil {
 
 		System.out.print("Verifying certificate with public key...");
 		System.out.flush();
-		cert.verify(keyPair.getPublic());
+		if (entry.getKeyPair().isPresent()) {
+			cert.verify(entry.getKeyPair().get().getPublic());
+		} else {
+			System.out.println(" KeyPair is missing");
+		}
 		System.out.println(" done.");
 		System.out.println(cert.toString());
 	}

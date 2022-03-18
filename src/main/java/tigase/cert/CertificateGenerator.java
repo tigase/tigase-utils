@@ -17,6 +17,8 @@
  */
 package tigase.cert;
 
+import tigase.annotations.TigaseDeprecated;
+
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -24,10 +26,17 @@ import java.security.cert.X509Certificate;
 
 public interface CertificateGenerator {
 
+	@Deprecated
+	@TigaseDeprecated(since = "4.3.0", removeIn = "5.0.0", note = "Due to JDK API limitations")
 	X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,
 												  String organization, String city, String state, String country,
 												  KeyPair keyPair)
 			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
 				   NoSuchProviderException, SignatureException;
+
+	CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
+														String organization, String city, String state, String country,
+														KeyPair keyPair)
+			throws GeneralSecurityException, IOException;
 
 }
