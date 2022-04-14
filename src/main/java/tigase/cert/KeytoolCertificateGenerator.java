@@ -95,7 +95,7 @@ public class KeytoolCertificateGenerator
 															  getDomainName(email, domain, organizationUnit,
 																			organization, city, state, country),
 															  "-ext", getSAN(domain),
-															  "-validity", "7200", "-deststoretype", "pkcs12");
+															  "-validity", "365", "-deststoretype", "pkcs12");
 
 		final Process process = keytool.start();
 		try {
