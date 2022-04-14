@@ -94,7 +94,7 @@ public class KeytoolCertificateGenerator
 															  "-storepass", password, "-keypass", password, "-dname",
 															  getDomainName(email, domain, organizationUnit,
 																			organization, city, state, country),
-//															  "-ext", getSAN(domain),
+															  "-ext", getSAN(domain),
 															  "-validity", "7200", "-deststoretype", "pkcs12");
 
 		final Process process = keytool.start();
@@ -137,6 +137,6 @@ public class KeytoolCertificateGenerator
 
 	private String getSAN(String domain) {
 		// keytool doesn't allow for a domain with wildcard in SAN extenstion so it has to go directly to CN
-		return "SAN=dns:" + domain;
+		return "SAN=dns:*." + domain;
 	}
 }
