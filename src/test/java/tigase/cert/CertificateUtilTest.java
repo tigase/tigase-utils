@@ -99,13 +99,20 @@ public class CertificateUtilTest
 
 		//System.out.println("Creating self-signed certificate for issuer: " + domain);
 
+
 		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
 		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
-		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
-		assertTrue("Verified certificate domain - wildcard domain: " + domain, verifyCertificateForDomain(cert, "subdomain." + domain));
-		assertFalse("Verified certificate domain - fail.tigase.im",
-				verifyCertificateForDomain(cert, "fail.tigase.im"));
+
 		System.out.println(entry.toString());
 		System.out.println(CertificateUtil.exportToPemFormat(entry));
+
+		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
+
+		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
+		if (generator.canGenerateWildcardSAN()) {
+			assertTrue("Verified certificate domain - wildcard domain: " + domain, verifyCertificateForDomain(cert, "subdomain." + domain));
+			assertFalse("Verified certificate domain - fail.tigase.im",
+					verifyCertificateForDomain(cert, "fail.tigase.im"));
+		}
 	}
 }

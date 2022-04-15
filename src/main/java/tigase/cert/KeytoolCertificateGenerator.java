@@ -27,6 +27,8 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +50,11 @@ public class KeytoolCertificateGenerator
 
 			sb.append(prefix).append('=').append(value);
 		}
+	}
+
+	@Override
+	public boolean canGenerateWildcardSAN() {
+		return Runtime.version().feature() >= 17;
 	}
 
 	@Override
@@ -88,14 +95,24 @@ public class KeytoolCertificateGenerator
 			}
 		}
 
-		ProcessBuilder keytool = new ProcessBuilder().command("keytool", "-genkey", "-alias", domain, "-keyalg", "RSA",
-															  "-keysize", "2048", "-sigalg", "SHA256withRSA",
-															  "-storetype", "JKS", "-keystore", file.toString(),
-															  "-storepass", password, "-keypass", password, "-dname",
-															  getDomainName(email, domain, organizationUnit,
-																			organization, city, state, country),
-															  "-ext", getSAN(domain),
-															  "-validity", "365", "-deststoretype", "pkcs12");
+		final List<String> commandParameters = new ArrayList<>(List.of("keytool", "-genkey"));
+		commandParameters.addAll(List.of("-alias", domain));
+		commandParameters.addAll(List.of("-keyalg", "RSA"));
+		commandParameters.addAll(List.of("-keysize", "2048"));
+		commandParameters.addAll(List.of("-sigalg", "SHA256withRSA"));
+		commandParameters.addAll(List.of("-storetype", "JKS"));
+		commandParameters.addAll(List.of("-keystore", file.toString()));
+		commandParameters.addAll(List.of("-storepass", password));
+		commandParameters.addAll(List.of("-keypass", password));
+		commandParameters.addAll(
+				List.of("-dname", getDomainName(email, domain, organizationUnit, organization, city, state, country)));
+		commandParameters.addAll(List.of("-validity", "365"));
+		commandParameters.addAll(List.of("-deststoretype", "pkcs12"));
+		commandParameters.addAll(List.of("-storetype", "JKS"));
+		if (canGenerateWildcardSAN()) {
+			commandParameters.addAll(getSAN(domain));
+		}
+		ProcessBuilder keytool = new ProcessBuilder().command(commandParameters);
 
 		final Process process = keytool.start();
 		try {
@@ -135,8 +152,7 @@ public class KeytoolCertificateGenerator
 				", C=" + country + ", EMAILADDRESS=" + email;
 	}
 
-	private String getSAN(String domain) {
-		// keytool doesn't allow for a domain with wildcard in SAN extenstion so it has to go directly to CN
-		return "SAN=dns:*." + domain;
+	private List<String> getSAN(String domain) {
+		return List.of("-ext", "SAN=dns:*." + domain);
 	}
 }

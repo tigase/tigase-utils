@@ -26,6 +26,8 @@ import java.security.cert.X509Certificate;
 
 public interface CertificateGenerator {
 
+	boolean canGenerateWildcardSAN();
+
 	@Deprecated
 	@TigaseDeprecated(since = "4.3.0", removeIn = "5.0.0", note = "Due to JDK API limitations")
 	X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,

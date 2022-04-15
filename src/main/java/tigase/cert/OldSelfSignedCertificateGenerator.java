@@ -47,6 +47,11 @@ public class OldSelfSignedCertificateGenerator
 	}
 
 	@Override
+	public boolean canGenerateWildcardSAN() {
+		return false;
+	}
+
+	@Override
 	public X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,
 														 String organization, String city, String state, String country,
 														 KeyPair keyPair)
