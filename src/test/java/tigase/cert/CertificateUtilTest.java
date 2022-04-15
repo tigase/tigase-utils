@@ -115,4 +115,34 @@ public class CertificateUtilTest
 					verifyCertificateForDomain(cert, "fail.tigase.im"));
 		}
 	}
+
+	public void testCertificateWildcardDomainVerification() throws Exception {
+		KeyPair keyPair = createKeyPair(1024, "secret");
+
+		// Certificate
+		String email = "artur.hefczyc@tigase.org";
+		String domain = "tigase.org";
+		String ou = "XMPP Service";
+		String o = "Tigase.org";
+		String l = "Cambourne";
+		String st = "Cambridgeshire";
+		String c = "UK";
+
+		String wildcardDomain = "*." + domain;
+
+		CertificateEntry entry = createSelfSignedCertificate(email, wildcardDomain, ou, o, l, st, c, () -> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
+
+		System.out.println(entry.toString());
+		System.out.println(CertificateUtil.exportToPemFormat(entry));
+
+		assertTrue("Verified certificate domain - domain: " + wildcardDomain, verifyCertificateForDomain(cert, domain));
+
+		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
+		if (generator.canGenerateWildcardSAN()) {
+			assertTrue("Verified certificate domain - wildcard domain: " + wildcardDomain, verifyCertificateForDomain(cert, "subdomain." + domain));
+			assertFalse("Verified certificate domain - fail.tigase.im",
+						verifyCertificateForDomain(cert, "fail.tigase.im"));
+		}
+	}
 }

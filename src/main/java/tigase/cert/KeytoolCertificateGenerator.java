@@ -109,7 +109,7 @@ public class KeytoolCertificateGenerator
 		commandParameters.addAll(List.of("-validity", "365"));
 		commandParameters.addAll(List.of("-deststoretype", "pkcs12"));
 		commandParameters.addAll(List.of("-storetype", "JKS"));
-		if (canGenerateWildcardSAN()) {
+		if (canGenerateWildcardSAN() && !isWildcardDomain(domain)) {
 			commandParameters.addAll(getSAN(domain));
 		}
 		ProcessBuilder keytool = new ProcessBuilder().command(commandParameters);
@@ -122,14 +122,20 @@ public class KeytoolCertificateGenerator
 		}
 
 		if (log.isLoggable(Level.FINEST)) {
-			log.log(Level.FINEST, "Generating certificate using `keytool` using command: " + process.info());
+			log.log(Level.FINEST,
+					"Generating certificate using `keytool` using command: " + process.info() + ", parameters: " +
+							commandParameters);
 		}
 
 		if (process.exitValue() > 0) {
 			final String processError = (new BufferedReader(new InputStreamReader(process.getErrorStream()))).lines()
 					.collect(Collectors.joining(" \\ "));
-			log.log(Level.WARNING, "Error generating certificate, size: " + processError);
-			throw new IOException("Keytool execution error: " + processError);
+			final String processOutput = (new BufferedReader(new InputStreamReader(process.getInputStream()))).lines()
+					.collect(Collectors.joining(" \\ "));
+			log.log(Level.WARNING, "Error generating certificate, error output: " + processError + ", normal output: " +
+					processOutput + ", commandline parameters: " + commandParameters);
+			throw new IOException(
+					"Keytool execution error: \'" + processError + "\', output: \'" + processOutput + "\'");
 		}
 
 		keyStore.load(new FileInputStream(file.toFile()), password.toCharArray());
@@ -143,6 +149,10 @@ public class KeytoolCertificateGenerator
 
 		Files.deleteIfExists(file);
 		return certificateEntry;
+	}
+
+	private boolean isWildcardDomain(String domain) {
+		return domain.startsWith("*.");
 	}
 
 	private String getDomainName(String email, String domain, String organizationUnit, String organization, String city,
