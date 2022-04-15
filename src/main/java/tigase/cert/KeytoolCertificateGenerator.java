@@ -135,7 +135,7 @@ public class KeytoolCertificateGenerator
 			log.log(Level.WARNING, "Error generating certificate, error output: " + processError + ", normal output: " +
 					processOutput + ", commandline parameters: " + commandParameters);
 			throw new IOException(
-					"Keytool execution error: \'" + processError + "\', output: \'" + processOutput + "\'");
+					"Keytool execution error: \'" + processError + "\', output: \'" + processOutput + "\'" + ", commandline parameters: " + commandParameters);
 		}
 
 		keyStore.load(new FileInputStream(file.toFile()), password.toCharArray());
