@@ -17,7 +17,9 @@
  */
 package tigase.cert;
 
-import sun.security.x509.*;
+ //import sun.security.x509.*;
+
+import tigase.annotations.TigaseDeprecated;
 
 import java.io.IOException;
 import java.security.*;
@@ -29,111 +31,117 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // This may stop working very soon as JDK9 warns about usage of internal classes which may be removed in the future.
+//
+// usage of `sun.security.*` packages under JDK newer than 11 is extremely problematic and impossible starting with 17.
+// Maintaining compatibility doesn't make sense at this point
+@TigaseDeprecated(since = "4.3.0")
+@Deprecated
 public class OldSelfSignedCertificateGenerator
-		implements CertificateGenerator {
-
-	private static final Logger log = Logger.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
-
-	private static void appendName(StringBuilder sb, String prefix, String value) {
-		log.log(Level.FINE, "appending value: {0} with prefix: {1} to sb: {2}",
-				new Object[]{value, prefix, sb.toString()});
-		if (value != null) {
-			if (sb.length() > 0) {
-				sb.append(", ");
-			}
-
-			sb.append(prefix).append('=').append(value);
-		}
-	}
-
-	@Override
-	public boolean canGenerateWildcardSAN() {
-		return false;
-	}
-
-	@Override
-	public X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,
-														 String organization, String city, String state, String country,
-														 KeyPair keyPair)
-			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
-				   NoSuchProviderException, SignatureException {
-		log.log(Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2}," +
-						"organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
-				new Object[]{email, domain, organizationUnit, organization, city, state, country, keyPair});
-		X509CertInfo certInfo = new X509CertInfo();
-		CertificateVersion certVersion = new CertificateVersion();
-
-		certInfo.set(X509CertInfo.VERSION, certVersion);
-
-		Date firstDate = new Date();
-		Date lastDate = new Date(firstDate.getTime() + 365 * 24 * 60 * 60 * 1000L);
-		CertificateValidity interval = new CertificateValidity(firstDate, lastDate);
-
-		certInfo.set(X509CertInfo.VALIDITY, interval);
-		certInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber((int) (firstDate.getTime() / 1000)));
-
-		StringBuilder subject = new StringBuilder(1024);
-
-		appendName(subject, "CN", domain);
-		appendName(subject, "EMAILADDRESS", email);
-		appendName(subject, "OU", organizationUnit);
-		appendName(subject, "O", organization);
-		appendName(subject, "L", city);
-		appendName(subject, "ST", state);
-		appendName(subject, "C", country);
-
-		// since JDK 1.8 we need to pass X500Name as ISSUER and SUBJECT
-		// while before JDK 1.8 we needed to pass special classes
-		// For now let's catch exception and use passing special classes
-		// as a fallback mechanism
-		X500Name issuerName = new X500Name(subject.toString());
-		try {
-			certInfo.set(X509CertInfo.ISSUER, issuerName);
-			certInfo.set(X509CertInfo.SUBJECT, issuerName);
-		} catch (CertificateException ex) {
-			// trying older solution as a fallback
-			CertificateIssuerName certIssuer = new CertificateIssuerName(issuerName);
-			CertificateSubjectName certSubject = new CertificateSubjectName(issuerName);
-
-			certInfo.set(X509CertInfo.ISSUER, certIssuer);
-			certInfo.set(X509CertInfo.SUBJECT, certSubject);
-		}
-
-		// certInfo.set(X509CertInfo.ISSUER + "." +
-		// CertificateSubjectName.DN_NAME, issuerName);
-		AlgorithmId algorithm = new AlgorithmId(AlgorithmId.RSAEncryption_oid);
-		CertificateAlgorithmId certAlgorithm = new CertificateAlgorithmId(algorithm);
-
-		certInfo.set(X509CertInfo.ALGORITHM_ID, certAlgorithm);
-
-		CertificateX509Key certPublicKey = new CertificateX509Key(keyPair.getPublic());
-
-		certInfo.set(X509CertInfo.KEY, certPublicKey);
-
-		// certInfo.set(X509CertInfo.ALGORITHM_ID + "." +
-		// CertificateAlgorithmId.ALGORITHM, algorithm);
-		X509CertImpl newCert = new X509CertImpl(certInfo);
-
-		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
-
-		log.log(Level.FINEST, "creating self signed cert, newCert: {0}", newCert);
-
-		return newCert;
-	}
-
-	@Override
-	public CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
-															   String organization, String city, String state,
-															   String country, KeyPair keyPair)
-			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
-				   NoSuchProviderException, SignatureException {
-
-		X509Certificate cert = generateSelfSignedCertificate(email, domain, organizationUnit, organization, city, state,
-															 country, keyPair);
-		CertificateEntry entry = new CertificateEntry();
-
-		entry.setPrivateKey(keyPair.getPrivate());
-		entry.setCertChain(new Certificate[]{cert});
-		return entry;
-	}
+//		implements CertificateGenerator
+{
+//
+//	private static final Logger log = Logger.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
+//
+//	private static void appendName(StringBuilder sb, String prefix, String value) {
+//		log.log(Level.FINE, "appending value: {0} with prefix: {1} to sb: {2}",
+//				new Object[]{value, prefix, sb.toString()});
+//		if (value != null) {
+//			if (sb.length() > 0) {
+//				sb.append(", ");
+//			}
+//
+//			sb.append(prefix).append('=').append(value);
+//		}
+//	}
+//
+//	@Override
+//	public boolean canGenerateWildcardSAN() {
+//		return false;
+//	}
+//
+//	@Override
+//	public X509Certificate generateSelfSignedCertificate(String email, String domain, String organizationUnit,
+//														 String organization, String city, String state, String country,
+//														 KeyPair keyPair)
+//			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
+//				   NoSuchProviderException, SignatureException {
+//		log.log(Level.INFO, "creating self signed cert, email: {0}, domain: {1}, organizationUnit: {2}," +
+//						"organization: {3}, city: {4}, state: {5}, country: {6}, keyPair: {7}",
+//				new Object[]{email, domain, organizationUnit, organization, city, state, country, keyPair});
+//		X509CertInfo certInfo = new X509CertInfo();
+//		CertificateVersion certVersion = new CertificateVersion();
+//
+//		certInfo.set(X509CertInfo.VERSION, certVersion);
+//
+//		Date firstDate = new Date();
+//		Date lastDate = new Date(firstDate.getTime() + 365 * 24 * 60 * 60 * 1000L);
+//		CertificateValidity interval = new CertificateValidity(firstDate, lastDate);
+//
+//		certInfo.set(X509CertInfo.VALIDITY, interval);
+//		certInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber((int) (firstDate.getTime() / 1000)));
+//
+//		StringBuilder subject = new StringBuilder(1024);
+//
+//		appendName(subject, "CN", domain);
+//		appendName(subject, "EMAILADDRESS", email);
+//		appendName(subject, "OU", organizationUnit);
+//		appendName(subject, "O", organization);
+//		appendName(subject, "L", city);
+//		appendName(subject, "ST", state);
+//		appendName(subject, "C", country);
+//
+//		// since JDK 1.8 we need to pass X500Name as ISSUER and SUBJECT
+//		// while before JDK 1.8 we needed to pass special classes
+//		// For now let's catch exception and use passing special classes
+//		// as a fallback mechanism
+//		X500Name issuerName = new X500Name(subject.toString());
+//		try {
+//			certInfo.set(X509CertInfo.ISSUER, issuerName);
+//			certInfo.set(X509CertInfo.SUBJECT, issuerName);
+//		} catch (CertificateException ex) {
+//			// trying older solution as a fallback
+//			CertificateIssuerName certIssuer = new CertificateIssuerName(issuerName);
+//			CertificateSubjectName certSubject = new CertificateSubjectName(issuerName);
+//
+//			certInfo.set(X509CertInfo.ISSUER, certIssuer);
+//			certInfo.set(X509CertInfo.SUBJECT, certSubject);
+//		}
+//
+//		// certInfo.set(X509CertInfo.ISSUER + "." +
+//		// CertificateSubjectName.DN_NAME, issuerName);
+//		AlgorithmId algorithm = new AlgorithmId(AlgorithmId.RSAEncryption_oid);
+//		CertificateAlgorithmId certAlgorithm = new CertificateAlgorithmId(algorithm);
+//
+//		certInfo.set(X509CertInfo.ALGORITHM_ID, certAlgorithm);
+//
+//		CertificateX509Key certPublicKey = new CertificateX509Key(keyPair.getPublic());
+//
+//		certInfo.set(X509CertInfo.KEY, certPublicKey);
+//
+//		// certInfo.set(X509CertInfo.ALGORITHM_ID + "." +
+//		// CertificateAlgorithmId.ALGORITHM, algorithm);
+//		X509CertImpl newCert = new X509CertImpl(certInfo);
+//
+//		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
+//
+//		log.log(Level.FINEST, "creating self signed cert, newCert: {0}", newCert);
+//
+//		return newCert;
+//	}
+//
+//	@Override
+//	public CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
+//															   String organization, String city, String state,
+//															   String country, KeyPair keyPair)
+//			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
+//				   NoSuchProviderException, SignatureException {
+//
+//		X509Certificate cert = generateSelfSignedCertificate(email, domain, organizationUnit, organization, city, state,
+//															 country, keyPair);
+//		CertificateEntry entry = new CertificateEntry();
+//
+//		entry.setPrivateKey(keyPair.getPrivate());
+//		entry.setCertChain(new Certificate[]{cert});
+//		return entry;
+//	}
 }

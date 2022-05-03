@@ -66,27 +66,6 @@
                 <maven.javadoc.skip>false</maven.javadoc.skip>
             </properties>
         </profile>
-        <profile>
-            <id>disable-java8-doclint</id>
-            <activation>
-                <jdk>[1.9,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>9</source>
-                            <target>9</target>
-                            <release combine.self="override" />
-                            <compilerArgs>
-                                <arg>--add-exports</arg><arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
-                            </compilerArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
 
     <build>
@@ -94,13 +73,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <source combine.self="override" >8</source>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>

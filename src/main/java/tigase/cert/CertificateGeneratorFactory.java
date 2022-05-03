@@ -29,9 +29,7 @@ public class CertificateGeneratorFactory {
 
 	static {
 		try {
-			final String generatorClassName = Runtime.version().feature() >= 17
-											  ? "tigase.cert.KeytoolCertificateGenerator"
-											  : "tigase.cert.OldSelfSignedCertificateGenerator";
+			final String generatorClassName = "tigase.cert.KeytoolCertificateGenerator";
 			generator = (CertificateGenerator) Class.forName(generatorClassName).newInstance();
 		} catch (Throwable ex) {
 			ex.printStackTrace();
