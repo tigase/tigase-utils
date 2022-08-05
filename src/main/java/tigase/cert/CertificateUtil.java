@@ -105,13 +105,13 @@ public abstract class CertificateUtil {
 	}
 
 	public static KeyPair createKeyPair(int size, String password) throws NoSuchAlgorithmException {
-		log.log(Level.INFO, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
+		log.log(Level.CONFIG, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 
 		keyPairGenerator.initialize(size);
 
 		KeyPair keyPair = keyPairGenerator.genKeyPair();
-		log.log(Level.INFO, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
+		log.log(Level.CONFIG, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
 				new Object[]{keyPairGenerator, keyPair});
 
 		return keyPair;
@@ -391,7 +391,7 @@ public abstract class CertificateUtil {
 	public static boolean isSelfSigned(X509Certificate cert) {
 		final boolean result = cert.getIssuerDN().equals(cert.getSubjectDN());
 		if (result) {
-			log.log(Level.INFO, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
+			log.log(Level.CONFIG, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
 		}
 		log.log(Level.FINEST, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[]{result, cert});
 		return result;

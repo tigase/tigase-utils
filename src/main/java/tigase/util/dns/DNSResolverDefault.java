@@ -230,7 +230,7 @@ public class DNSResolverDefault
 		}.start();
 		resolveDefaultTime = System.currentTimeMillis() - start;
 		if (resolveDefaultTime > 0) {
-			log.log(Level.WARNING, "Resolving default host name: {0} took: {1}",
+			log.log(Level.INFO, "Resolving default host name: {0} took: {1}",
 					new Object[]{defaultHost, resolveDefaultTime});
 		}
 
@@ -257,7 +257,7 @@ public class DNSResolverDefault
 	public void setPrimaryHost(String tigasePrimaryHost) {
 		if (isHostValid(tigasePrimaryHost)) {
 			primaryHost = tigasePrimaryHost;
-			log.log(Level.WARNING, "Explicit configuring default hostname: {0}", new Object[]{getDefaultHost()});
+			log.log(Level.INFO, "Explicit configuring default hostname: {0}", new Object[]{getDefaultHost()});
 		} else {
 			primaryHost = defaultHost;
 		}
