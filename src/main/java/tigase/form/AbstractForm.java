@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class AbstractForm {
 
-	protected final Logger log = Logger.getLogger(this.getClass().getName());
+	protected static final Logger log = Logger.getLogger(AbstractForm.class.getName());
 	protected String instruction;
 	protected String title;
 	protected String type;

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class Fields {
 
-	protected final Logger log = Logger.getLogger(this.getClass().getName());
+	protected static final Logger log = Logger.getLogger(Fields.class.getName());
 	private List<Field> fields = new ArrayList<Field>();
 	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
 

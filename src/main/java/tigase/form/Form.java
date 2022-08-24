@@ -21,6 +21,7 @@ import tigase.xml.Element;
 
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p> Created: 2007-05-27 11:41:02 </p>
@@ -30,6 +31,7 @@ import java.util.logging.Level;
 public class Form
 		extends AbstractForm {
 
+	protected static final Logger log = Logger.getLogger(Form.class.getName());
 	protected Fields fields = new Fields();
 
 	public Form(Element form) {

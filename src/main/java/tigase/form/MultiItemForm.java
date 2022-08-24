@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Wojciech Kapcia
@@ -31,6 +32,7 @@ import java.util.logging.Level;
 public class MultiItemForm
 		extends Form {
 
+	protected static final Logger log = Logger.getLogger(MultiItemForm.class.getName());
 	private final List<Fields> items = new ArrayList<>();
 	private Fields reported = null;
 
