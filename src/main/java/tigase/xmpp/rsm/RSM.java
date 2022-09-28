@@ -183,4 +183,19 @@ public class RSM {
 
 		return set;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuffer sb = new StringBuffer("RSM{");
+		sb.append("after='").append(after).append('\'');
+		sb.append(", before='").append(before).append('\'');
+		sb.append(", first='").append(first).append('\'');
+		sb.append(", last='").append(last).append('\'');
+		sb.append(", index=").append(index);
+		sb.append(", max=").append(max);
+		sb.append(", count=").append(count);
+		sb.append(", hasBefore=").append(hasBefore);
+		sb.append('}');
+		return sb.toString();
+	}
 }
