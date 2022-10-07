@@ -91,7 +91,6 @@ public @interface TODO {
 		DOCUMENTATION;
 	}
 
-	;
 
 	/**
 	 * <code>severity</code> property allows you to set and retrieve severity of expected code change described by this
