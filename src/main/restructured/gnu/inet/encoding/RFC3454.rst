@@ -1,0 +1,120 @@
+RFC3454
+=======
+
+.. java:package:: gnu.inet.encoding
+   :noindex:
+
+.. java:type:: public class RFC3454
+
+   Auto-generated class containing StringPrep mapping tables.
+
+Fields
+------
+A1
+^^
+
+.. java:field:: static final char[][] A1
+   :outertype: RFC3454
+
+B1
+^^
+
+.. java:field:: static final char[] B1
+   :outertype: RFC3454
+
+B2replace
+^^^^^^^^^
+
+.. java:field:: static final String[] B2replace
+   :outertype: RFC3454
+
+B2search
+^^^^^^^^
+
+.. java:field:: static final char[] B2search
+   :outertype: RFC3454
+
+B3replace
+^^^^^^^^^
+
+.. java:field:: static final String[] B3replace
+   :outertype: RFC3454
+
+B3search
+^^^^^^^^
+
+.. java:field:: static final char[] B3search
+   :outertype: RFC3454
+
+C11
+^^^
+
+.. java:field:: static final char[] C11
+   :outertype: RFC3454
+
+C12
+^^^
+
+.. java:field:: static final char[] C12
+   :outertype: RFC3454
+
+C21
+^^^
+
+.. java:field:: static final char[][] C21
+   :outertype: RFC3454
+
+C22
+^^^
+
+.. java:field:: static final char[][] C22
+   :outertype: RFC3454
+
+C3
+^^
+
+.. java:field:: static final char[][] C3
+   :outertype: RFC3454
+
+C4
+^^
+
+.. java:field:: static final char[][] C4
+   :outertype: RFC3454
+
+C5
+^^
+
+.. java:field:: static final char[][] C5
+   :outertype: RFC3454
+
+C6
+^^
+
+.. java:field:: static final char[][] C6
+   :outertype: RFC3454
+
+C7
+^^
+
+.. java:field:: static final char[][] C7
+   :outertype: RFC3454
+
+C8
+^^
+
+.. java:field:: static final char[][] C8
+   :outertype: RFC3454
+
+D1
+^^
+
+.. java:field:: static final char[][] D1
+   :outertype: RFC3454
+
+D2
+^^
+
+.. java:field:: static final char[][] D2
+   :outertype: RFC3454
+
