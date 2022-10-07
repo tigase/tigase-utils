@@ -4,3 +4,5 @@ target
 .classpath
 tigase-utils.iml
 .idea/
+
+src/main/restructured/_build
