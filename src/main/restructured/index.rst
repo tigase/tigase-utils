@@ -1,7 +1,6 @@
 
-.. autosummary::
-   :toctree: _autosummary
-   :recursive:
+.. toctree::
+   :maxdepth: 2
 
    packages.rst
 
