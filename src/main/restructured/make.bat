@@ -1,5 +1,5 @@
 @REM
-@REM Tigase XMPP Server - The instant messaging server
+@REM Tigase Utils - Utilities module
 @REM Copyright (C) 2004 Tigase, Inc. (office@tigase.com)
 @REM
 @REM This program is free software: you can redistribute it and/or modify

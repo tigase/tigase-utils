@@ -1,5 +1,5 @@
 #
-# Tigase XMPP Server - The instant messaging server
+# Tigase Utils - Utilities module
 # Copyright (C) 2004 Tigase, Inc. (office@tigase.com)
 #
 # This program is free software: you can redistribute it and/or modify
