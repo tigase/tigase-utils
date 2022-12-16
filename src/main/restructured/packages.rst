@@ -1,4 +1,4 @@
-Tigase Utils 4.3.0-SNAPSHOT API
+Tigase Utils 4.4.0-SNAPSHOT API
 ================================
 
 .. toctree::
