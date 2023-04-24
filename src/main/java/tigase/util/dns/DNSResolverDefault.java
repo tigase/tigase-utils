@@ -167,7 +167,9 @@ public class DNSResolverDefault
 		// actually this also impacts MySQL on AWS where sometimes DNS query causes exception
 		// making it impossible for the driver to reestablish connection. Let's have some
 		// small cache (https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-jvm-ttl.html)
-		java.security.Security.setProperty("networkaddress.cache.ttl", "120");
+		if (java.security.Security.getProperty("networkaddress.cache.ttl") == null) {
+			java.security.Security.setProperty("networkaddress.cache.ttl", "60");
+		}
 		ip_cache.put(LOCALHOST, new DNSEntry(LOCALHOST, "127.0.0.1"));
 		setPrimaryHost(System.getProperty(TIGASE_PRIMARY_ADDRESS));
 		setSecondaryHost(System.getProperty(TIGASE_SECONDARY_ADDRESS));
