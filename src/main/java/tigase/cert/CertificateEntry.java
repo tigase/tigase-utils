@@ -87,7 +87,7 @@ public class CertificateEntry {
 			}
 		}
 
-		return "Private key: " + (privateKey != null ? privateKey.toString() : "private key missing!!! \n\n\n") + '\n' +
+		return "Private key: " + (privateKey != null ? "present" : "MISSING!!! \n\n\n") + '\n' +
 				sb;
 	}
 

@@ -45,6 +45,6 @@ public interface CertificateGenerator {
 
 	CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
 	                                                    String organization, String city, String state, String country,
-	                                                    KeyPair keyPair, boolean generateWildcard)
+	                                                    KeyPair keyPair, boolean generateWildcardCnAlt)
 			throws GeneralSecurityException, IOException;
 }
