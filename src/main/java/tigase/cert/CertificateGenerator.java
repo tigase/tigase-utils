@@ -36,9 +36,15 @@ public interface CertificateGenerator {
 			throws CertificateException, IOException, NoSuchAlgorithmException, InvalidKeyException,
 				   NoSuchProviderException, SignatureException;
 
-	CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
+	default CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
 														String organization, String city, String state, String country,
 														KeyPair keyPair)
-			throws GeneralSecurityException, IOException;
+			throws GeneralSecurityException, IOException {
+		return generateSelfSignedCertificateEntry(email, domain, organizationUnit, organization, city, state, country, keyPair, true);
+	}
 
+	CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
+	                                                    String organization, String city, String state, String country,
+	                                                    KeyPair keyPair, boolean generateWildcard)
+			throws GeneralSecurityException, IOException;
 }

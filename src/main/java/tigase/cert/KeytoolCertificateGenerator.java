@@ -73,7 +73,7 @@ public class KeytoolCertificateGenerator
 	@Override
 	public CertificateEntry generateSelfSignedCertificateEntry(String email, String domain, String organizationUnit,
 															   String organization, String city, String state,
-															   String country, KeyPair keyPair)
+															   String country, KeyPair keyPair, boolean generateWildcard)
 			throws GeneralSecurityException, IOException {
 
 		// test running under windows
@@ -109,7 +109,7 @@ public class KeytoolCertificateGenerator
 		commandParameters.addAll(List.of("-validity", "365"));
 		commandParameters.addAll(List.of("-deststoretype", "pkcs12"));
 		commandParameters.addAll(List.of("-storetype", "JKS"));
-		if (canGenerateWildcardSAN() && !isWildcardDomain(domain)) {
+		if (generateWildcard && canGenerateWildcardSAN() && !isWildcardDomain(domain)) {
 			commandParameters.addAll(getSAN(domain));
 		}
 		ProcessBuilder keytool = new ProcessBuilder().command(commandParameters);
