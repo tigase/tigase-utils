@@ -1,37 +1,19 @@
-version: 6
+version: 25
+imports:
+- projectPath: Templates
+  revision: 0.0.3
 jobs:
-- name: maven ci
+- name: Maven CI
   steps:
-  - !CheckoutStep
-    name: checkout
-    cloneCredential: !DefaultCredential {}
-    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
-  - !CommandStep
-    name: detect build version
-    image: 'maven:3.6.1-jdk-11'
-    commands:
-    - echo "Detecting project version (may require some time while downloading maven
-      dependencies)..."
-    - echo $(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version
-      -q -DforceStdout) > buildVersion
-    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
-  - !SetBuildVersionStep
-    name: set build version
-    buildVersion: '@file:buildVersion@'
-    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
-  - !CommandStep
-    name: run maven
-    image: 'maven:3.6.1-jdk-11'
-    commands:
-    - mvn clean test
+  - !UseTemplateStep
+    name: maven build & deploy
+    templateName: Tigase Server - Maven build & deploy
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
   triggers:
   - !BranchUpdateTrigger {}
   retryCondition: never
   maxRetries: 3
   retryDelay: 30
-  cpuRequirement: 250m
-  memoryRequirement: 128m
   caches:
   - key: maven-cache
     path: /root/.m2/repository
