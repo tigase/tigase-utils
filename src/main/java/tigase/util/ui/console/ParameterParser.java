@@ -208,7 +208,7 @@ public class ParameterParser {
 			if (option.getFullName().isPresent()) {
 				this.optionsByName.put(option.getFullName().get(), option);
 			}
-		} else {
+		} else if (this.options.stream().noneMatch(o -> o == option)) {
 			throw new IllegalArgumentException("Option already exists!" + " Existing: " +
 													   this.options.get(this.options.indexOf(option)).toStringSimple() +
 													   " added: " + (option != null ? option.toStringSimple() : "n/a")
