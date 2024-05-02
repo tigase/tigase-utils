@@ -175,7 +175,6 @@ public class RSM {
 				set.addChild(new Element("count", count.toString()));
 			}
 		} else {
-			set.addChild(new Element("max", String.valueOf(max)));
 			if (after != null) {
 				set.addChild(new Element("after", after));
 			}
