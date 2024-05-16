@@ -132,9 +132,9 @@ public class CertificateUtilTest
 		assertEquals("Failed encryption-decryption test", new String(inputText), new String(plainText));
 	}
 
-	public void testRsaPkcs8Load() throws Exception {
+	public void testRsaPkcs1Load() throws Exception {
 		try (Reader r = new InputStreamReader(
-				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa.pem")))) {
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa_pkcs1.pem")))) {
 			var entry = CertificateUtil.parseCertificate(r);
 			assertNotNull(entry);
 			assertNotNull(entry.getPrivateKey());
@@ -142,9 +142,10 @@ public class CertificateUtilTest
 			assertEquals(1, entry.getCertChain().length);
 		}
 	}
-	public void testRsaPkcs1Load() throws Exception {
+
+	public void testRsaPkcs8Load() throws Exception {
 		try (Reader r = new InputStreamReader(
-				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa_pkcs1.pem")))) {
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa.pem")))) {
 			var entry = CertificateUtil.parseCertificate(r);
 			assertNotNull(entry);
 			assertNotNull(entry.getPrivateKey());

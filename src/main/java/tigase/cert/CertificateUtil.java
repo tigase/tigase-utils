@@ -628,15 +628,15 @@ public abstract class CertificateUtil {
 		return entry;
 	}
 
-	private static PrivateKey generateKeyWithFallback(KeySpec keySpec) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	private static PrivateKey generateKeyWithFallback(KeySpec keySpec)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
 		try {
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 			return keyFactory.generatePrivate(keySpec);
-		}catch (InvalidKeySpecException e){
+		} catch (InvalidKeySpecException e) {
 			KeyFactory keyFactory = KeyFactory.getInstance("EC");
-			return  keyFactory.generatePrivate(keySpec);
+			return keyFactory.generatePrivate(keySpec);
 		}
-
 	}
 
 	private static void printHelp() {
