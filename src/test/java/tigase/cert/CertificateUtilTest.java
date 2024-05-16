@@ -20,10 +20,15 @@ package tigase.cert;
 import junit.framework.TestCase;
 
 import javax.crypto.Cipher;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.KeyPair;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
+import java.util.Objects;
 
 import static tigase.cert.CertificateUtil.*;
 
@@ -32,6 +37,79 @@ import static tigase.cert.CertificateUtil.*;
  */
 public class CertificateUtilTest
 		extends TestCase {
+
+	public void testCertificateDomainVerification() throws Exception {
+		KeyPair keyPair = createKeyPair(1024, "secret");
+
+		// Certificate
+		String email = "artur.hefczyc@tigase.org";
+		String domain = "tigase.org";
+		String ou = "XMPP Service";
+		String o = "Tigase.org";
+		String l = "Cambourne";
+		String st = "Cambridgeshire";
+		String c = "UK";
+
+		//System.out.println("Creating self-signed certificate for issuer: " + domain);
+
+		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
+
+		System.out.println(entry);
+		System.out.println(CertificateUtil.exportToPemFormat(entry));
+
+		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
+
+		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
+		if (generator.canGenerateWildcardSAN()) {
+			assertTrue("Verified certificate domain - wildcard domain: " + domain,
+					   verifyCertificateForDomain(cert, "subdomain." + domain));
+			assertFalse("Verified certificate domain - fail.tigase.im",
+						verifyCertificateForDomain(cert, "fail.tigase.im"));
+		}
+	}
+
+	public void testCertificateWildcardDomainVerification() throws Exception {
+		KeyPair keyPair = createKeyPair(1024, "secret");
+
+		// Certificate
+		String email = "artur.hefczyc@tigase.org";
+		String domain = "tigase.org";
+		String ou = "XMPP Service";
+		String o = "Tigase.org";
+		String l = "Cambourne";
+		String st = "Cambridgeshire";
+		String c = "UK";
+
+		String wildcardDomain = "*." + domain;
+
+		CertificateEntry entry = createSelfSignedCertificate(email, wildcardDomain, ou, o, l, st, c, () -> keyPair);
+		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
+
+		System.out.println(entry);
+		System.out.println(CertificateUtil.exportToPemFormat(entry));
+
+		assertTrue("Verified certificate domain - domain: " + wildcardDomain, verifyCertificateForDomain(cert, domain));
+
+		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
+		if (generator.canGenerateWildcardSAN()) {
+			assertTrue("Verified certificate domain - wildcard domain: " + wildcardDomain,
+					   verifyCertificateForDomain(cert, "subdomain." + domain));
+			assertFalse("Verified certificate domain - fail.tigase.im",
+						verifyCertificateForDomain(cert, "fail.tigase.im"));
+		}
+	}
+
+	public void testEcdsPkcs8Load() throws Exception {
+		try (Reader r = new InputStreamReader(
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_ecds.pem")))) {
+			var entry = CertificateUtil.parseCertificate(r);
+			assertNotNull(entry);
+			assertNotNull(entry.getPrivateKey());
+			assertTrue(entry.getPrivateKey() instanceof ECPrivateKey);
+			assertEquals(1, entry.getCertChain().length);
+		}
+	}
 
 	public void testEncription() throws Exception {
 
@@ -52,6 +130,27 @@ public class CertificateUtilTest
 		byte[] plainText = cipher.doFinal(cipherText);
 
 		assertEquals("Failed encryption-decryption test", new String(inputText), new String(plainText));
+	}
+
+	public void testRsaPkcs8Load() throws Exception {
+		try (Reader r = new InputStreamReader(
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa.pem")))) {
+			var entry = CertificateUtil.parseCertificate(r);
+			assertNotNull(entry);
+			assertNotNull(entry.getPrivateKey());
+			assertTrue(entry.getPrivateKey() instanceof RSAPrivateKey);
+			assertEquals(1, entry.getCertChain().length);
+		}
+	}
+	public void testRsaPkcs1Load() throws Exception {
+		try (Reader r = new InputStreamReader(
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_rsa_pkcs1.pem")))) {
+			var entry = CertificateUtil.parseCertificate(r);
+			assertNotNull(entry);
+			assertNotNull(entry.getPrivateKey());
+			assertTrue(entry.getPrivateKey() instanceof RSAPrivateKey);
+			assertEquals(1, entry.getCertChain().length);
+		}
 	}
 
 	public void testSelfSignedCert() throws Exception {
@@ -83,66 +182,5 @@ public class CertificateUtilTest
 
 		cert.verify(entry.getKeyPair().get().getPublic());
 		assertTrue("Verified certificate with public key - done", true);
-	}
-
-	public void testCertificateDomainVerification() throws Exception {
-		KeyPair keyPair = createKeyPair(1024, "secret");
-
-		// Certificate
-		String email = "artur.hefczyc@tigase.org";
-		String domain = "tigase.org";
-		String ou = "XMPP Service";
-		String o = "Tigase.org";
-		String l = "Cambourne";
-		String st = "Cambridgeshire";
-		String c = "UK";
-
-		//System.out.println("Creating self-signed certificate for issuer: " + domain);
-
-
-		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
-		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
-
-		System.out.println(entry.toString());
-		System.out.println(CertificateUtil.exportToPemFormat(entry));
-
-		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
-
-		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
-		if (generator.canGenerateWildcardSAN()) {
-			assertTrue("Verified certificate domain - wildcard domain: " + domain, verifyCertificateForDomain(cert, "subdomain." + domain));
-			assertFalse("Verified certificate domain - fail.tigase.im",
-					verifyCertificateForDomain(cert, "fail.tigase.im"));
-		}
-	}
-
-	public void testCertificateWildcardDomainVerification() throws Exception {
-		KeyPair keyPair = createKeyPair(1024, "secret");
-
-		// Certificate
-		String email = "artur.hefczyc@tigase.org";
-		String domain = "tigase.org";
-		String ou = "XMPP Service";
-		String o = "Tigase.org";
-		String l = "Cambourne";
-		String st = "Cambridgeshire";
-		String c = "UK";
-
-		String wildcardDomain = "*." + domain;
-
-		CertificateEntry entry = createSelfSignedCertificate(email, wildcardDomain, ou, o, l, st, c, () -> keyPair);
-		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
-
-		System.out.println(entry.toString());
-		System.out.println(CertificateUtil.exportToPemFormat(entry));
-
-		assertTrue("Verified certificate domain - domain: " + wildcardDomain, verifyCertificateForDomain(cert, domain));
-
-		CertificateGenerator generator = CertificateGeneratorFactory.getGenerator();
-		if (generator.canGenerateWildcardSAN()) {
-			assertTrue("Verified certificate domain - wildcard domain: " + wildcardDomain, verifyCertificateForDomain(cert, "subdomain." + domain));
-			assertFalse("Verified certificate domain - fail.tigase.im",
-						verifyCertificateForDomain(cert, "fail.tigase.im"));
-		}
 	}
 }

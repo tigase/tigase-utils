@@ -29,7 +29,9 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.*;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
@@ -600,16 +602,13 @@ public abstract class CertificateUtil {
 				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
-				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-				privateKey = keyFactory.generatePrivate(keySpec);
+				privateKey = generateKeyWithFallback(keySpec);
 				log.log(Level.FINEST, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
 				sb = new StringBuilder(4096);
 			} else if (line.contains(END_RSA_KEY)) {
 				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				RSAPrivateKeyDecoder decoder = new RSAPrivateKeyDecoder(bytes);
-
 				privateKey = decoder.getPrivateKey();
 				log.log(Level.FINEST, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
 				sb = new StringBuilder(4096);
@@ -627,6 +626,17 @@ public abstract class CertificateUtil {
 		log.log(Level.FINEST, "parseCertificate, entry: {0}", new Object[]{entry});
 
 		return entry;
+	}
+
+	private static PrivateKey generateKeyWithFallback(KeySpec keySpec) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		try {
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			return keyFactory.generatePrivate(keySpec);
+		}catch (InvalidKeySpecException e){
+			KeyFactory keyFactory = KeyFactory.getInstance("EC");
+			return  keyFactory.generatePrivate(keySpec);
+		}
+
 	}
 
 	private static void printHelp() {
