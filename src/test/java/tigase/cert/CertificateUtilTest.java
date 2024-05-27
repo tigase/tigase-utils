@@ -55,8 +55,8 @@ public class CertificateUtilTest
 		CertificateEntry entry = createSelfSignedCertificate(email, domain, ou, o, l, st, c, () -> keyPair);
 		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 
-		System.out.println(entry);
-		System.out.println(CertificateUtil.exportToPemFormat(entry));
+//		System.out.println(entry);
+//		System.out.println(CertificateUtil.exportToPemFormat(entry));
 
 		assertTrue("Verified certificate domain - domain: " + domain, verifyCertificateForDomain(cert, domain));
 
@@ -86,8 +86,8 @@ public class CertificateUtilTest
 		CertificateEntry entry = createSelfSignedCertificate(email, wildcardDomain, ou, o, l, st, c, () -> keyPair);
 		X509Certificate cert = (X509Certificate) entry.getCertChain()[0];
 
-		System.out.println(entry);
-		System.out.println(CertificateUtil.exportToPemFormat(entry));
+//		System.out.println(entry);
+//		System.out.println(CertificateUtil.exportToPemFormat(entry));
 
 		assertTrue("Verified certificate domain - domain: " + wildcardDomain, verifyCertificateForDomain(cert, domain));
 
