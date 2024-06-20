@@ -44,9 +44,13 @@ public class ClassUtil {
 	private static final String[] SKIP_WHITELIST = {"tigase."};
 	private static final String[] SKIP_CONTAINS = {".ui.", ".swing", ".awt", ".sql.", ".xml.", ".terracotta."};
 
+	private static final String META_VERSION_PREFIX = "META-INF.versions.";
+
 	private static final String[] SKIP_STARTS = {"com.mysql", "tigase.pubsub.Utils", "org.apache.derby",
 												 "org.apache.xml", "org.postgresql", "com.sun", "groovy",
 												 "org.codehaus.groovy", "org.netbeans", "org.python"};
+
+	private static final int RUNTIME_FEATURE_VERSION = Runtime.version().feature();
 
 	public static String getClassNameFromFileName(String fileName) {
 		String class_name = null;
@@ -265,6 +269,15 @@ public class ClassUtil {
 		} // end of if (file.isDirectory()) else
 	}
 
+	public static boolean filterIncorrectMultiVersionClasses(String name) {
+		if (name.startsWith(META_VERSION_PREFIX)) {
+			var prefixLength = META_VERSION_PREFIX.length();
+			var version = name.substring(prefixLength, name.indexOf(".", prefixLength));
+			return Integer.parseInt(version) > RUNTIME_FEATURE_VERSION;
+		}
+		return false;
+	}
+
 	private static boolean filterSkipStartWith(String name) {
 		for (String test_str : SKIP_STARTS) {
 			if (name.startsWith(test_str)) {
@@ -273,4 +286,4 @@ public class ClassUtil {
 		}
 		return true;
 	}
-} // ClassUtil
+}
