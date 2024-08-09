@@ -26,8 +26,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -52,7 +52,7 @@ public class ZLibWrapper {
 	/**
 	 * Variable <code>log</code> is a class logger.
 	 */
-	private static Logger log = Logger.getLogger(ZLibWrapper.class.getName());
+	private static Logger log = System.getLogger(ZLibWrapper.class.getName());
 
 	private float average_compression_rate = 0f;
 	private float average_decompression_rate = 0f;
@@ -325,9 +325,7 @@ public class ZLibWrapper {
 		if (result_arr.length > compress_output.length) {
 			compress_output = result_arr;
 
-			if (log.isLoggable(Level.FINEST)) {
-				log.log(Level.FINEST, "Increasing compress_output size to: {0}", compress_output.length);
-			}
+			log.log(Level.TRACE, () -> "Increasing compress_output size to: " + compress_output.length);
 		}
 
 		// Calculate compression rate for statistics collection
@@ -392,8 +390,8 @@ public class ZLibWrapper {
 		if (result_arr.length > compress_output.length) {
 			compress_output = result_arr;
 
-			if (log.isLoggable(Level.FINEST)) {
-				log.log(Level.FINEST, "Increasing compress_output size to: {0}", compress_output.length);
+			if (log.isLoggable(Level.TRACE)) {
+				log.log(Level.TRACE, "Increasing compress_output size to: {0}", compress_output.length);
 			}
 		}
 
@@ -500,9 +498,7 @@ public class ZLibWrapper {
 			if (result_arr.length > decompress_output.length) {
 				decompress_output = result_arr;
 
-				if (log.isLoggable(Level.FINEST)) {
-					log.finest("Increasing compress_output size to: " + compress_output.length);
-				}
+				log.log(Logger.Level.TRACE, () -> "Increasing compress_output size to: " + compress_output.length);
 			}
 
 			// Calculate decompression rate for statistics collection

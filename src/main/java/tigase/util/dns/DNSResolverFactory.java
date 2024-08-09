@@ -17,13 +17,13 @@
  */
 package tigase.util.dns;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 public class DNSResolverFactory {
 
 	public static final String TIGASE_RESOLVER_CLASS = "tigase-resolver-class";
-	private static final Logger log = Logger.getLogger(DNSResolverFactory.class.getName());
+	private static final Logger log = System.getLogger(DNSResolverFactory.class.getName());
 	private static volatile DNSResolverIfc instance = null;
 
 	static {
@@ -46,7 +46,7 @@ public class DNSResolverFactory {
 			}
 
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-			log.log(Level.SEVERE, "Failed initialization of class: {0} (property: {1}), using default: {2}",
+			log.log(Level.ERROR, "Failed initialization of class: {0} (property: {1}), using default: {2}",
 					new Object[]{clazz, property, DNSResolverDefault.class.getCanonicalName()});
 		}
 		if (instance == null) {

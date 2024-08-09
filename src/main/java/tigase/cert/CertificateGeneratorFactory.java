@@ -18,12 +18,12 @@
 package tigase.cert;
 
 import java.security.NoSuchProviderException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 public class CertificateGeneratorFactory {
 
-	private static final Logger log = Logger.getLogger(CertificateGeneratorFactory.class.getCanonicalName());
+	private static final Logger log = System.getLogger(CertificateGeneratorFactory.class.getCanonicalName());
 
 	private static CertificateGenerator generator;
 

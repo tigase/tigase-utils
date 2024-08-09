@@ -19,8 +19,8 @@ package tigase.util;
 
 import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +35,7 @@ public class Version
 			.thenComparing(Version::getVersionType)
 			.thenComparingInt(Version::getTypeNumber)
 			.thenComparingInt(Version::getBuild);
-	private static final Logger log = Logger.getLogger("tigase.util.updater.UpdatesChecker");
+	private static final Logger log = System.getLogger("tigase.util.updater.UpdatesChecker");
 	private static final Pattern PATTERN = Pattern.compile(
 			"(.*?)-?((\\d{1,20}\\.){1,2}\\d{1,20})(-(SNAPSHOT|RC|BETA)(\\d*))?(-b(\\d{1,50})(/([0-9a-f]{4,16}))?)?",
 			Pattern.CASE_INSENSITIVE);
@@ -145,7 +145,7 @@ public class Version
 					}
 				}
 			} catch (NumberFormatException e) {
-				log.warning("Can not detect the server version.... " + str);
+				log.log(Logger.Level.WARNING,"Can not detect the server version.... " + str);
 			} catch (Exception e) {
 				log.log(Level.WARNING, "Problem parsing server version.... " + str, e);
 			}

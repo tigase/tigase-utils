@@ -18,7 +18,7 @@
 package tigase.util.cache;
 
 import java.util.*;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 /**
  * Describe class SimpleCache here.
@@ -35,7 +35,7 @@ public class SimpleCache<K, V>
 	/**
 	 * Variable <code>log</code> is a class logger.
 	 */
-	private static final Logger log = Logger.getLogger("tigase.util.SimpleCache");
+	private static final Logger log = System.getLogger("tigase.util.SimpleCache");
 
 	private static final long serialVersionUID = 1L;
 	protected boolean cache_off = false;

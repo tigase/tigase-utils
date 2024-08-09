@@ -19,8 +19,8 @@ package tigase.util.ui.console;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class ParameterParser {
 
-	private static final Logger log = Logger.getLogger(ParameterParser.class.getName());
+	private static final Logger log = System.getLogger(ParameterParser.class.getName());
 	private final CommandlineParameter helpOption = new CommandlineParameter.Builder(null, "help").description(
 			"Print the help").requireArguments(false).build();
 	private final boolean interactiveMode;
@@ -390,7 +390,7 @@ public class ParameterParser {
 	 * @return Properties with parameter/value pairs matching defined options.
 	 */
 	public Properties parseArgs(String[] args) {
-		log.log(Level.FINEST, "Parsing arguments: " + Arrays.toString(args));
+		log.log(Level.TRACE, "Parsing arguments: " + Arrays.toString(args));
 		Properties props = new Properties();
 
 		// so we can run parse many times
@@ -432,7 +432,7 @@ public class ParameterParser {
 		if (interactiveMode && getOptionByName("interactive").isPresent() &&
 				Boolean.valueOf(getOptionByName("interactive").get().getValue().orElse("false"))) {
 
-			log.log(Level.FINEST, "Using interactive mode for {0}", getOptionsNames(missingValuesPredicate));
+			log.log(Level.TRACE, "Using interactive mode for {0}", getOptionsNames(missingValuesPredicate));
 			System.out.println("Using interactive mode for: " + getOptionsNames(missingValuesPredicate) +
 									   ", skipped options will use default if available");
 
@@ -453,11 +453,11 @@ public class ParameterParser {
 			}
 		}
 
-		log.log(Level.FINEST, "Using defaults for mode for {0}", getOptionsNames(missingValuesPredicate));
+		log.log(Level.TRACE, "Using defaults for mode for {0}", getOptionsNames(missingValuesPredicate));
 		getOptions(missingValuesPredicate).forEach(CommandlineParameter::setValueFromDefault);
 
 		final Predicate<CommandlineParameter> missingAndRequired = (p) -> !p.getValue().isPresent() && p.isRequired();
-		log.log(Level.FINEST, "Still missing values for: {0}, of which required are: {1}",
+		log.log(Level.TRACE, "Still missing values for: {0}, of which required are: {1}",
 				new Object[]{getOptionsNames(missingValuesPredicate), getOptionsNames(missingAndRequired)});
 
 		if (getOptions(missingAndRequired).size() > 0) {
@@ -606,7 +606,7 @@ public class ParameterParser {
 				}
 				added |= addOptionsIfMissing(option.getValueDependentParameters());
 			} else {
-				log.log(Level.FINE, "Checked item is not valid: %1$s, possibly value of parameter", args[i]);
+				log.log(Level.DEBUG, "Checked item is not valid: %1$s, possibly value of parameter", args[i]);
 			}
 			if (null != key && null != value) {
 				props.put(key, value);

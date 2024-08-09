@@ -20,8 +20,8 @@ package tigase.form;
 import tigase.xml.Element;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 /**
  * <p> Created: 2007-05-27 11:41:02 </p>
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class Form
 		extends AbstractForm {
 
-	protected static final Logger log = Logger.getLogger(Form.class.getName());
+	protected static final Logger log = System.getLogger(Form.class.getName());
 	protected Fields fields = new Fields();
 
 	public Form(Element form) {
@@ -45,9 +45,7 @@ public class Form
 				if ("field".equals(sub.getName())) {
 					Field field = new Field(sub);
 
-					if (log.isLoggable(Level.FINEST)) {
-						log.finest("read Data Form field [" + field.getVar() + "]");
-					}
+					log.log(Logger.Level.TRACE, () -> "read Data Form field [" + field.getVar() + "]");
 					fields.addField(field);
 				}
 			}
@@ -67,7 +65,7 @@ public class Form
 	}
 
 	public void copyValuesFrom(Element form) {
-		log.finest("Copying values from form ");
+		log.log(Logger.Level.TRACE,"Copying values from form ");
 
 		List<Element> children = form.getChildren();
 
@@ -79,8 +77,8 @@ public class Form
 
 					if (f != null) {
 						f.setValues(field.getValues());
-					} else if (log.isLoggable(Level.FINER)) {
-						log.finer("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+					} else if (log.isLoggable(Level.TRACE)) {
+						log.log(Level.TRACE, () -> "Field " + field.getVar() + " is not declared in form '" + title + "'!");
 					}
 				}
 			}
@@ -93,8 +91,8 @@ public class Form
 
 			if (f != null) {
 				f.setValues(field.getValues());
-			} else if (log.isLoggable(Level.FINER)) {
-				log.finer("Field " + field.getVar() + " is not declared in form '" + title + "'!");
+			} else if (log.isLoggable(Level.TRACE)) {
+				log.log(Logger.Level.TRACE,() -> "Field " + field.getVar() + " is not declared in form '" + title + "'!");
 			}
 		}
 	}

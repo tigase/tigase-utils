@@ -30,18 +30,18 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 import java.util.stream.Collectors;
 
 // This may stop working very soon as JDK9 warns about usage of internal classes which may be removed in the future.
 public class KeytoolCertificateGenerator
 		implements CertificateGenerator {
 
-	private static final Logger log = Logger.getLogger(KeytoolCertificateGenerator.class.getCanonicalName());
+	private static final Logger log = System.getLogger(KeytoolCertificateGenerator.class.getCanonicalName());
 
 	private static void appendName(StringBuilder sb, String prefix, String value) {
-		log.log(Level.FINE, "appending value: {0} with prefix: {1} to sb: {2}",
+		log.log(Level.DEBUG, "appending value: {0} with prefix: {1} to sb: {2}",
 				new Object[]{value, prefix, sb.toString()});
 		if (value != null) {
 			if (sb.length() > 0) {
@@ -121,11 +121,9 @@ public class KeytoolCertificateGenerator
 			throw new IOException("Keytool execution error");
 		}
 
-		if (log.isLoggable(Level.FINEST)) {
-			log.log(Level.FINEST,
-					"Generating certificate using `keytool` using command: " + process.info() + ", parameters: " +
-							commandParameters);
-		}
+		log.log(Level.TRACE,
+		        () -> "Generating certificate using `keytool` using command: " + process.info() + ", parameters: " +
+				        commandParameters);
 
 		if (process.exitValue() > 0) {
 			final String processError = (new BufferedReader(new InputStreamReader(process.getErrorStream()))).lines()

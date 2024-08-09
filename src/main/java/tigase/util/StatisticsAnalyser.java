@@ -29,11 +29,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 class StatisticsAnalyser {
 
-	private final static Logger log = Logger.getLogger(StatisticsAnalyser.class.getName());
+	private final static Logger log = System.getLogger(StatisticsAnalyser.class.getName());
 
 	public static void main(String[] args) {
 

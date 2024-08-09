@@ -28,8 +28,8 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 /**
  * DNSResolver class for handling DNS names
@@ -39,7 +39,7 @@ public class DNSResolverDefault
 
 	private static final long DNS_CACHE_TIME = 1000 * 60;
 	private static final String LOCALHOST = "localhost";
-	private static final Logger log = Logger.getLogger(DNSResolverDefault.class.getName());
+	private static final Logger log = System.getLogger(DNSResolverDefault.class.getName());
 	private static final String OPEN_DNS_HIT_NXDOMAIN = "hit-nxdomain.opendns.com";
 	private final static Comparator<String> IPv4_PRIORITY_COMPARATOR = Comparator.comparing(
 			(String s) -> s.contains(":"));
@@ -61,7 +61,7 @@ public class DNSResolverDefault
 				return true;
 			}
 		} catch (UnknownHostException ex) {
-			log.log(Level.SEVERE, "Not possible to resolve " + host + ", using fallback address...");
+			log.log(Level.ERROR, "Not possible to resolve " + host + ", using fallback address...");
 		}
 		return false;
 	}
@@ -215,7 +215,7 @@ public class DNSResolverDefault
 		} catch (UnknownHostException e) {
 			localnames = new String[]{LOCALHOST};
 			defaultHost = LOCALHOST;
-			log.log(Level.SEVERE,
+			log.log(Level.ERROR,
 					"Retrieval of default hostnames failed! Most likely network misconfiguration problem," +
 							"make sure the local hostname to whichever it is set does resolve to IP address," +
 							"fallback to: " + defaultHost, e);

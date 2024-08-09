@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 /**
  * @author Wojciech Kapcia
  */
 public class Fields {
 
-	protected static final Logger log = Logger.getLogger(Fields.class.getName());
+	protected static final Logger log = System.getLogger(Fields.class.getName());
 	private List<Field> fields = new ArrayList<Field>();
 	private Map<String, Field> fieldsByVar = new HashMap<String, Field>();
 

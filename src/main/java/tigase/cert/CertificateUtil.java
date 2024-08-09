@@ -29,14 +29,13 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.*;
 import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 /**
  * Created: Sep 22, 2010 3:09:01 PM
@@ -62,7 +61,7 @@ public abstract class CertificateUtil {
 	private static final String LOAD_CERT_SHORT = "-lc";
 	private static final String LOAD_DER_PRIVATE_KEY = "--load-der-priv-key";
 	private static final String LOAD_DER_PRIVATE_KEY_SHORT = "-ldpk";
-	private static final Logger log = Logger.getLogger(CertificateUtil.class.getName());
+	private static final Logger log = System.getLogger(CertificateUtil.class.getName());
 	private static final String PRINT_PROVIDERS = "--print-providers";
 	private static final String PRINT_PROVIDERS_SHORT = "-pp";
 	private static final String PRINT_SERVICES = "--print-services";
@@ -80,7 +79,7 @@ public abstract class CertificateUtil {
 	private static final String STORE_CERT_SHORT = "-sc";
 
 	private static int calculateLength(byte[] buffer, int start) throws ArrayIndexOutOfBoundsException {
-		log.log(Level.FINE, "calculating length, buffer: {0}, start: {1}", new Object[]{new String(buffer), start});
+		log.log(Level.DEBUG, "calculating length, buffer: {0}, start: {1}", new Object[]{new String(buffer), start});
 		int offset = start + 1;
 		int b = (buffer[offset] & 0xff);
 		if (b < 0x80) {
@@ -97,7 +96,7 @@ public abstract class CertificateUtil {
 	}
 
 	private final static int calculateOffset(byte[] buffer, int offset) throws ArrayIndexOutOfBoundsException {
-		log.log(Level.FINE, "calculating offset, buffer: {0}, start: {1}", new Object[]{new String(buffer), offset});
+		log.log(Level.DEBUG, "calculating offset, buffer: {0}, start: {1}", new Object[]{new String(buffer), offset});
 		int b = (buffer[(offset + 1)] & 0xff);
 		if (b < 0x80) {
 			return (offset + 2);
@@ -107,13 +106,13 @@ public abstract class CertificateUtil {
 	}
 
 	public static KeyPair createKeyPair(int size, String password) throws NoSuchAlgorithmException {
-		log.log(Level.CONFIG, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
+		log.log(Level.INFO, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 
 		keyPairGenerator.initialize(size);
 
 		KeyPair keyPair = keyPairGenerator.genKeyPair();
-		log.log(Level.CONFIG, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
+		log.log(Level.INFO, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
 				new Object[]{keyPairGenerator, keyPair});
 
 		return keyPair;
@@ -177,7 +176,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static String exportToPemFormat(CertificateEntry entry) throws CertificateEncodingException {
-		log.log(Level.FINEST, "exportToPemFormat cert, entry: {0}", new Object[]{entry});
+		log.log(Level.TRACE, "exportToPemFormat cert, entry: {0}", new Object[]{entry});
 		StringBuilder sb = new StringBuilder(4096);
 
 		if ((entry.getCertChain() != null) && (entry.getCertChain().length > 0)) {
@@ -203,7 +202,7 @@ public abstract class CertificateUtil {
 			}
 		}
 
-		log.log(Level.FINEST, "exportToPemFormat cert, string: {0}", new Object[]{sb.toString()});
+		log.log(Level.TRACE, "exportToPemFormat cert, string: {0}", new Object[]{sb.toString()});
 
 		return sb.toString();
 	}
@@ -212,7 +211,7 @@ public abstract class CertificateUtil {
 		String[] dd = principal.getName(X500Principal.RFC2253).split(",");
 		for (String string : dd) {
 			if (string.toLowerCase().startsWith("cn=")) {
-				log.log(Level.FINEST, "extractCN, principal: {0}, result: {1}",
+				log.log(Level.TRACE, "extractCN, principal: {0}, result: {1}",
 						new Object[]{principal, string.substring(3)});
 				return string.substring(3);
 			}
@@ -221,7 +220,7 @@ public abstract class CertificateUtil {
 	}
 
 	private static String extractValue(byte[] buffer, byte[] id) {
-		log.log(Level.FINE, "extracting value, buffer: {0}, id: {1}", new Object[]{new String(buffer), new String(id)});
+		log.log(Level.DEBUG, "extracting value, buffer: {0}, id: {1}", new Object[]{new String(buffer), new String(id)});
 		try {
 			if (buffer[0] != 0x30) {
 				return null;
@@ -258,7 +257,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static List<String> extractXmppAddrs(final X509Certificate x509Certificate) {
-		log.log(Level.FINEST, "extractXmppAddrs, x509Certificate: {0}", new Object[]{x509Certificate.toString()});
+		log.log(Level.TRACE, "extractXmppAddrs, x509Certificate: {0}", new Object[]{x509Certificate.toString()});
 		final ArrayList<String> result = new ArrayList<String>();
 		try {
 			Collection<List<?>> altNames = x509Certificate.getSubjectAlternativeNames();
@@ -277,7 +276,7 @@ public abstract class CertificateUtil {
 
 				}
 			}
-			log.log(Level.FINEST, "extractXmppAddrs, result: {0}", new Object[]{result});
+			log.log(Level.TRACE, "extractXmppAddrs, result: {0}", new Object[]{result});
 			return result;
 		} catch (Exception e) {
 			return result;
@@ -285,7 +284,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static List<String> getCertAltCName(X509Certificate cert) {
-		log.log(Level.FINEST, "getCertAltCName, x509Certificate: {0}", new Object[]{cert.toString()});
+		log.log(Level.TRACE, "getCertAltCName, x509Certificate: {0}", new Object[]{cert.toString()});
 		try {
 			Collection<List<?>> subjectAlternativeNames = cert.getSubjectAlternativeNames();
 			ArrayList<String> result = new ArrayList<>();
@@ -298,7 +297,7 @@ public abstract class CertificateUtil {
 					}
 				}
 			}
-			log.log(Level.FINE, "Certificate alternative names: {0}", new Object[]{result});
+			log.log(Level.DEBUG, "Certificate alternative names: {0}", new Object[]{result});
 			return result;
 		} catch (CertificateParsingException e) {
 			return Collections.emptyList();
@@ -306,7 +305,7 @@ public abstract class CertificateUtil {
 	}
 
 	public static String getCertCName(X509Certificate cert) {
-		log.log(Level.FINEST, "getCertCName, X509Certificate: {0}", new Object[]{cert});
+		log.log(Level.TRACE, "getCertCName, X509Certificate: {0}", new Object[]{cert});
 		X500Principal princ = cert.getSubjectX500Principal();
 		String name = princ.getName();
 		String[] all = name.split(",");
@@ -315,7 +314,7 @@ public abstract class CertificateUtil {
 			String[] ns = n.trim().split("=");
 
 			if (ns[0].equals("CN")) {
-				log.log(Level.FINE, "Certificate DN: {0}", new Object[]{ns[1]});
+				log.log(Level.DEBUG, "Certificate DN: {0}", new Object[]{ns[1]});
 				return ns[1];
 			}
 		}
@@ -393,9 +392,9 @@ public abstract class CertificateUtil {
 	public static boolean isSelfSigned(X509Certificate cert) {
 		final boolean result = cert.getIssuerDN().equals(cert.getSubjectDN());
 		if (result) {
-			log.log(Level.CONFIG, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
+			log.log(Level.INFO, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
 		}
-		log.log(Level.FINEST, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[]{result, cert});
+		log.log(Level.TRACE, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[]{result, cert});
 		return result;
 	}
 
@@ -439,7 +438,7 @@ public abstract class CertificateUtil {
 
 	public static PrivateKey loadPrivateKeyFromDER(File file)
 			throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-		log.log(Level.CONFIG, "loadPrivateKeyFromDER, file: {0}", new Object[]{file});
+		log.log(Level.INFO, "loadPrivateKeyFromDER, file: {0}", new Object[]{file});
 		DataInputStream dis = new DataInputStream(new FileInputStream(file));
 		byte[] privKeyBytes = new byte[(int) file.length()];
 
@@ -454,11 +453,12 @@ public abstract class CertificateUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-		final Level lvl = Level.FINE;
-		log.setLevel(lvl);
+		var lvl = java.util.logging.Level.FINE;
+		java.util.logging.Logger julLogger = java.util.logging.Logger.getLogger("tigase.cert");
+		julLogger.setLevel(lvl);
 		ConsoleHandler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(lvl);
-		log.addHandler(consoleHandler);
+		julLogger.addHandler(consoleHandler);
 
 		if ((args != null) && (args.length > 0)) {
 			if (args[0].equals(PRINT_PROVIDERS) || args[0].equals(PRINT_PROVIDERS_SHORT)) {
@@ -603,14 +603,14 @@ public abstract class CertificateUtil {
 				byte[] bytes = Base64.decode(sb.toString());
 				PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 				privateKey = generateKeyWithFallback(keySpec);
-				log.log(Level.FINEST, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
+				log.log(Level.TRACE, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
 				sb = new StringBuilder(4096);
 			} else if (line.contains(END_RSA_KEY)) {
 				addToBuffer = false;
 				byte[] bytes = Base64.decode(sb.toString());
 				RSAPrivateKeyDecoder decoder = new RSAPrivateKeyDecoder(bytes);
 				privateKey = decoder.getPrivateKey();
-				log.log(Level.FINEST, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
+				log.log(Level.TRACE, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
 				sb = new StringBuilder(4096);
 			} else if (addToBuffer) {
 				sb.append(line);
@@ -623,7 +623,7 @@ public abstract class CertificateUtil {
 		entry.setCertChain(certs.toArray(new Certificate[certs.size()]));
 		entry.setPrivateKey(privateKey);
 
-		log.log(Level.FINEST, "parseCertificate, entry: {0}", new Object[]{entry});
+		log.log(Level.TRACE, "parseCertificate, entry: {0}", new Object[]{entry});
 
 		return entry;
 	}
@@ -770,7 +770,7 @@ public abstract class CertificateUtil {
 
 	public static void storeCertificate(String file, CertificateEntry entry)
 			throws CertificateEncodingException, IOException {
-		log.log(Level.FINEST, "storeCertificate, file: {0}, entry: {1}", new Object[]{file, entry});
+		log.log(Level.TRACE, "storeCertificate, file: {0}, entry: {1}", new Object[]{file, entry});
 
 		String pemFormat = exportToPemFormat(entry);
 
@@ -789,8 +789,8 @@ public abstract class CertificateUtil {
 													  boolean revocationEnabled)
 			throws NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException,
 				   CertificateException {
-		if (log.isLoggable(Level.FINEST)) {
-			log.log(Level.FINEST,
+		if (log.isLoggable(Level.TRACE)) {
+			log.log(Level.TRACE,
 					"Validating cert: {0}, chain size: {1}, trustKeystore size: {2}, revocationEnabled: {3}",
 					new Object[]{((X509Certificate) chain[0]).getSubjectDN(), chain.length, trustKeystore.size(),
 								 revocationEnabled});
@@ -837,7 +837,7 @@ public abstract class CertificateUtil {
 
 	protected static boolean verifyCertificateForHostname(String hostname, X509Certificate x509Certificate)
 			throws CertificateParsingException {
-		log.log(Level.FINEST, "verifyCertificateForHostname, hostname: {0}, x509Certificate: {1}",
+		log.log(Level.TRACE, "verifyCertificateForHostname, hostname: {0}, x509Certificate: {1}",
 				new Object[]{hostname, x509Certificate});
 		boolean altNamePresents = false;
 		Collection<List<?>> altNames = x509Certificate.getSubjectAlternativeNames();
@@ -867,7 +867,7 @@ public abstract class CertificateUtil {
 
 	protected static boolean verifyCertificateForIp(String ipAddr, X509Certificate x509Certificate)
 			throws CertificateParsingException {
-		log.log(Level.FINEST, "verifyCertificateForIp, ipAddr: {0}, x509Certificate: {1}",
+		log.log(Level.TRACE, "verifyCertificateForIp, ipAddr: {0}, x509Certificate: {1}",
 				new Object[]{ipAddr, x509Certificate});
 		for (List<?> entry : x509Certificate.getSubjectAlternativeNames()) {
 			Integer altNameType = (Integer) entry.get(0);

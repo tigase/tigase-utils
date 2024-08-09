@@ -24,8 +24,8 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 public interface DNSResolverIfc {
 
@@ -33,7 +33,7 @@ public interface DNSResolverIfc {
 
 	static final String TIGASE_SECONDARY_ADDRESS = "tigase-secondary-address";
 
-	static final Logger log = Logger.getLogger(DNSResolverIfc.class.getName());
+	static final Logger log = System.getLogger(DNSResolverIfc.class.getName());
 
 	static Random rand = new Random();
 
@@ -168,14 +168,12 @@ public interface DNSResolverIfc {
 					}
 				}
 			} else {
-				log.log(Level.FINER, "Empty SRV DNS records set for domain: {0}", hostname);
+				log.log(Level.TRACE, "Empty SRV DNS records set for domain: {0}", hostname);
 			}
 			ctx.close();
 		} catch (NamingException e) {
 			result_host = hostname;
-			if (log.isLoggable(Level.FINER)) {
-				log.log(Level.FINER, "Problem getting SRV DNS records for domain: " + hostname + ", " + e.getMessage());
-			}
+			log.log(Level.TRACE, () ->"Problem getting SRV DNS records for domain: " + hostname + ", " + e.getMessage());
 		}    // end of try-catch
 		if (entries.isEmpty()) {
 			String[] ip_address = getHostIPs(result_host);
@@ -183,9 +181,7 @@ public interface DNSResolverIfc {
 			entries.add(new DNSEntry(hostname, ip_address, port));
 		}
 
-		if (log.isLoggable(Level.FINER)) {
-			log.log(Level.FINER, "Resolved DNS for : " + hostname + " to: " + entries);
-		}
+		log.log(Level.TRACE,() ->  "Resolved DNS for : " + hostname + " to: " + entries);
 
 		return entries.toArray(new DNSEntry[]{});
 	}
@@ -246,8 +242,8 @@ public interface DNSResolverIfc {
 			log.log(Level.WARNING, "No result?? should not happen, an error in the code: {0}",
 					Arrays.toString(entries));
 		}
-		if (log.isLoggable(Level.FINEST)) {
-			log.log(Level.FINEST, "Start idx: {0}, last idx: {1}, selected DNSEntry: {2}",
+		if (log.isLoggable(Level.TRACE)) {
+			log.log(Level.TRACE, "Start idx: {0}, last idx: {1}, selected DNSEntry: {2}",
 					new Object[]{start, idx, result});
 		}
 

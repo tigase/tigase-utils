@@ -27,8 +27,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 // This may stop working very soon as JDK9 warns about usage of internal classes which may be removed in the future.
 //
@@ -40,10 +40,10 @@ public class OldSelfSignedCertificateGenerator
 //		implements CertificateGenerator
 {
 //
-//	private static final Logger log = Logger.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
+//	private static final Logger log = System.getLogger(OldSelfSignedCertificateGenerator.class.getCanonicalName());
 //
 //	private static void appendName(StringBuilder sb, String prefix, String value) {
-//		log.log(Level.FINE, "appending value: {0} with prefix: {1} to sb: {2}",
+//		log.log(Level.DEBUG, "appending value: {0} with prefix: {1} to sb: {2}",
 //				new Object[]{value, prefix, sb.toString()});
 //		if (value != null) {
 //			if (sb.length() > 0) {
@@ -124,7 +124,7 @@ public class OldSelfSignedCertificateGenerator
 //
 //		newCert.sign(keyPair.getPrivate(), "SHA1WithRSA");
 //
-//		log.log(Level.FINEST, "creating self signed cert, newCert: {0}", newCert);
+//		log.log(Level.TRACE, "creating self signed cert, newCert: {0}", newCert);
 //
 //		return newCert;
 //	}

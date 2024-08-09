@@ -24,8 +24,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 /**
  * <code>ClassUtil</code> file contains code used for loading all implementations of specified <em>interface</em> or
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class ClassUtil {
 
-	private static final Logger log = Logger.getLogger(ClassUtil.class.getName());
+	private static final Logger log = System.getLogger(ClassUtil.class.getName());
 
 	private static final String[] SKIP_WHITELIST = {"tigase."};
 	private static final String[] SKIP_CONTAINS = {".ui.", ".swing", ".awt", ".sql.", ".xml.", ".terracotta."};

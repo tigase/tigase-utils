@@ -20,7 +20,7 @@ package tigase.form;
 import tigase.xml.Element;
 
 import java.util.List;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
 /**
  * <p> Created: 2007-05-27 11:41:02 </p>
@@ -29,14 +29,14 @@ import java.util.logging.Logger;
  */
 public class AbstractForm {
 
-	protected static final Logger log = Logger.getLogger(AbstractForm.class.getName());
+	protected static final Logger log = System.getLogger(AbstractForm.class.getName());
 	protected String instruction;
 	protected String title;
 	protected String type;
 
 	public AbstractForm(Element form) {
 		this.type = form.getAttributeStaticStr("type");
-		log.finest("Retriving Data Form type " + this.type);
+		log.log(Logger.Level.TRACE,"Retriving Data Form type " + this.type);
 
 		List<Element> children = form.getChildren();
 
@@ -44,10 +44,10 @@ public class AbstractForm {
 			for (Element sub : children) {
 				if ("title".equals(sub.getName())) {
 					this.title = sub.getCData();
-					log.finest("read Data Form title [" + this.title + "]");
+					log.log(Logger.Level.TRACE,"read Data Form title [" + this.title + "]");
 				} else if ("instructions".equals(sub.getName())) {
 					this.instruction = sub.getCData();
-					log.finest("read Data Form instruction [" + this.instruction + "]");
+					log.log(Logger.Level.TRACE,"read Data Form instruction [" + this.instruction + "]");
 				}
 			}
 		}

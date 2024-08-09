@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.lang.System.Logger.Level;
+import java.lang.System.Logger;
 
 /**
  * @author Wojciech Kapcia
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public class MultiItemForm
 		extends Form {
 
-	protected static final Logger log = Logger.getLogger(MultiItemForm.class.getName());
+	protected static final Logger log = System.getLogger(MultiItemForm.class.getName());
 	private final List<Fields> items = new ArrayList<>();
 	private Fields reported = null;
 
@@ -110,17 +110,15 @@ public class MultiItemForm
 			for (Field field : i.getAllFields()) {
 				reported.addField(field.cloneShalow());
 			}
-			if (log.isLoggable(Level.WARNING)) {
-				log.log(Level.WARNING, "Initialised MultiItemForm with first item vars: {0}", reported.getAllFields());
-			}
+			log.log(Level.WARNING, () -> "Initialised MultiItemForm with first item vars: " + reported.getAllFields());
 		}
 
 		Iterator<Field> iterator = i.getAllFields().iterator();
 		while (iterator.hasNext()) {
 			Field field = iterator.next();
 			if (!reported.is(field.getVar())) {
-				if (log.isLoggable(Level.FINEST)) {
-					log.log(Level.FINEST, "variable {0} of added {1} does not match reported fields: {2} - removing!",
+				if (log.isLoggable(Level.TRACE)) {
+					log.log(Level.TRACE, "variable {0} of added {1} does not match reported fields: {2} - removing!",
 							new Object[]{field.getVar(), i.getAllFields(), reported.getAllFields()});
 				}
 				iterator.remove();
