@@ -65,7 +65,7 @@ public class ClassUtil {
 			String tmp_class_name = fileName.substring(0, fileName.length() - 6).replace('\\', '.');
 
 			class_name = tmp_class_name.replace('/', '.');
-		} // end of if (entry_name.endsWith(".class"))
+		}
 
 		return class_name;
 	}
@@ -81,8 +81,8 @@ public class ClassUtil {
 				result.add(class_name);
 
 				// System.out.println("class name: "+class_name);
-			} // end of if (class_name != null)
-		} // end of for ()
+			}
+		}
 
 		return result;
 	}
@@ -100,8 +100,8 @@ public class ClassUtil {
 				result.add(class_name);
 
 				// System.out.println("class name: "+class_name);
-			} // end of if (entry_name.endsWith(".class"))
-		} // end of while (jar_entries.hasMoreElements())
+			}
+		}
 
 		return result;
 	}
@@ -128,7 +128,7 @@ public class ClassUtil {
 					Set<String> class_names = getClassNamesFromDir(file);
 
 					classes_set.addAll(getClassesFromNames(class_names, classNamesFilter));
-				} // end of if (file.isDirectory())
+				}
 
 				if (file.isFile()) {
 
@@ -138,9 +138,9 @@ public class ClassUtil {
 					classes_set.addAll(getClassesFromNames(class_names, classNamesFilter));
 
 					// System.out.println("Loaded jar file: "+path);
-				} // end of if (file.isFile())
-			} // end of if (file.exists())
-		} // end of while (stok.hasMoreTokens())
+				}
+			}
+		}
 
 		return classes_set;
 	}
@@ -197,7 +197,7 @@ public class ClassUtil {
 					cause.printStackTrace();
 				}
 			}
-		} // end of for ()
+		}
 
 		return classes;
 	}
@@ -214,9 +214,9 @@ public class ClassUtil {
 
 				if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod)) {
 					classes_set.add((T) c);
-				} // end of if (!Modifier.isAbstract(mod) && !Modifier.isInterface(mod))
-			} // end of if (cls.isAssignableFrom(c))
-		} // end of for ()
+				}
+			}
+		}
 
 		return classes_set;
 	}
@@ -233,10 +233,10 @@ public class ClassUtil {
 
 			for (String file : files) {
 				walkInDirForFiles(path, file, set);
-			} // end of for ()
+			}
 		} else {
 			set.add(path.toString());
-		} // end of if (file.isDirectory()) else
+		}
 
 		return set;
 	}
@@ -248,7 +248,7 @@ public class ClassUtil {
 
 		for (Class cls : getClassesImplementing(obj)) {
 			result.add((T) cls.newInstance());
-		} // end of for ()
+		}
 
 		return result;
 	}
@@ -261,12 +261,12 @@ public class ClassUtil {
 
 			for (String file : files) {
 				walkInDirForFiles(base_dir, new File(path, file).toString(), set);
-			} // end of for ()
+			}
 		} else {
 
 			// System.out.println("File: " + path.toString());
 			set.add(path);
-		} // end of if (file.isDirectory()) else
+		}
 	}
 
 	public static boolean filterIncorrectMultiVersionClasses(String name) {

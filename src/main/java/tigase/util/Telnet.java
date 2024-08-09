@@ -65,10 +65,10 @@ public class Telnet {
 			StringBuilder sb = new StringBuilder();
 			while ((res = fr.read(buff)) != -1) {
 				sb.append(buff, 0, res);
-			} // end of while ((res = fr.read(buff)) != -1)
+			}
 			fr.close();
 			data = sb.toString();
-		} // end of if (file != null)
+		}
 		Socket sock = new Socket(hostname, port);
 		new Telnet(sock, data);
 	}
@@ -79,57 +79,57 @@ public class Telnet {
 				if (args[i].equals("-h")) {
 					System.out.print(help());
 					System.exit(0);
-				} // end of if (args[i].equals("-h"))
+				}
 				if (args[i].equals("-v")) {
 					System.out.print(version());
 					System.exit(0);
-				} // end of if (args[i].equals("-h"))
+				}
 				if (args[i].equals("-f")) {
 					if (i + 1 == args.length) {
 						System.out.print(help());
 						System.exit(1);
-					} // end of if (i+1 == args.length)
+					}
 					else {
 						file = args[++i];
-					} // end of else
-				} // end of if (args[i].equals("-h"))
+					}
+				}
 				if (args[i].equals("-n")) {
 					if (i + 1 == args.length) {
 						System.out.print(help());
 						System.exit(1);
-					} // end of if (i+1 == args.length)
+					}
 					else {
 						hostname = args[++i];
-					} // end of else
-				} // end of if (args[i].equals("-h"))
+					}
+				}
 				if (args[i].equals("-p")) {
 					if (i + 1 == args.length) {
 						System.out.print(help());
 						System.exit(1);
-					} // end of if (i+1 == args.length)
+					}
 					else {
 						port = Integer.decode(args[++i]);
-					} // end of else
-				} // end of if (args[i].equals("-h"))
+					}
+				}
 				if (args[i].equals("-d")) {
 					if (i + 1 == args.length || args[i + 1].startsWith("-")) {
 						debug = true;
-					} // end of if (i+1 == args.length)
+					}
 					else {
 						++i;
 						debug = args[i].charAt(0) != '-' && (args[i].equals("true") || args[i].equals("yes"));
-					} // end of else
-				} // end of if (args[i].equals("-d"))
+					}
+				}
 				if (args[i].equals("-c")) {
 					if (i + 1 == args.length || args[i + 1].startsWith("-")) {
 						continuous = true;
-					} // end of if (i+1 == args.length)
+					}
 					else {
 						++i;
 						continuous = args[i].charAt(0) != '-' && (args[i].equals("true") || args[i].equals("yes"));
-					} // end of else
-				} // end of if (args[i].equals("-d"))
-			} // end of for (int i = 0; i < args.length; i++)
+					}
+				}
+			}
 		}
 	}
 
@@ -169,25 +169,25 @@ public class Telnet {
 			try {
 				if (data != null) {
 					os.write(data.getBytes());
-				} // end of if (data != null)
+				}
 				while (data != null && continuous && !stopped) {
 					os.write(data.getBytes());
 					if (os == System.out) {
 						break;
-					} // end of if (os == System.out)
+					}
 					Thread.currentThread().sleep(delay);
-				} // end of while (continuous && !stopped)
+				}
 				while (!stopped) {
 					int chr = is.read();
 					if (chr == -1) {
 						break;
-					} // end of if (chr == -1)
+					}
 					os.write(chr);
 					os.flush();
-				} // end of while (true)
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
-			} // end of try-catch
+			}
 			System.exit(1);
 		}
 

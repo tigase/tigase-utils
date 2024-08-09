@@ -174,7 +174,7 @@ public interface DNSResolverIfc {
 		} catch (NamingException e) {
 			result_host = hostname;
 			log.log(Level.TRACE, () ->"Problem getting SRV DNS records for domain: " + hostname + ", " + e.getMessage());
-		}    // end of try-catch
+		}
 		if (entries.isEmpty()) {
 			String[] ip_address = getHostIPs(result_host);
 

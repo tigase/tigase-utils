@@ -49,20 +49,20 @@ public class Algorithms {
 			if (args[i].equals("-h")) {
 				System.out.println(help());
 				System.exit(0);
-			} // end of if (args[i].equals("-id"))
+			}
 			if (args[i].equals("-id")) {
 				id = args[++i];
-			} // end of if (args[i].equals("-id"))
+			}
 			if (args[i].equals("-pass")) {
 				pass = args[++i];
-			} // end of if (args[i].equals("-id"))
+			}
 			if (args[i].equals("-alg")) {
 				alg = args[++i];
-			} // end of if (args[i].equals("-id"))
-		} // end of for (int i = 0; i < args.length; i++)
+			}
+		}
 		if (id == null) {
 			id = "";
-		} // end of if (id == null)
+		}
 		System.out.println(hexDigest(id, pass, alg));
 	}
 
@@ -73,7 +73,7 @@ public class Algorithms {
 			res.append(ch);
 			ch = Character.forDigit(b & 0xF, 16);
 			res.append(ch);
-		} // end of for (b : digest)
+		}
 		return res.toString();
 	}
 

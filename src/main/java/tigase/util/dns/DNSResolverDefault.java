@@ -103,7 +103,7 @@ public class DNSResolverDefault
 
 		for (InetAddress ia : all) {
 			System.out.println("Host:getAllByName: " + ia.toString());
-		}    // end of for (InetAddress ia: all)
+		}
 		System.out.println("-------------------");
 
 		Hashtable env = new Hashtable();
@@ -119,7 +119,7 @@ public class DNSResolverDefault
 		if (att == null) {
 			id = "A";
 			att = attrs.get(id);
-		}    // end of if (attr == null)
+		}
 		System.out.println(id + ": " + att.get(0));
 		System.out.println("Class: " + att.get(0).getClass().getSimpleName());
 		for (NamingEnumeration<? extends Attribute> ae = attrs.getAll(); ae.hasMoreElements(); ) {
@@ -302,7 +302,7 @@ public class DNSResolverDefault
 
 		if (cache_res != null) {
 			return cache_res.getIps();
-		}    // end of if (result != null)
+		}
 
 		InetAddress[] all = InetAddress.getAllByName(hostname);
 		String[] ip_addresses = new String[all.length];
