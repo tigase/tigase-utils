@@ -20,6 +20,8 @@ package tigase.cert;
 //import sun.security.x509.*;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -161,6 +163,14 @@ public class KeytoolCertificateGenerator
 	}
 
 	private List<String> getSAN(String domain) {
+		try {
+			InetAddress address = InetAddress.getByName(domain);
+			if (address != null && domain.equals(address.getHostAddress())) {
+				return List.of("-ext", "SAN=dns:" + domain);//Collections.emptyList();
+			}
+		} catch (UnknownHostException ex) {
+			// we can ignore it
+		}
 		return List.of("-ext", "SAN=dns:*." + domain);
 	}
 }

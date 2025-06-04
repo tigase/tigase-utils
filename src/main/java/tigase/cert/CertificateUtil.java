@@ -872,6 +872,12 @@ public abstract class CertificateUtil {
 		for (List<?> entry : x509Certificate.getSubjectAlternativeNames()) {
 			Integer altNameType = (Integer) entry.get(0);
 			if (altNameType != 7) {
+				if (altNameType == 2) {
+					String altName = (String) entry.get(1);
+					if (ipAddr.equals(altName)) {
+						return true;
+					}
+				}
 				continue;
 			}
 			String altName = (String) entry.get(1);
