@@ -106,13 +106,13 @@ public abstract class CertificateUtil {
 	}
 
 	public static KeyPair createKeyPair(int size, String password) throws NoSuchAlgorithmException {
-		log.log(Level.INFO, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
+		log.log(Level.TRACE, "creating KeyPair, size: {0}, password: {1}", new Object[]{size, password});
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 
 		keyPairGenerator.initialize(size);
 
 		KeyPair keyPair = keyPairGenerator.genKeyPair();
-		log.log(Level.INFO, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
+		log.log(Level.TRACE, "creating KeyPair, KeyPairGenerator: {0}, keyPair: {1}",
 				new Object[]{keyPairGenerator, keyPair});
 
 		return keyPair;

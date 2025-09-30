@@ -20,7 +20,10 @@ package tigase.cert;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created: Oct 9, 2010 5:08:30 PM
@@ -33,6 +36,9 @@ public class CertificateEntry {
 	private Certificate[] chain = null;
 	private PrivateKey privateKey = null;
 	private KeyPair keyPair = null;
+	private String domain = null;
+	private Set<String> allDomains = new HashSet<>();
+	private boolean selfSigned = false;
 
 	public CertificateEntry() {
 	}
@@ -41,23 +47,32 @@ public class CertificateEntry {
 		this.chain = chain;
 		this.keyPair = keyPair;
 		privateKey = keyPair.getPrivate();
+		updateChain();
 	}
 
 	public CertificateEntry(Certificate[] chain, PrivateKey privateKey) {
 		this.chain = chain;
 		this.privateKey = privateKey;
-		this.keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
+		updateChain();
+		updateKeyPair();
 	}
 
 	public Certificate[] getCertChain() {
 		return chain;
 	}
 
+	public Certificate[] getCertChain(boolean withoutRoot) {
+		if (withoutRoot) {
+			return CertificateUtil.removeRootCACertificate(chain);
+		} else  {
+			return chain;
+		}
+	}
+
 	public void setCertChain(Certificate[] chain) {
 		this.chain = chain;
-		if (privateKey != null) {
-			keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
-		}
+		updateChain();
+		updateKeyPair();
 	}
 
 	public PrivateKey getPrivateKey() {
@@ -66,7 +81,50 @@ public class CertificateEntry {
 
 	public void setPrivateKey(PrivateKey privateKey) {
 		this.privateKey = privateKey;
+		updateKeyPair();
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public Set<String> getAllDomains() {
+		return allDomains;
+	}
+
+	public boolean isSelfSigned() {
+		return selfSigned;
+	}
+
+	public boolean isValid() {
+		if (chain == null || chain.length == 0) {
+			return false;
+		}
+		if (chain[0] instanceof X509Certificate) {
+			return !CertificateUtil.isExpired((X509Certificate) chain[0]);
+		}
+		return true;
+	}
+
+	private void updateChain() {
+		allDomains.clear();
+		domain = null;
+		selfSigned = false;
 		if (chain != null) {
+			chain = CertificateUtil.sort(chain);
+			if (chain[0] instanceof X509Certificate) {
+				selfSigned = CertificateUtil.isSelfSigned((X509Certificate) chain[0]);
+				allDomains.addAll(CertificateUtil.getCertAltCName((X509Certificate) chain[0]));
+				domain = CertificateUtil.getCertCName((X509Certificate) chain[0]);
+				if (domain != null) {
+					allDomains.add(domain);
+				}
+			}
+		}
+	}
+
+	private void updateKeyPair() {
+		if (chain != null && chain.length > 0 && privateKey != null) {
 			keyPair = new KeyPair(chain[0].getPublicKey(), privateKey);
 		}
 	}
@@ -87,8 +145,8 @@ public class CertificateEntry {
 			}
 		}
 
-		return "Private key: " + (privateKey != null ? "present" : "MISSING!!! \n\n\n") + '\n' +
-				sb;
+		return "Alias: " + domain + ", alternative domains: " + allDomains + ", Private key: " +
+				(privateKey != null ? "present" : "MISSING!!! \n\n\n") + '\n' + sb;
 	}
 
 	public Optional<KeyPair> getKeyPair() {
