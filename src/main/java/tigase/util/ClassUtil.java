@@ -89,20 +89,18 @@ public class ClassUtil {
 
 	public static Set<String> getClassNamesFromJar(File jarFile) throws IOException {
 		Set<String> result = new TreeSet<String>();
-		JarFile jar = new JarFile(jarFile);
-		Enumeration<JarEntry> jar_entries = jar.entries();
+		try (JarFile jar = new JarFile(jarFile)) {
+			Enumeration<JarEntry> jar_entries = jar.entries();
 
-		while (jar_entries.hasMoreElements()) {
-			JarEntry jar_entry = jar_entries.nextElement();
-			String class_name = getClassNameFromFileName(jar_entry.getName());
+			while (jar_entries.hasMoreElements()) {
+				JarEntry jar_entry = jar_entries.nextElement();
+				String class_name = getClassNameFromFileName(jar_entry.getName());
 
-			if (class_name != null) {
-				result.add(class_name);
-
-				// System.out.println("class name: "+class_name);
+				if (class_name != null) {
+					result.add(class_name);
+				}
 			}
 		}
-
 		return result;
 	}
 
