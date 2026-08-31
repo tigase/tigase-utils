@@ -22,9 +22,19 @@ import tigase.util.Algorithms;
 import tigase.util.Base64;
 
 import javax.crypto.Cipher;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import javax.security.auth.x500.X500Principal;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.*;
@@ -36,6 +46,7 @@ import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.lang.System.Logger.Level;
 import java.lang.System.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created: Sep 22, 2010 3:09:01 PM
@@ -49,11 +60,13 @@ public abstract class CertificateUtil {
 															  0x05};
 	private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
 	private static final String BEGIN_KEY = "-----BEGIN PRIVATE KEY-----";
+	private static final String BEGIN_EC_KEY = "-----BEGIN EC PRIVATE KEY-----";
 	private static final String BEGIN_RSA_KEY = "-----BEGIN RSA PRIVATE KEY-----";
 	private static final String ENCRIPT_TEST = "--encript-test";
 	private static final String ENCRIPT_TEST_SHORT = "-et";
 	private static final String END_CERT = "-----END CERTIFICATE-----";
 	private static final String END_KEY = "-----END PRIVATE KEY-----";
+	private static final String END_EC_KEY = "-----END EC PRIVATE KEY-----";
 	private static final String END_RSA_KEY = "-----END RSA PRIVATE KEY-----";
 	private static final String KEY_PAIR = "--key-pair";
 	private static final String KEY_PAIR_SHORT = "-kp";
@@ -367,6 +380,38 @@ public abstract class CertificateUtil {
 		return Optional.ofNullable(serialNumber);
 	}
 
+	public static KeyStore getDefaultTrustStore() throws KeyStoreException {
+		var truststore = KeyStore.getInstance(KeyStore.getDefaultType());
+		try {
+			truststore.load(null, null);
+
+			for (Map.Entry<Principal, Certificate> principalCertificateEntry : getTrustedRootCertificates().entrySet()) {
+				truststore.setCertificateEntry(principalCertificateEntry.getKey().getName(), principalCertificateEntry.getValue());
+			}
+		} catch (Exception e) {
+			throw new KeyStoreException("Could not load default trust store", e);
+		}
+
+		return truststore;
+	}
+
+	public static Map<Principal, Certificate> getTrustedRootCertificates() {
+		try {
+			var tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			tmf.init((KeyStore) null);
+
+			var tm = Arrays.asList(tmf.getTrustManagers());
+			return tm.stream()
+					.filter(t -> t instanceof X509TrustManager)
+					.map(t -> (X509TrustManager) t)
+					.flatMap(t -> Arrays.stream(t.getAcceptedIssuers()))
+					.collect(Collectors.toMap(X509Certificate::getIssuerX500Principal, c -> c));
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Could not load default trust store", e);
+			return Collections.emptyMap();
+		}
+	}
+
 	private static Certificate getRootCertificateCertificate(List<Certificate> certs) {
 		Certificate rt = null;
 		for (Certificate x509Certificate : certs) {
@@ -375,6 +420,12 @@ public abstract class CertificateUtil {
 			if (i.equals(s)) {
 				rt = x509Certificate;
 			}
+		}
+		if (rt == null) {
+			var sorted = sort(certs);
+			var last = sorted.get(sorted.size() - 1);
+			var issuerPrincipal = ((X509Certificate) last).getIssuerX500Principal();
+			rt = getTrustedRootCertificates().get(issuerPrincipal);
 		}
 		return rt;
 	}
@@ -489,14 +540,23 @@ public abstract class CertificateUtil {
 				System.out.println(ce.toString(basic));
 
 				final ArrayList<Certificate> certs = new ArrayList<>(Arrays.asList(ce.getCertChain()));
-				if (getRootCertificateCertificate(certs) == null) {
+				var rootCertificateCertificate = getRootCertificateCertificate(certs);
+				if (rootCertificateCertificate == null) {
 					System.out.println("Can't find root certificate in chain!");
 					for (Certificate x509Certificate : certs) {
 						Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
 						Principal s = ((X509Certificate) x509Certificate).getSubjectDN();
 						System.out.println(s + " ~ ISSUED BY: " + i);
 					}
+				} else {
+					StringBuilder sb = new StringBuilder();
+					CertificateUtil.getCertificateBasicInfo(sb, rootCertificateCertificate);
+					System.out.println("Using root certificate:\n" + sb);
 				}
+
+				var result = validateCertificate(ce.getCertChain(), getDefaultTrustStore(), false);
+				System.out.println("Certificate validation result: " + result);
+
 				sort(ce.getCertChain());
 			}
 
@@ -582,7 +642,7 @@ public abstract class CertificateUtil {
 
 		while ((line = br.readLine()) != null) {
 
-			if (line.contains(BEGIN_CERT) || line.contains(BEGIN_KEY) || line.contains(BEGIN_RSA_KEY)) {
+			if (line.contains(BEGIN_CERT) || line.contains(BEGIN_KEY) || line.contains(BEGIN_EC_KEY) || line.contains(BEGIN_RSA_KEY)) {
 				addToBuffer = true;
 			} else if (line.contains(END_CERT)) {
 				addToBuffer = false;
@@ -603,6 +663,13 @@ public abstract class CertificateUtil {
 				byte[] bytes = Base64.decode(sb.toString());
 				PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(bytes);
 				privateKey = generateKeyWithFallback(keySpec);
+				log.log(Level.TRACE, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
+				sb = new StringBuilder(4096);
+			} else if (line.contains(END_EC_KEY)) {
+				addToBuffer = false;
+				byte[] bytes = Base64.decode(sb.toString());
+				var ecPrivateKeyDecoder = new ECPrivateKeyDecoder(bytes);
+				privateKey = ecPrivateKeyDecoder.getPrivateKey();
 				log.log(Level.TRACE, "parseCertificate, privateKey: {0}", new Object[]{privateKey});
 				sb = new StringBuilder(4096);
 			} else if (line.contains(END_RSA_KEY)) {
@@ -678,12 +745,13 @@ public abstract class CertificateUtil {
 	}
 
 	public static Certificate[] removeRootCACertificate(Certificate[] certChain) {
+		final Map<Principal, Certificate> trustedRootCertificates = getTrustedRootCertificates();
 		return Arrays.stream(certChain)
 				.filter(X509Certificate.class::isInstance)
 				.map(X509Certificate.class::cast)
 				.filter(cert -> {
 					final boolean[] keyUsage = cert.getKeyUsage();
-					return !(keyUsage != null && keyUsage[5] && isSelfSigned(cert));
+					return !(keyUsage != null && keyUsage[5] && isSelfSigned(cert) && trustedRootCertificates.containsKey(cert.getSubjectX500Principal()));
 				})
 				.toArray(Certificate[]::new);
 	}
@@ -736,36 +804,32 @@ public abstract class CertificateUtil {
 	}
 
 	public static List<Certificate> sort(List<Certificate> certs) {
-		Certificate rt = getRootCertificateCertificate(certs);
+		if (certs.isEmpty()) return new ArrayList<>();
 
-		if (rt == null) {
-			throw new RuntimeException("Can't find root certificate in chain!");
+		var bySubject = new HashMap<Principal,Certificate>();
+		var issuers = new HashSet<Principal>();
+		certs.forEach(c -> {
+			bySubject.put(((X509Certificate)c).getSubjectX500Principal(), c);
+			issuers.add(((X509Certificate)c).getIssuerX500Principal());
+		});
+
+		// Leaf = certificate whose subject is NOT referenced as an issuer by any cert
+		var leaf = certs.stream()
+				.filter(c -> !issuers.contains(((X509Certificate)c).getSubjectX500Principal()))
+				.findFirst()
+				.orElseGet(() -> {
+					if (certs.size() == 1 && isSelfSigned((X509Certificate) certs.get(0))) return certs.get(0);
+					throw new IllegalArgumentException("No leaf certificate found");
+				});
+
+		var sortedChain = new ArrayList<Certificate>();
+		for (Certificate current = leaf; current != null; ) {
+			sortedChain.add(current);
+			Principal issuer = ((X509Certificate)current).getIssuerX500Principal();
+			if (issuer.equals(((X509Certificate)current).getSubjectX500Principal())) break; // self-signed
+			current = bySubject.get(issuer);
 		}
-
-		ArrayList<Certificate> res = new ArrayList<Certificate>();
-		certs.remove(rt);
-		res.add(rt);
-
-		while (!certs.isEmpty()) {
-			boolean found = false;
-			for (Certificate x509Certificate : certs) {
-				Principal i = ((X509Certificate) x509Certificate).getIssuerDN();
-				if (i.equals(((X509Certificate) rt).getSubjectDN())) {
-					rt = x509Certificate;
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				certs.remove(rt);
-				res.add(0, rt);
-			} else {
-				throw new RuntimeException("Can't find certificate " + ((X509Certificate) rt).getSubjectDN() +
-												   " in chain. Verify that all entries are correct and match against each other!");
-			}
-		}
-
-		return res;
+		return sortedChain;
 	}
 
 	public static void storeCertificate(String file, CertificateEntry entry)

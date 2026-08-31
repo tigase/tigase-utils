@@ -27,6 +27,8 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateCrtKeySpec;
 
+import static tigase.cert.Asn1DerUtilities.*;
+
 /**
  * Created: Oct 9, 2010 9:16:55 PM
  *
@@ -35,21 +37,24 @@ import java.security.spec.RSAPrivateCrtKeySpec;
  */
 public class RSAPrivateKeyDecoder {
 
-	private InputStream is = null;
+	private final InputStream is;
+	private final RSAPrivateCrtKeySpec keySpec;
 
-	public RSAPrivateKeyDecoder(byte[] bytes) {
+	public RSAPrivateKeyDecoder(byte[] bytes) throws IOException {
 		this(new ByteArrayInputStream(bytes));
 	}
 
-	public RSAPrivateKeyDecoder(InputStream is) {
+	public RSAPrivateKeyDecoder(InputStream is) throws IOException {
 		this.is = is;
-	}
+		keySpec = getKeySpec();
+		is.close();
+    }
 
-	public RSAPrivateCrtKeySpec getKeySpec() throws IOException {
+	private RSAPrivateCrtKeySpec getKeySpec() throws IOException {
 
 		// Skip to the beginning of the sequence:
 		int tag = is.read();
-		int len = readLength();
+		int len = readLength(is);
 
 		// System.out.println("Sequence: " + tag + ", size: " + len);
 		BigInteger ver = nextInt();
@@ -68,47 +73,11 @@ public class RSAPrivateKeyDecoder {
 	public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-		return keyFactory.generatePrivate(getKeySpec());
+		return keyFactory.generatePrivate(keySpec);
 	}
 
 	private BigInteger nextInt() throws IOException {
-		int tag = is.read();
-		int len = readLength();
-		byte[] val = new byte[len];
-		int res = is.read(val);
-
-		if (res < len) {
-			throw new IOException("Invalid DER data: data too short.");
-		}
-
-		return new BigInteger(val);
-	}
-
-	private int readLength() throws IOException {
-		int len = is.read();
-
-		if (len == -1) {
-			throw new IOException("Invalid field length in DER data.");
-		}
-
-		if ((len & ~0x7F) == 0) {
-			return len;
-		}
-
-		int size = len & 0x7F;
-
-		if ((len >= 0xFF) || (size > 4)) {
-			throw new IOException("Invalid field length in DER data: too big (" + len + ")");
-		}
-
-		byte[] bytes = new byte[size];
-		int res = is.read(bytes);
-
-		if (res < size) {
-			throw new IOException("Invalid DER file: data too short.");
-		}
-
-		return new BigInteger(1, bytes).intValue();
+		return new BigInteger(nextComponentValue(is));
 	}
 }
 

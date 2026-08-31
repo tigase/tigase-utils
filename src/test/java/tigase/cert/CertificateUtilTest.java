@@ -18,11 +18,16 @@
 package tigase.cert;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import javax.crypto.Cipher;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.KeyPair;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.ECPrivateKey;
@@ -154,6 +159,17 @@ public class CertificateUtilTest
 		}
 	}
 
+	public void testEcSec1Load() throws Exception {
+		try (Reader r = new InputStreamReader(
+				Objects.requireNonNull(this.getClass().getResourceAsStream("/key_sec1.pem")))) {
+			var entry = CertificateUtil.parseCertificate(r);
+			assertNotNull(entry);
+			assertNotNull(entry.getPrivateKey());
+			assertTrue(entry.getPrivateKey() instanceof ECPrivateKey);
+			assertEquals(1, entry.getCertChain().length);
+		}
+	}
+
 	public void testSelfSignedCert() throws Exception {
 		KeyPair keyPair = createKeyPair(1024, "secret");
 
@@ -183,5 +199,24 @@ public class CertificateUtilTest
 
 		cert.verify(entry.getKeyPair().get().getPublic());
 		assertTrue("Verified certificate with public key - done", true);
+	}
+
+
+
+	@Ignore
+	public void testLetsEncryptValidCertificate() throws Exception {
+		Certificate[] certificates = fetchDomainCertificateChain("valid-isrgrootx1.letsencrypt.org", 443);
+		CertificateEntry entry = new CertificateEntry();
+		entry.setCertChain(certificates);
+		System.out.println(entry.toString(true));
+		assertEquals(CertCheckResult.trusted, CertificateUtil.validateCertificate(entry.getCertChain(), getDefaultTrustStore(), false));
+	}
+
+	private static Certificate[] fetchDomainCertificateChain(String host, int port) throws IOException {
+		SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+		try (SSLSocket socket = (SSLSocket)factory.createSocket(host, port)) {
+			socket.startHandshake();
+            return socket.getSession().getPeerCertificates();
+		}
 	}
 }
