@@ -441,11 +441,11 @@ public abstract class CertificateUtil {
 	}
 
 	public static boolean isSelfSigned(X509Certificate cert) {
-		final boolean result = cert.getIssuerDN().equals(cert.getSubjectDN());
+		final boolean result = cert.getIssuerX500Principal().equals(cert.getSubjectX500Principal());
 		if (result) {
-			log.log(Level.INFO, "Self-signed certificate for domain: {0}", new Object[]{cert.getSubjectDN()});
+			log.log(Level.DEBUG, "Self-signed certificate for domain: {0}", cert.getSubjectX500Principal());
 		}
-		log.log(Level.TRACE, "isSelfSigned, result: {0}, X509Certificate: {1}", new Object[]{result, cert});
+		log.log(Level.TRACE, "isSelfSigned, result: {0}, X509Certificate: {1}", result, cert);
 		return result;
 	}
 
