@@ -52,6 +52,7 @@ public class SimpleCache<K, V>
 			cache_off = false;
 			cache = new SizedCache<K, CacheObject<V>>(maxSize);
 		} else {
+			log.log(Logger.Level.WARNING, "Globally disabling cache due to `tigase.cache` property set");
 			cache_off = true;
 		}
 	}
